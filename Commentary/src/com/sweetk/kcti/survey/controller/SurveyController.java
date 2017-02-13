@@ -30,7 +30,7 @@ public class SurveyController {
     
     @RequestMapping("/survey_write.do")
 	protected ModelAndView survey_write(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		ModelAndView mav = new ModelAndView("survey/survey_write");
+		ModelAndView mav = new ModelAndView("survey/index_write");
 		
 		
 		return mav;
@@ -39,14 +39,14 @@ public class SurveyController {
     
 	@RequestMapping("/survey_list.do")
 	protected ModelAndView board_list(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-    	ModelAndView mav = new ModelAndView("survey/survey_list");
+    	ModelAndView mav = new ModelAndView("survey/index_list");
     	
     	
     	return mav;
     }
 	@RequestMapping("/survey_result.do")
 	protected ModelAndView survey_result(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		ModelAndView mav = new ModelAndView("survey/survey_result");
+		ModelAndView mav = new ModelAndView("survey/index_result");
 		
 		
 		return mav;

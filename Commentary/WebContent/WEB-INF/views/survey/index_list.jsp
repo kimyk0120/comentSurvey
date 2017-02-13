@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>survey_list</title>
+    <link rel="shortcut icon" type="image/png" href=""/>
     <link rel="stylesheet" href="/surveySrc/css/style.css">
     <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
+    <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
     <div id="s_head">

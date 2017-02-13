@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>survey_write</title>
+<link rel="shortcut icon" type="image/png" href=""/>
 <link rel="stylesheet" href="/surveySrc/css/style.css">
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
@@ -16,23 +17,22 @@ $(function(){
 		var $selElId = $(this).attr("id");
 		/* console.log("$selElId: "+ $selElId); */
 		
-		var $stDate = $("input[id=start_s]").val();
-		var $endDate = $("input[id=end_s]").val();
-				
-		console.log("$stDate : " + $stDate);
-		console.log("$endDate : " + $endDate);
+		var $stDate = $("input[id=start_s]").val(); // 시작일
+		var $endDate = $("input[id=end_s]").val();  // 종료일
+		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지자체 
+		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
+		var $chargeLocation = $("#chargeLocText").val();	// 관리담당지역
 		
 		
-		
-		
+		console.log("$chargeLocation : " + $chargeLocation);
 		
 		// 임시저장
 		if($selElId=="temp"){
-			console.log("임시저장")
+			//console.log("임시저장")
 		
 		// 저장하기
 		}else if($selElId=="save"){
-			console.log("저장하기")
+			//console.log("저장하기")
 			
 		} 
 		
@@ -61,8 +61,8 @@ $(function(){
                 </li>
                 <li id="sort_s">
                     <span>설문대상</span>
-                    <label><input type="checkbox" value="group">지자체</label>
-                    <label><input type="checkbox" value="commentator">해설사</label>
+                    <label><input type="checkbox" value="group" name="surveyTarget_1">지자체</label>
+                    <label><input type="checkbox" value="commentator" name="surveyTarget_2">해설사</label>
                 </li>
             </ul>           
         </fieldset><!--2017.02.10 추가-->
@@ -73,7 +73,7 @@ $(function(){
             </div>
             <div class="clear">                
                <!--2017.02.10 삭제-->
-                <input type="text" class="t_input">
+                <input type="text" class="t_input" id="chargeLocText">
             </div>            
         </fieldset>
         <fieldset class="article">
@@ -85,19 +85,19 @@ $(function(){
                 <!--2017.02.10 삭제-->
                 <ul class="s_radio">
                     <li>
-                        <input type="radio" class="r_li" value="r_01"> 1~10명
+                        <label><input type="radio" class="r_li" value="r_01" name="chrgPcnt"> 1~10명</label>
                     </li>
                     <li>
-                        <input type="radio" class="r_li" value="r_02"> 11~20명
+                        <label><input type="radio" class="r_li" value="r_02" name="chrgPcnt"> 11~20명</label>
                     </li>
                     <li>
-                        <input type="radio" class="r_li" value="r_03"> 21~30명
+                        <label><input type="radio" class="r_li" value="r_03" name="chrgPcnt"> 21~30명</label>
                     </li>
                     <li>
-                        <input type="radio" class="r_li" value="r_04"> 31~40명
+                        <input type="radio" class="r_li" value="r_04" name="chrgPcnt"> 31~40명
                     </li>
                     <li>
-                        <input type="radio" class="r_li" value="r_05"> 41명 이상
+                        <input type="radio" class="r_li" value="r_05" name="chrgPcnt"> 41명 이상
                     </li>
                 </ul>
             </div>            
