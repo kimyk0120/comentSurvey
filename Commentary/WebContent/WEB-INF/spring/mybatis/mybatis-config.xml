@@ -13,7 +13,6 @@
 		<typeAlias type="com.sweetk.kcti.commentary.vo.CommentaryVo" 	alias="CommentaryVo"/>
 		<typeAlias type="com.sweetk.kcti.common.vo.CommonVo" 			alias="CommonVo"/>
 		<typeAlias type="com.sweetk.kcti.login.vo.LoginVo" 				alias="LoginVo"/>
-		<typeAlias type="com.sweetk.kcti.auth.vo.AuthVo" 				alias="AuthVo"/>
 		<typeAlias type="com.sweetk.kcti.board.vo.BoardVo" 				alias="BoardVo"/>
 		<typeAlias type="com.sweetk.kcti.stats.vo.StatsVo" 				alias="StatsVo"/>
 		<typeAlias type="com.sweetk.kcti.excel.vo.ExcelVo" 				alias="ExcelVo"/>
