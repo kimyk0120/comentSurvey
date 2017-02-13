@@ -28,6 +28,7 @@ public class SurveyController {
     private PlatformTransactionManager transactionManager;
  
     
+    //  설문 작성 
     @RequestMapping("/survey_write.do")
 	protected ModelAndView survey_write(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		ModelAndView mav = new ModelAndView("survey/index_write");

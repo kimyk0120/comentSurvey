@@ -46,7 +46,7 @@ $(function(){
 			$(this).find("p").attr("class","o_open"); // 객관식 이미지 활성
 			$(this).next().attr("class","subjective close sort_bt"); // 주관식 글씨 비활성
 			$(this).next().find("p").attr("class","s_close"); //주관식 이미지 비활성
-			$(this).parent().next().css("display","inline-block");
+			$(this).parent().next().show(); // 객관식 히든 영역 노출
 		}
 	});
 	
@@ -63,12 +63,21 @@ $(function(){
 			$(this).find("p").attr("class","s_open"); // 주관식 이미지 활성
 			$(this).prev().attr("class","objective close sort_bt"); // 객관식 글씨 비활성
 			$(this).prev().find("p").attr("class","o_close"); // 객관식 이미지 비활성
-			$(this).parent().next().css("display","none");
+			$(this).parent().next().hide(); // 객관식 히든 영역 숨김
 		}
 		
 	});
 	
 	
+	// 객관식 영역에서 항목 삭제버튼 선택시
+	$(".r_delete").on("click",function(){
+		$(this).parent().remove();		
+	});
+	
+	// 객관식 영역에서 항목 추가버튼 선택시
+	$(".r_add").on("click",function(){
+		$(this).parent().remove();		
+	});
 	
 })// endDomReady
 </script>
@@ -97,59 +106,58 @@ $(function(){
                     <label><input type="checkbox" value="commentator" name="surveyTarget_2">해설사</label>
                 </li>
             </ul>           
-        </fieldset><!--2017.02.10 추가-->
+        </fieldset>
         
         
         <!-- 1번 예시 -->
-        <!-- <fieldset class="article">
+        <fieldset class="article">
             <div>
                 <p class="a_number">1</p>
                 <p class="aq_text">관리 담당 지역은 어디입니까?</p>
+                <button class="b_del"></button>
             </div>
             <div class="clear">                
-               2017.02.10 삭제
                 <input type="text" class="t_input" id="chargeLocText">
             </div>            
-        </fieldset> -->
+        </fieldset>
         <!-- .1번 -->
         
         
         <!-- 2번 예시 -->
-        <!-- <fieldset class="article">
+        <fieldset class="article">
             <div>
                 <p class="a_number">2</p>
                 <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
+                <button class="b_del"></button>
             </div>
             <div class="clear">                
-                2017.02.10 삭제
                 <ul class="s_radio">
                     <li>
-                        <label><input type="radio" class="r_li" value="r_01" name="chrgPcnt"> 1~10명</label>
+                        <label><input type="radio" class="r_li" value="r_01" name=""> 1~10명</label>
                     </li>
                     <li>
-                        <label><input type="radio" class="r_li" value="r_02" name="chrgPcnt"> 11~20명</label>
+                        <label><input type="radio" class="r_li" value="r_02" name=""> 11~20명</label>
                     </li>
                     <li>
-                        <label><input type="radio" class="r_li" value="r_03" name="chrgPcnt"> 21~30명</label>
+                        <label><input type="radio" class="r_li" value="r_03" name=""> 21~30명</label>
                     </li>
                     <li>
-                        <label><input type="radio" class="r_li" value="r_04" name="chrgPcnt"> 31~40명</label>
+                        <label><input type="radio" class="r_li" value="r_04" name=""> 31~40명</label>
                     </li>
                     <li>
-                        <label><input type="radio" class="r_li" value="r_05" name="chrgPcnt"> 41명 이상</label>
+                        <label><input type="radio" class="r_li" value="r_05" name=""> 41명 이상</label>
                     </li>
                 </ul>
             </div>            
-        </fieldset> -->
+        </fieldset> 
         <!-- .2번 -->
         
         
         <!-- 질문 작성 영역 -->
         <fieldset class="m_article mb60">
             <div>
-                <p class="am_number">3</p>
+                <p class="am_number"></p>
                 <input type="text" class="qw" placeholder="질문을 입력해주세요.">
-                <button class="b_del"></button>
             </div>
             <div class="clear">                
                 <div class="sort">
@@ -168,20 +176,20 @@ $(function(){
 	                <div class="clear"></div>
 	                <ul class="w_radio">
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_01"> 
+	                        <input type="radio" class="m_radio" value="r_01" name="r_rardio1"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_02"> 
+	                        <input type="radio" class="m_radio" value="r_02" name="r_rardio1"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_03"> 
+	                        <input type="radio" class="m_radio" value="r_03" name="r_rardio1"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_04"> 
+	                        <input type="radio" class="m_radio" value="r_04" name="r_rardio1"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
