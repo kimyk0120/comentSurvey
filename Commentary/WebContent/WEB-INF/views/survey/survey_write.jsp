@@ -16,7 +16,13 @@ $(function(){
 		var $selElId = $(this).attr("id");
 		/* console.log("$selElId: "+ $selElId); */
 		
+		var $stDate = $("input[id=start_s]").val();
+		var $endDate = $("input[id=end_s]").val();
 				
+		console.log("$stDate : " + $stDate);
+		console.log("$endDate : " + $endDate);
+		
+		
 		
 		
 		
