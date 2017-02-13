@@ -1,0 +1,17 @@
+
+@media screen and (max-width:1020px) {
+    
+    body {width: 100%; height: 100%; font-size:1em; }
+    div#sr_contents {width: 90%; }
+    div#sr_title {font-size:2em;}
+    div p.aq_text {font-size:2em;}
+    form#survey_result input.t_input {width: 90%; height: 2em;}
+    p.aq_text {width: 80%; margin-top: 0;}
+    div ul {width: 80%; }
+    div ul li {padding-left: 2%;}
+    fieldset.article div ul li {font-size:2em; margin-bottom: 0.3em;!important}
+    fieldset.article div ul li input.r_li {width: 0.8em; height: 0.8em;} 
+    
+    
+    
+}

@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.commentary.mapper.CommentaryMapper">
+	
+	<select id="login_check" parameterType="CommentaryVo" resultType="int">
+		
+		select count(*)
+		from user
+		where user_id = #{email}
+		and #{pw} = aes_decrypt(unhex(pw),'kcti')
+				
+	</select>
+	
+	<select id="cmmt_list_count" parameterType="CommentaryVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				c.cmntor_no,
+			    name,
+			    birth_dt,
+			    gender,
+			    eng_name,
+			    arrg_place,
+			    (select act_prt_nm from act_prt ap where ap.act_prt_cd = c.act_prt_cd) as act_prt_nm,
+			    sido_cd,
+			    (select sido_cd_nm from sido s where c.sido_cd = s.sido_cd) as sido_nm,
+			    gugun_cd,
+			    (select gugun_cd_nm from gugun g where c.gugun_cd = g.gugun_cd) as gugun_nm
+			FROM cmntor c  
+			WHERE ifnull(del_yn, 'N') &lt;&gt; 'Y'
+				<if test="srch_sido != null and srch_sido != '' "> 
+					AND	c.sido_cd = #{srch_sido}
+				</if>
+				<if test="srch_gugun != null and srch_gugun != '' "> 
+					AND	c.gugun_cd = case when #{srch_gugun} like '%000' then c.gugun_cd else #{srch_gugun} end 
+				</if>
+				<if test="srch_nm != null and srch_nm != '' ">
+					AND c.name like concat('%', #{srch_nm}, '%')
+				</if>
+				<if test ="auth_no == 4">
+					AND c.cmntor_no = #{cmntor_no}
+				</if>
+				<if test="srch_act_yn != null and srch_act_yn != '' ">
+					AND c.act_yn = #{srch_act_yn}
+				</if>
+				<if test="auth_no == 5">
+					AND c.auth_no = #{auth_no}
+				</if>
+			) tt
+		WHERE
+			1 =1
+			<if test="srch_area != null and srch_area != '' "> 
+				AND	(sido_nm like concat('%', #{srch_area}, '%') or gugun_nm like concat('%', #{srch_area}, '%') )
+			</if>
+	</select>
+	
+	<select id="cmmt_list" parameterType="CommentaryVo" resultType="CommentaryVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					c.cmntor_no,
+				    name,
+				    birth_dt,
+				    case when substr(birth_dt,1,2) in ('19','20') then substr(now(),1,4) - substr(birth_dt,1,4) + 1 else '' end age, 
+				    gender,
+				    eng_name,
+				    eng_name2,
+				    arrg_place,
+				    c.rgst_dt,
+				    act_yn,
+				    (select act_prt_nm from act_prt ap where ap.act_prt_cd = c.act_prt_cd) as act_prt_nm,
+				    sido_cd,
+				    (select sido_cd_nm from sido s where c.sido_cd = s.sido_cd) as sido_cd_nm,
+				    gugun_cd,
+				    hand_phone,
+				    (select gugun_cd_nm from gugun g where c.gugun_cd = g.gugun_cd) as gugun_cd_nm,
+				    SUBSTRING_INDEX(hand_phone,'-',-1) as hand_ph3,
+    				group_concat( 
+    					case when l.lang_cd = '09' then l.etc_lang else la.lang_nm end
+    					order by la.lang_cd separator '/' ) as lang_nm
+				FROM cmntor c  left join cmntor_lang l on c.cmntor_no = l.cmntor_no
+					left join lang la on l.lang_cd = la.lang_cd
+				WHERE ifnull(del_yn, 'N') &lt;&gt; 'Y'
+					<if test="srch_sido != null and srch_sido != '' "> 
+						AND	c.sido_cd = #{srch_sido}
+					</if>
+					<if test="srch_gugun != null and srch_gugun != '' "> 
+						AND	c.gugun_cd = case when #{srch_gugun} like '%000' then c.gugun_cd else #{srch_gugun} end 
+					</if>
+					<if test="srch_nm != null and srch_nm != '' ">
+						AND c.name like concat('%', #{srch_nm}, '%')
+					</if>
+					<if test ="auth_no == 4">
+						AND c.cmntor_no = #{cmntor_no}
+					</if>
+					<if test="srch_act_yn != null and srch_act_yn != '' ">
+						AND c.act_yn = #{srch_act_yn}
+					</if>
+					<if test="auth_no == 5">
+						AND c.auth_no = #{auth_no}
+					</if>
+				group by 
+					c.cmntor_no,
+				    name,
+				    birth_dt,
+				    gender,
+				    hand_phone,
+				    eng_name,
+				    eng_name2,
+				    act_prt_cd,
+				    act_yn,
+				    arrg_place,
+				    c.rgst_dt,
+				    sido_cd,
+				    gugun_cd
+				) tt , (select @rownum:=0) tmp
+			WHERE 1 = 1
+				<if test="srch_area != null and srch_area != '' "> 
+					AND	(sido_cd_nm like concat('%', #{srch_area}, '%') or gugun_cd_nm like concat('%', #{srch_area}, '%') )
+				</if>
+			ORDER BY
+				<choose>
+					<when test="order_prt == 2 and srch_order == 1">
+						name
+					</when>
+					<when test="order_prt == 2 and srch_order == 2">
+						name desc
+					</when>
+					<otherwise>
+						rgst_dt, cmntor_no
+					</otherwise>				
+				</choose>
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<insert id="cmmt_save" parameterType="CommentaryVo">
+		INSERT INTO cmntor(cmntor_no, name, birth_dt, gender, eng_name, eng_name2, rgst_dt, act_yn,  act_prt_cd, sido_cd, gugun_cd,
+						last_edu_cd, home_zip, home_addr1, home_addr2, home_phone, hand_phone, email, arrg_place, hope_place,
+						prfl_img, job, etc_job_nm, eng_test_yy, eng_test_nm, eng_test_pnt, chn_test_yy, chn_test_nm, chn_test_pnt, 
+						jpn_test_yy, jpn_test_nm, jpn_test_pnt,	etc_lang_nm, etc_test_yy, etc_test_nm, etc_test_pnt,
+						auth_no, inpt_usr, inpt_tm, updt_usr, updt_tm)
+		SELECT
+			
+			<choose>
+			    <when test="gugun_cd != null and gugun_cd != ''"> 
+					CONCAT(#{gugun_cd}, LPAD(IFNULL((SELECT max(convert(substring(cmntor_no,4), decimal))+1 FROM cmntor WHERE cmntor_no like concat(#{gugun_cd},'%') ),1), 4, '0'))
+				</when>
+				<otherwise>
+					CONCAT(#{sido_cd}, LPAD(IFNULL((SELECT max(convert(substring(cmntor_no,2), decimal))+1 FROM cmntor WHERE cmntor_no like concat(#{sido_cd},'%') ),1), 4, '0'))
+				</otherwise>
+			</choose>
+			,#{name}
+			,#{birth_dt}
+			,#{gender}
+			,#{eng_name}
+			,#{eng_name2}
+			,#{rgst_dt}
+			,#{act_yn}
+			,#{act_prt_cd}
+			,#{sido_cd}
+			,ifnull(#{gugun_cd},'')
+			,#{last_edu_cd}
+			,#{home_zip}
+			,#{home_addr1}
+			,#{home_addr2}
+			,#{home_phone}
+			,#{hand_phone}
+			,#{email}
+			,#{arrg_place}
+			,#{hope_place}
+			,#{prfl_img}
+			,#{job}
+			,#{etc_job_nm}
+			,#{eng_test_yy}
+			,#{eng_test_nm}
+			,#{eng_test_pnt}
+			,#{chn_test_yy}
+			,#{chn_test_nm}
+			,#{chn_test_pnt}
+			,#{jpn_test_yy}
+			,#{jpn_test_nm}
+			,#{jpn_test_pnt}
+			,#{etc_lang_nm}
+			,#{etc_test_yy}
+			,#{etc_test_nm}
+			,#{etc_test_pnt}
+			,#{auth_no}
+			,#{inpt_usr}
+			,now()
+			,#{inpt_usr}
+			,now()
+		<selectKey resultType="String" keyProperty="cmntor_no" order="AFTER">
+			select max(cmntor_no) as cmntor_no 
+			FROM cmntor 
+			WHERE 1 = 1 
+			<choose>
+			    <when test="gugun_cd != null and gugun_cd != ''"> 
+				AND	cmntor_no like concat(#{gugun_cd},'%')
+				</when>
+				<otherwise>
+				AND	cmntor_no like concat(#{sido_cd},'%')
+				</otherwise>
+			</choose>
+		</selectKey>
+	</insert>
+	
+	<insert id="cmmt_lang_save" parameterType="CommentaryVo">
+		INSERT INTO cmntor_lang (cmntor_no, lang_cd, etc_lang, grade)
+		VALUES (#{cmntor_no}, #{lang_cd}, #{etc_lang}, #{grade})
+	</insert>
+	
+	<select id="cmmt_info" parameterType="CommentaryVo" resultType="CommentaryVo">
+		SELECT 
+			cc.cmntor_no,
+		    name,
+		    birth_dt,
+		    gender,
+		    eng_name,
+		    eng_name2,
+		    arrg_place,
+		    cc.rgst_dt,
+		    act_yn,
+		    act_prt_cd,
+		    (select act_prt_nm from act_prt ap where ap.act_prt_cd = cc.act_prt_cd) as act_prt_nm,
+		    sido_cd,
+		    (select sido_cd_nm from sido s where cc.sido_cd = s.sido_cd) as sido_cd_nm,
+		    gugun_cd,
+		    last_edu_cd,
+		    case last_edu_cd when '01' then '안받음'
+		         			 when '02' then '초등학교'
+							 when '03' then '중학교'
+							 when '04' then '고등학교'
+							 when '05' then '대학교'
+							 when '06' then '대학교(4년제미만)'
+							 when '07' then '대학교(4년제이상)'
+							 when '08' then '대학원 석사'
+							 when '09' then '대학원 박사' else '' end as last_edu_nm,
+		    home_zip,
+		    home_addr1,
+		    home_addr2,
+		    home_phone,
+		    hand_phone,
+		    email,
+		    arrg_place,
+		    hope_place,
+		    prfl_img,
+		    job,
+		    case job when '01' then '자영업' when '02' then '판매/영업'
+					 when '03' then '기능/작업'
+					 when '04' then '사무/기술'
+					 when '05' then '경영/관리'
+					 when '06' then '자유/관리'
+					 when '07' then '농/임/어/축산업'
+					 when '08' then '전업주부'
+					 when '09' then '학생'
+					 when '10' then '무직'
+					 when '11' then concat('기타','(', etc_job_nm,')' ) else '' end job_nm,
+			etc_job_nm,
+		    eng_test_yy,
+		    eng_test_nm,
+		    eng_test_pnt,
+		    chn_test_yy,
+		    chn_test_nm,
+		    chn_test_pnt,
+		    jpn_test_yy,
+		    jpn_test_nm,
+		    jpn_test_pnt,
+		    etc_lang_nm,
+		    etc_test_yy,
+		    etc_test_nm,
+		    etc_test_pnt,
+		    (select gugun_cd_nm from gugun g where cc.gugun_cd = g.gugun_cd) as gugun_cd_nm,
+  			bs.lang_nm,
+  			SUBSTRING_INDEX(home_phone,'-',1) as home_ph1,
+            SUBSTRING_INDEX(substr(home_phone, instr(home_phone,'-')+1, length(home_phone)),'-',1) as home_ph2,
+            SUBSTRING_INDEX(home_phone,'-',-1) as home_ph3,
+  			SUBSTRING_INDEX(hand_phone,'-',1) as hand_ph1,
+            SUBSTRING_INDEX(substr(hand_phone, instr(hand_phone,'-')+1, length(hand_phone)),'-',1) as hand_ph2,
+            SUBSTRING_INDEX(hand_phone,'-',-1) as hand_ph3,
+			SUBSTRING_INDEX(email,'@',1) as email1,
+            SUBSTRING_INDEX(email,'@',-1) as email2,
+            case when substr(birth_dt,1,2) in ('19','20') then substr(now(),1,4) - substr(birth_dt,1,4) + 1 else '' end age, 
+            (select max(id) from user u where cc.cmntor_no = u.cmntor_no) as id
+		FROM 
+			cmntor cc join 
+			(select c.cmntor_no, group_concat(case when l.lang_cd = '09' then concat(l.etc_lang, '(', ifnull(l.grade, ''),')') else concat(la.lang_nm, '(',ifnull(l.grade, ''),')' ) end order by la.lang_cd separator '/' ) as lang_nm 
+			 from cmntor c left join cmntor_lang l on c.cmntor_no = l.cmntor_no
+				  left join lang la on l.lang_cd = la.lang_cd
+			WHERE c.cmntor_no = #{cmntor_no}
+			) bs on cc.cmntor_no = bs.cmntor_no
+		
+	</select>
+	
+	<insert id="cmmt_update" parameterType="CommentaryVo">
+		UPDATE cmntor
+		SET 
+			name = #{name}	
+			,birth_dt = #{birth_dt}
+			,gender = #{gender}
+			,eng_name = #{eng_name}
+			,eng_name2 = #{eng_name2}
+			,rgst_dt = #{rgst_dt}
+			,act_yn = #{act_yn}
+			,act_prt_cd = #{act_prt_cd}
+			,sido_cd = #{sido_cd}
+			,gugun_cd = ifnull(#{gugun_cd},'')
+			,last_edu_cd = #{last_edu_cd}
+			,home_zip = #{home_zip}
+			,home_addr1 = #{home_addr1}
+			,home_addr2 = #{home_addr2}
+			,home_phone = #{home_phone}
+			,hand_phone = #{hand_phone}
+			,email = #{email}
+			,arrg_place = #{arrg_place}
+			,hope_place = #{hope_place}
+			<if test="prfl_img != null and prfl_img != '' "> 
+				,prfl_img = #{prfl_img}
+			</if>
+			,job = #{job}
+			,etc_job_nm = #{etc_job_nm}
+			,eng_test_yy = #{eng_test_yy}
+			,eng_test_nm = #{eng_test_nm}
+			,eng_test_pnt = #{eng_test_pnt}
+			,chn_test_yy = #{chn_test_yy}
+			,chn_test_nm = #{chn_test_nm}
+			,chn_test_pnt = #{chn_test_pnt}
+			,jpn_test_yy = #{jpn_test_yy}
+			,jpn_test_nm = #{jpn_test_nm}
+			,jpn_test_pnt = #{jpn_test_pnt}
+			,etc_lang_nm = #{etc_lang_nm}
+			,etc_test_yy = #{etc_test_yy}
+			,etc_test_nm = #{etc_test_nm}
+			,etc_test_pnt = #{etc_test_pnt}
+			,updt_usr = #{inpt_usr}
+			,updt_tm = now()
+		WHERE
+			cmntor_no = #{cmntor_no}
+	</insert>
+	
+	<delete id="cmmt_lang_delete"  parameterType="CommentaryVo" >
+		DELETE FROM cmntor_lang
+		WHERE cmntor_no = #{cmntor_no}
+	</delete>
+	
+	<select id ="cmmt_lang_info" parameterType="CommentaryVo" resultType="CommentaryVo" >
+	SELECT
+		cmntor_no,
+	    max(case when lang_cd = '01' then lang_cd else '' end) as lang_cd1,
+	    max(case when lang_cd = '02' then lang_cd else '' end) as lang_cd2,
+	    max(case when lang_cd = '02' then grade else '' end) as lang_cd2_grade,
+	    max(case when lang_cd = '03' then lang_cd else '' end) as lang_cd3,
+	    max(case when lang_cd = '03' then grade else '' end) as lang_cd3_grade,
+	    max(case when lang_cd = '04' then lang_cd else '' end) as lang_cd4,
+	    max(case when lang_cd = '04' then grade else '' end) as lang_cd4_grade,
+	    max(case when lang_cd = '09' then lang_cd else '' end) as lang_cd9,
+	    max(case when lang_cd = '09' then grade else '' end) as lang_cd9_grade,
+	    max(case when lang_cd = '09' then etc_lang else '' end) as etc_lang
+	FROM cmntor_lang
+	where cmntor_no = #{cmntor_no}
+	group by cmntor_no
+	</select>
+	
+	<update id="cmmt_delete" parameterType="CommentaryVo" >
+		UPDATE cmntor
+		SET del_yn = 'Y'
+		WHERE
+			cmntor_no = #{cmntor_no}
+	</update>
+	
+	<select id="cmmt_edu_list_count" parameterType="CommentaryVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				cmntor_no,
+			    edu_seq,
+			    edu_prt,
+			    case when edu_prt = '1' then '신규' when edu_prt='2' then '보수' end as edu_prt_nm,
+			    yyyy,
+			    edu_place,
+			    edu_tm,
+			    edu_cmpl
+			FROM edu_cmpl_hist  
+			WHERE cmntor_no = #{cmntor_no}
+				) tt
+	</select>
+	
+	<select id="cmmt_edu_list" parameterType="CommentaryVo" resultType="CommentaryVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					cmntor_no,
+				    edu_seq,
+				    edu_prt,
+				    case when edu_prt = '1' then '신규' when edu_prt='2' then '보수' end as edu_prt_nm,
+				    yyyy,
+				    edu_place,
+				    edu_nm,
+				    edu_tm,
+				    edu_cmpl
+				FROM edu_cmpl_hist  
+				WHERE cmntor_no = #{cmntor_no}
+				) tt , (select @rownum:=0) tmp
+			ORDER BY
+				edu_seq
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<update id="cmmt_edu_update" parameterType="CommentaryVo">
+		UPDATE edu_cmpl_hist
+		SET
+			edu_prt = #{edu_prt},
+		    yyyy = #{yyyy},
+		    edu_place = #{edu_place},
+		    edu_nm = #{edu_nm},
+		    edu_tm = #{edu_tm},
+		    edu_cmpl = #{edu_cmpl}
+		WHERE cmntor_no = #{cmntor_no}
+		AND edu_seq = #{edu_seq}
+	</update>
+	
+	<insert id="cmmt_edu_insert" parameterType="CommentaryVo">
+		INSERT INTO edu_cmpl_hist (cmntor_no, edu_seq, edu_prt, yyyy, edu_place, edu_nm, edu_tm, edu_cmpl)
+		SELECT 
+			#{cmntor_no}, 
+			ifnull( (SELECT max(edu_seq)+1 FROM edu_cmpl_hist WHERE  cmntor_no = #{cmntor_no}), 1),
+			#{edu_prt}, #{yyyy}, #{edu_place}, #{edu_nm}, #{edu_tm}, #{edu_cmpl}
+	</insert>
+	
+	<select id="cmmt_act_list_count" parameterType="CommentaryVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				cmntor_no,
+			    seq,
+			    work_ym,
+			    work_tm,
+			    work_dt_cnt,
+			    work_place,
+			    visitor_cnt,
+			    cmmt_cnt
+			FROM act_hist  
+			WHERE cmntor_no = #{cmntor_no}
+			) tt
+	</select>
+	
+	<select id="cmmt_act_list" parameterType="CommentaryVo" resultType="CommentaryVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					cmntor_no,
+				    seq,
+				    case when length(work_ym) > 0 then concat(substr(work_ym,1,4), '년 ', substr(work_ym,6,7), '월') end as work_ym,
+				    work_tm,
+				    work_dt_cnt,
+				    work_place,
+				    visitor_cnt,
+				    cmmt_cnt
+				FROM act_hist  
+				WHERE cmntor_no = #{cmntor_no}
+				) tt , (select @rownum:=0) tmp
+			ORDER BY
+				work_ym
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<update id="cmmt_act_update" parameterType="CommentaryVo">
+		UPDATE act_hist
+		SET
+			work_tm = #{work_tm},
+		    work_dt_cnt = #{work_dt_cnt},
+		    work_place = #{work_place},
+		    visitor_cnt = #{visitor_cnt},
+		    cmmt_cnt = #{cmmt_cnt},
+		    upt_id = #{id},
+		    upt_tm = now()
+		WHERE cmntor_no = #{cmntor_no}
+		AND seq = #{seq}
+	</update>
+	
+	<insert id="cmmt_act_insert" parameterType="CommentaryVo">
+		INSERT INTO act_hist (cmntor_no, seq, work_ym, work_tm, work_dt_cnt, work_place, visitor_cnt, cmmt_cnt, reg_id, reg_tm, upt_id, upt_tm)
+		SELECT 
+			#{cmntor_no}, 
+			ifnull( (SELECT max(seq)+1 FROM act_hist WHERE cmntor_no = #{cmntor_no}), 1),
+			#{work_ym}, #{work_tm}, #{work_dt_cnt}, #{work_place}, #{visitor_cnt}, #{cmmt_cnt}, #{id}, now(), #{id}, now()
+	</insert>
+	
+	<insert id="cmmt_act_delete" parameterType="String">
+		DELETE FROM act_hist
+		WHERE
+			cmntor_no = #{0} 
+			AND seq = #{1}
+	</insert>
+	
+	<select id="cmmt_fee_list_count" parameterType="CommentaryVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+			    seq,
+				cmntor_no,
+			    act_ym,
+			    act_fee,
+			    pay_info,
+			    pay_yn
+			FROM act_fee_pay_hist  
+			WHERE cmntor_no = #{cmntor_no}
+			) tt
+	</select>
+	
+	<select id="cmmt_fee_list" parameterType="CommentaryVo" resultType="CommentaryVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+				    seq,
+					cmntor_no,
+					case when length(act_ym) > 0 then concat(substr(act_ym,1,4), '년 ', substr(act_ym,6,7), '월') end as act_ym,
+					act_fee,
+				    pay_info,
+				    pay_yn
+				FROM act_fee_pay_hist  
+				WHERE cmntor_no = #{cmntor_no}
+				) tt , (select @rownum:=0) tmp
+			ORDER BY
+				act_ym, seq
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<update id="cmmt_fee_update" parameterType="CommentaryVo">
+		UPDATE act_fee_pay_hist
+		SET
+			act_fee = #{act_fee},
+		    pay_info = #{pay_info},
+		    pay_yn = #{pay_yn},
+		    upt_id = #{id},
+		    upt_tm = now()
+		WHERE seq = #{seq}
+	</update>
+	
+	<insert id="cmmt_fee_insert" parameterType="CommentaryVo">
+		INSERT INTO act_fee_pay_hist (cmntor_no, act_ym, act_fee, pay_info, pay_yn, reg_id, reg_tm, upt_id, upt_tm)
+		SELECT 
+			#{cmntor_no}, #{act_ym}, #{act_fee}, #{pay_info}, #{pay_yn}, #{id}, now(), #{id}, now()
+	</insert>
+	
+	<insert id="cmmt_fee_delete" parameterType="String">
+		DELETE FROM act_fee_pay_hist
+		WHERE
+			cmntor_no = #{0} 
+			AND seq = #{1}
+	</insert>
+	
+	<select id="cmmt_all_list" resultType="CommentaryVo">
+		SELECT 
+			cmntor_no,
+		    name,
+		    birth_dt,
+		    gender,
+		    eng_name,
+		    eng_name2,
+		    arrg_place,
+		    rgst_dt,
+		    home_addr1,
+		    home_addr2,
+		    home_phone,
+		    hand_phone,
+		    email
+		FROM cmntor c
+	</select>
+	
+	<insert id="cmmt_all_update" parameterType="CommentaryVo">
+		UPDATE cmntor
+		SET 
+			JOB=JOB
+			<if test="birth_dt != null and birth_dt != '' "> 
+				,birth_dt = #{birth_dt}
+			</if>
+			<if test="home_addr1 != null and home_addr1 != '' ">
+				,home_addr1 = #{home_addr1}
+			</if>
+			<if test="home_addr2 != null and home_addr2 != '' ">
+				,home_addr2 = #{home_addr2}
+			</if> 
+			<if test="home_phone != null and home_phone != '' ">
+				,home_phone = #{home_phone}
+			</if>
+			<if test="hand_phone != null and hand_phone != '' ">
+				,hand_phone = #{hand_phone}
+			</if>
+			<if test="email != null and email != '' ">	
+				,email = #{email}
+			</if>
+		WHERE
+			cmntor_no = #{cmntor_no}
+	</insert>
+	
+	
+	<select id="act_list_count" parameterType="CommentaryVo" resultType="int">
+		SELECT 
+			count(*) as cnt
+		FROM (
+			select @rownum:=@rownum+1 as row_num, c.* 
+	        from  cmntor c join (select @rownum:=0) tmp                     
+			WHERE ifnull(del_yn, 'N') != 'Y' 
+			AND	c.sido_cd = #{srch_sido}
+			<if test='srch_area == "Y"'>
+				AND	c.gugun_cd = #{srch_gugun} 
+			</if>
+			) c
+			left join act_tot_hist a on c.cmntor_no = a.cmntor_no and a.work_ym = #{srch_ym}
+		WHERE ifnull(del_yn, 'N') &lt;&gt; 'Y'
+	</select>
+	
+	<select id="act_list" parameterType="CommentaryVo" resultType="CommentaryVo">
+		
+		select 
+			bs.*
+		from (
+			SELECT 
+				c.row_num,
+				c.name,
+				c.cmntor_no,
+				c.sido_cd,
+				c.gugun_cd,
+				(select gugun_yn from sido s where c.sido_cd = s.sido_cd) as srch_area,
+				c.eng_name,
+				c.eng_name2,
+				a.work_ym,
+				a.work_dt_cnt,
+				a.work_tm,
+				a.work_place,
+				a.visitor_cnt,
+				a.cmmt_cnt,
+				a.act_fee,
+				a.pay_yn
+			FROM (
+				select @rownum:=@rownum+1 as row_num, c.* 
+		        from  cmntor c join (select @rownum:=0) tmp                     
+				WHERE ifnull(del_yn, 'N') != 'Y' 
+				AND	c.sido_cd = #{srch_sido}
+				<if test='srch_area == "Y"'>
+					AND	c.gugun_cd = #{srch_gugun} 
+				</if>
+				) c
+				left join act_tot_hist a on c.cmntor_no = a.cmntor_no and a.work_ym = #{srch_ym}
+			WHERE ifnull(del_yn, 'N') &lt;&gt; 'Y'
+			) bs 
+		order by row_num desc
+		limit #{startRow}, #{endRow}      
+	</select>
+	
+	<select id="act_save_check" parameterType="String" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM
+			act_tot_hist
+		WHERE
+			work_ym = #{0}
+			AND cmntor_no = #{1} 
+	</select>
+	
+	<insert id="act_tot_insert" parameterType="CommentaryVo">
+		INSERT INTO act_tot_hist (work_ym, cmntor_no, work_dt_cnt, work_tm, work_place, visitor_cnt, cmmt_cnt, act_fee, pay_yn, reg_id, reg_tm, upt_id, upt_tm)
+		VALUES (#{work_ym}, #{cmntor_no}, #{work_dt_cnt}, #{work_tm}, #{work_place}, #{visitor_cnt}, #{cmmt_cnt}, #{act_fee}, #{pay_yn}, #{id}, now(), #{id}, now())
+	</insert>
+	
+	<update id="act_tot_update" parameterType="CommentaryVo">
+		UPDATE act_tot_hist 
+		SET 
+			work_dt_cnt = #{work_dt_cnt},  
+			work_tm = #{work_tm},
+			work_place = #{work_place},
+			visitor_cnt = #{visitor_cnt},
+			cmmt_cnt = #{cmmt_cnt},
+			act_fee = #{act_fee},
+			pay_yn = #{pay_yn}, 
+			upt_id = #{id}, 
+			upt_tm = now()
+		WHERE work_ym = #{work_ym}
+		AND cmntor_no =  #{cmntor_no}
+	</update>
+	
+</mapper>

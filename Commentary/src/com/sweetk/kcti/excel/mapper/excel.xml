@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.excel.mapper.ExcelMapper">
+	
+		<select id="cmmt_excel_down" parameterType="ExcelVo" resultType="ExcelVo">
+			<!-- select
+				bs.cmntor_no,
+				bs.sido_cd_nm as sido_nm,
+				bs.gugun_cd_nm as gugun_nm,
+				bs.name,
+				bs.birth_dt,
+				bs.home_addr1 as address,
+				bs.rgst_dt,
+				bs.lang_nm as act_lang,
+				bs.ENG_TEST_PNT as eng_pnt,
+                bs.CHN_TEST_PNT as chn_pnt,
+                bs.JPN_TEST_PNT as jpn_pnt,
+			    bs.arrg_place as main_place,
+                bs.hope_place,
+				bs2.yy1 as edu_yyyy,
+				bs2.EDU_PLACE1 as edu_place,
+				bs2.EDU_TM1 as edu_ym,
+				'' as edu_tot_pnt,
+				'' as edu_avg_pnt,
+				bs2.EDU_CMPL1 as edu_cmpl_yn,
+				bs2.yy2 as edu_yyyy2,
+				bs2.EDU_PLACE2 as edu_place2,
+				bs2.EDU_TM2 as edu_tm2,
+				'' as edu_tot_pnt2,
+				''as edu_avg_pnt2,
+				bs2.EDU_CMPL2 as edu_cmpl_yn2,
+				bs2.ACT_YM,
+				bs2.WORK_DT_CNT as act_dt_cnt,
+				bs2.WORK_TM as act_tm,
+				bs2.WORK_PLACE as act_place,
+				bs2.CMMT_CNT as cmmt_cnt,
+				bs2.ACT_FEE,
+				bs2.PAY_YN as fee_yn
+			from (
+				SELECT 
+					c.cmntor_no,
+                    sido_cd,
+				    ifnull( (select sido_cd_nm from sido s where c.sido_cd = s.sido_cd), '') as sido_cd_nm,
+				    gugun_cd,
+                    ifnull( (select gugun_cd_nm from gugun g where c.gugun_cd = g.gugun_cd), '') as gugun_cd_nm,
+				    name,
+				    birth_dt,
+				    gender,
+                    HOME_ADDR1,
+                    c.rgst_dt,
+					group_concat(case when l.lang_cd = '09' then l.etc_lang else la.lang_nm end
+						order by la.lang_cd separator '/' ) as lang_nm,
+					ENG_TEST_PNT,
+                    CHN_TEST_PNT,
+                    JPN_TEST_PNT,
+				    arrg_place,
+                    hope_place
+				FROM cmntor c  left join cmntor_lang l on c.cmntor_no = l.cmntor_no
+					left join lang la on l.lang_cd = la.lang_cd
+				WHERE ifnull(del_yn, 'N') != 'Y'
+						AND	c.sido_cd = #{sido_cd}
+				group by 
+					c.cmntor_no,
+                    sido_cd,
+				    gugun_cd,
+				    name,
+				    birth_dt,
+				    gender,
+                    HOME_ADDR1,
+                    c.rgst_dt,
+					ENG_TEST_PNT,
+                    CHN_TEST_PNT,
+                    JPN_TEST_PNT,
+				    arrg_place,
+                    hope_place
+				) bs
+			    left join (
+			    select 
+					tmp.cmntor_no,
+					tmp.tt,
+					ech1.YYYY as yy1,
+					ech1.EDU_PLACE as edu_place1,
+					ech1.EDU_NM as edu_nm1,
+					ech1.EDU_TM as edu_tm1,
+					ech1.EDU_CMPL as edu_cmpl1,
+					ech2.YYYY as yy2,
+					ech2.EDU_PLACE as edu_place2,
+					ech2.EDU_NM as edu_nm2,
+					ech2.EDU_TM as edu_tm2,
+					ech2.EDU_CMPL as edu_cmpl2,
+					af.ACT_YM,
+					af.ACT_FEE,
+					af.PAY_INFO,
+					af.PAY_YN,
+					ah.WORK_YM,
+					ah.WORK_DT_CNT,
+					ah.WORK_TM,
+					ah.WORK_PLACE,
+					ah.VISITOR_CNT,
+					ah.CMMT_CNT
+				from (
+					select 
+						cmntor_no, tt
+					from cmntor c join (
+					select 
+						date_format(date_add('2016-12-01', interval -ROWNUM+1 month) , '%Y-%m') as tt
+					from (
+						select 
+							@ROWNUM := @ROWNUM +1 AS ROWNUM
+						from cmntor ,
+							(SELECT @ROWNUM := 0) R
+							) bs
+						where 
+							ROWNUM &lt; 37
+						) bs on 1=1
+					where c.sido_cd = #{sido_cd}
+					and c.cmntor_no = 'A0001'
+					) tmp 
+					left join edu_cmpl_hist ech1 on tmp.cmntor_no = ech1.CMNTOR_NO and ech1.YYYY = substr(tt, 1,4) and ech1.EDU_PRT = '1'
+					left join edu_cmpl_hist ech2 on tmp.cmntor_no = ech2.CMNTOR_NO and ech2.YYYY = substr(tt, 1,4) and ech2.EDU_PRT  = '2'
+					left join act_hist ah on tmp.cmntor_no = ah.cmntor_no and ah.WORK_YM = tt
+					left join act_fee_pay_hist af on tmp.cmntor_no = af.cmntor_no and af.act_ym = tt
+				 where ah.seq &gt; 0 or af.seq &gt; 0 or ech1.EDU_SEQ &gt; 0 or ech2.EDU_SEQ &gt; 0
+			     ) bs2 on bs.cmntor_no = bs2.cmntor_no -->
+			     
+			     
+		select 
+			a.cmntor_no, 
+		    sido_cd_nm, 
+		    gugun_cd_nm, 
+		    name, 
+		    birth_dt, 
+		    gender, 
+		    home_addr1, 
+		    rgst_dt, 
+		    lang_nm as act_lang, 
+		    ENG_TEST_PNT as eng_pnt, 
+		    CHN_TEST_PNT as chn_pnt, 
+		    JPN_TEST_PNT as jpn_pnt, 
+		    ARRG_PLACE as main_place, 
+		    HOPE_PLACE, 
+			'' as edu_yyyy, 
+		    '' as edu_place, 
+		    '' as edu_ym, 
+		    '' as edu_tot_pnt,
+			'' as edu_avg_pnt,
+		    '' as edu_cmpl, 
+		    '' as edu_cmpl_yn, 
+		    '' as edu_place2, 
+		    '' as edu_tm2, 
+		    '' as edu_tot_pnt2,
+			''as edu_avg_pnt2,
+		    '' as edu_cmpl_yn2,
+			b.ACT_YM, 
+		    WORK_DT_CNT as act_dt_cnt, 
+		    WORK_TM as act_tm, 
+		    WORK_PLACE as act_place, 
+		    CMMT_CNT as cmmt_cnt,  
+		    ACT_FEE, 
+		    PAY_YN as fee_yn
+		from ( 
+			select  a.cmntor_no, a.name, (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) as sido_cd_nm, 
+			(select gugun_cd_nm from gugun g where a.gugun_cd = g.gugun_cd) as gugun_cd_nm,
+			birth_dt, gender, home_addr1, rgst_dt,
+			group_concat( case when l.lang_cd = '09' then l.etc_lang else la.lang_nm end  order by la.lang_cd separator '/' ) as lang_nm,
+			ENG_TEST_PNT, CHN_TEST_PNT, JPN_TEST_PNT, ARRG_PLACE, HOPE_PLACE from cmntor a  left join cmntor_lang l on a.cmntor_no = l.cmntor_no left join lang la on l.lang_cd = la.lang_cd
+			where a.cmntor_no like concat(#{sido_cd},'%')
+			group by a.cmntor_no, a.name, sido_cd, gugun_cd, birth_dt,gender,home_addr1,rgst_dt,ENG_TEST_PNT,CHN_TEST_PNT,JPN_TEST_PNT,ARRG_PLACE,HOPE_PLACE) a
+			left join act_fee_pay_hist b on a.cmntor_no = b.cmntor_no 
+			left join act_hist c on b.cmntor_no = c.cmntor_no and b.ACT_YM = c.WORK_YM 
+		union all
+		select a.cmntor_no, name, sido_cd_nm, gugun_cd_nm, birth_dt, gender, home_addr1, rgst_dt, lang_nm, ENG_TEST_PNT, CHN_TEST_PNT, JPN_TEST_PNT, ARRG_PLACE, HOPE_PLACE, 
+			d.yyyy, d.edu_place, d.edu_tm, d.edu_cmpl, e.yyyy, e.edu_place, e.edu_tm, e.edu_cmpl,
+			'' as ACT_YM, '' as WORK_DT_CNT, ''as WORK_TM, '' as WORK_PLACE, ''as CMMT_CNT,  '' as ACT_FEE, '' as PAY_YN
+		from ( select  a.cmntor_no, a.name, (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) as sido_cd_nm, (select gugun_cd_nm from gugun g where a.gugun_cd = g.gugun_cd) as gugun_cd_nm,
+					birth_dt, gender, home_addr1, rgst_dt,
+					group_concat( case when l.lang_cd = '09' then l.etc_lang else la.lang_nm end  order by la.lang_cd separator '/' ) as lang_nm,
+					ENG_TEST_PNT, CHN_TEST_PNT, JPN_TEST_PNT, ARRG_PLACE, HOPE_PLACE 
+				from cmntor a  left join cmntor_lang l on a.cmntor_no = l.cmntor_no left join lang la on l.lang_cd = la.lang_cd
+				where a.cmntor_no like concat(#{sido_cd},'%')
+				group by a.cmntor_no, a.name, sido_cd, gugun_cd, birth_dt,gender,home_addr1,rgst_dt,ENG_TEST_PNT,CHN_TEST_PNT,JPN_TEST_PNT,ARRG_PLACE,HOPE_PLACE) a
+		left join edu_cmpl_hist d on a.cmntor_no = d.cmntor_no and d.edu_prt = 1
+		left join edu_cmpl_hist e on a.cmntor_no = e.cmntor_no and e.edu_prt = 2
+		order by cmntor_no		     
+	</select>
+	</mapper>

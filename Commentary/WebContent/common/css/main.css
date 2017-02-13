@@ -1,0 +1,910 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: 'NotoSansKR';
+    font-style: normal;
+    font-weight: 200;
+    src: url('../font/NotoSansKR-Light.eot');
+    src: url('../font/NotoSansKR-Light.eot?#iefix') format('embedded-opentype'),
+    url('../font/NotoSansKR-Light.woff2') format('woff2'),
+    url('../font/NotoSansKR-Light.woff') format('woff'),
+    url('../font/NotoSansKR-Light.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'NotoSansKR';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../font/NotoSansKR-DemiLight.eot');
+    src: url('../font/NotoSansKR-DemiLight.eot?#iefix') format('embedded-opentype'),
+    url('../font/NotoSansKR-DemiLight.woff2') format('woff2'),
+    url('../font/NotoSansKR-DemiLight.woff') format('woff'),
+    url('../font/NotoSansKR-DemiLight.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'NotoSansKR';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../font/NotoSansKR-Regular.eot');
+    src: url('../font/NotoSansKR-Regular.eot?#iefix') format('embedded-opentype'),
+    url('../font/NotoSansKR-Regular.woff2') format('woff2'),
+    url('../font/NotoSansKR-Regular.woff') format('woff'),
+    url('../font/NotoSansKR-Regular.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'NotoSansKR';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../font/NotoSansKR-Medium.eot');
+    src: url('../font/NotoSansKR-Medium.eot?#iefix') format('embedded-opentype'),
+    url('../font/NotoSansKR-Medium.woff2') format('woff2'),
+    url('../font/NotoSansKR-Medium.woff') format('woff'),
+    url('../font/NotoSansKR-Medium.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'NotoSansKR';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../font/NotoSansKR-Bold.eot');
+    src: url('../font/NotoSansKR-Bold.eot?#iefix') format('embedded-opentype'),
+    url('../font/NotoSansKR-Bold.woff2') format('woff2'),
+    url('../font/NotoSansKR-Bold.woff') format('woff'),
+    url('../font/NotoSansKR-Bold.otf') format('opentype');
+}
+
+
+/* ============================================================
+  common, reset
+============================================================ */
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    /*font-size:100%;*/
+    vertical-align:middle;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+    display:block;
+}
+
+nav ul {
+    list-style:none;
+}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    /*font-size:100%;*/
+    vertical-align:baseline;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000; 
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;   
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select { vertical-align:middle; outline:none; }
+
+html, body {font-size:13px; font-family: "NotoSansKR","나눔고딕","맑은고딕","malgun gothic","AppleGothic","돋움","dotum",Helvetica,Arial,sans-serif; color:#444444; font-weight:400; } 
+
+ul li {list-style:none;}
+
+img {vertical-align:middle;}
+caption {width:0; height:0; font-size:0; line-height:0; overflow:hidden;}
+legend {position:absolute; top:0; left:0; width:0; height:0; overflow:hidden; visibility:hidden; font-size:0; line-height:0; display:none;}
+input, select, textarea {font-size:13px; font-family: "Nanum Gothic","나눔고딕","맑은고딕","malgun gothic","AppleGothic","돋움","dotum",Helvetica,Arial,sans-serif; color:#444444; font-weight:400;}
+button {border:0 none;background:transparent; outline:0; font-size:13px; font-family: "Nanum Gothic","나눔고딕","맑은고딕","malgun gothic","AppleGothic","돋움","dotum",Helvetica,Arial,sans-serif; color:#444444; font-weight:400;}
+input { vertical-align:middle;}
+input[type="button"] {line-height:999px; text-indent:-9999px; cursor: pointer;}
+input[type="checkbox"] {margin-right:4px;}
+input[type="radio"] {margin-right:2px; vertical-align:middle;}
+select{ vertical-align:middle; border:1px solid #e1e4e8; height:28px; color:#585858; font-size:13px; padding-left:10px;}
+textarea {padding:5px; border:1px solid #d3d3d3; overflow-y:auto; outline:none;}
+em, address {font-style:normal;}
+table {border-spacing:0;border-collapse:collapse; width:100%;}
+a, a:link, a:visited {text-decoration:none; color:#444444;}
+a:hover {text-decoration:none; color:#444444;}
+p, a, h2, h3 {word-wrap:break-word;}
+textarea {resize:none; }
+strong{ font-weight:600; }
+th{ font-weight:600; }
+input[type=text],input[type=password] { border:1px solid #e6e6e6;}
+input[type=text]:focus,input[type=password]:focus, .use_focus:focus, textarea:focus, .set_focus, select:focus{ border:1px solid #25395b !important; }
+input[type=text]:focus.no_br_l{border:1px solid #25395b !important; border-left:none !important;}
+input[type=text]:focus.no_br_r{border:1px solid #25395b !important; border-right:none !important;}
+input[type=text].non_focus:focus{ border:1px solid #e6e6e6 !important;}
+.non_br{ border:none !important;}
+
+input[readonly=readonly]:focus{border:1px solid #d3d3d3 !important;}
+
+button:disabled, input:disabled, textarea:disabled, select:disabled { background-color: #EFEFEF !important; color:#ABABAB !important}
+button:disabled{ cursor:default; border:1px solid #d3d3d3 !important; box-shadow:1px 1px 0px rgba(135,135,135,0.1) !important; }
+input[readonly=readonly], textarea[readonly=readonly]{ background-color: #EFEFEF !important; color:#ABABAB !important}
+
+/* .hidden */
+.hidden {overflow:hidden; visibility:hidden; width:0; height:0; margin:0; padding:0; font-size:0; line-height:0;}
+.hide {visibility:hidden;position:absolute;top:-9999px;width:0;height:0;font-size:0;line-height:0} /* image */
+.blind {display:block;overflow:hidden;position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;text-indent:-9999px} /* txt */
+
+img[usemap], map area{ outline: none; }
+
+
+
+/* ============================================================
+  Layout / Contents
+============================================================ */
+header{ height:420px; background:url(../images/visual.png) no-repeat 50% 0; min-width:1020px;}
+header .head{  width:1020px; height:420px; margin:0 auto; position:relative; text-align:center; }
+header .head .logo{ background:url(../images/logo.png) no-repeat 0 0; width:144px; height:37px; display:inline-block; position:absolute; top:30px; left:35px; overflow:hidden; text-indent:-5000px; font-size:0;}
+header .head .title_t{ font-size:48px; color:#fff; font-weight:700; padding-top:174px; }
+header .head .title_b{ font-size:18px; color:#fff; font-weight:200; padding-top:20px; }
+
+.main_contents{ width:1020px; margin:0 auto; padding-bottom:50px; }
+.main_contents .info_txt{ text-align:center; height:90px; line-height:120px; }
+.main_contents .info_txt .txt{ display:inline-block; font-size:16px; font-weight:200; color:#003669; }
+.main_contents .maps{ height:480px; background:url(../images/img_center.png) no-repeat 50% 20px; }
+.main_contents .maps .whole_map{ width:50%; float:left; height:480px; text-align:center;}
+.main_contents .maps .area_map{ width:50%; float:right; height:480px; }
+
+footer{ height:114px; background:#e5e5e5; min-width:1020px; }
+footer .copy_area{ width:1020px; height:114px; position:relative; margin:0 auto;}
+footer .copy_area .logos{ position:absolute; left:142px; top:45px;}
+footer .copy_area .logos img{ margin-right:20px;}
+footer .copy_area .inofo{ position:absolute; left:532px; top:43px; font-size:12px; color:#b0afaf; font-weight:200; line-height:17px;}
+
+.data_table{ width:870px; margin:0 auto; padding-top:60px;display:none;}
+.data_table .resul_info{ color:#595857; font-size:16px; font-weight:400; padding-bottom:7px;}
+.data_table .resul_info .area{ color:#003669; font-weight:700;}
+.data_table .resul_info .area, .data_table .resul_info span {display:inline-block;vertical-align:top;}
+.data_table table th{ background:#ccd7e1; height:50px; border-top:1px solid #003669; border-bottom:1px solid #003669; color:#003669; font-size:16px; font-weight:400;  }
+.data_table table th:first-child{ padding-right:20%}
+.data_table table td{ text-align:center; font-size:16px; color:#595857; font-weight:400; height:40px; line-height:40px; border-bottom:1px solid #ccd7e1; }
+.data_table table td:first-child{ padding-right:20%}
+a.link{display:inline-block; width:16px; height:16px; vertical-align:middle; overflow:hidden; text-indent:-5000px; font-size:0;}
+.btn_reservation{ background:url(../images/icon_reservation.png) no-repeat 0 0; }
+.btn_guide{background:url(../images/icon_guide.png) no-repeat 0 0;}
+
+
+/* ============================================================
+  전국지도 Map
+============================================================ */
+.whole_map .map{ width:347px; height:480px; display:inline-block; position:relative; background:url(../images/map_bg.png) no-repeat 100% 100%; }
+.whole_map .map span[class^=map]{ display:inline-block; overflow:hidden; position:absolute; z-index:1; }
+.area_name li{ position:absolute; z-index:2; left:0; top:0; color:#595857; font-size:16px; font-weight:400;}
+.area_name li.on{ font-weight:600; color:#ffffff; text-shadow:1px 1px 0px #938B7B;}
+.ie9 .area_name li.on{ font-weight:600; color:#d8d0bd;}
+.map_btns{ position:absolute; left:0; top:0; z-index:3;}
+.whole_map .area_name li.txt0{left: 28px;top: 112px;}
+.whole_map .area_name li.txt1{left: 61px;top: 100px;}
+.whole_map .area_name li.txt2{left: 77px;top: 136px;}
+.whole_map .area_name li.txt3{left: 160px;top: 81px;}
+.whole_map .area_name li.txt4{left: 23px;top: 198px;}
+.whole_map .area_name li.txt5{left: 55px;top: 218px;}
+.whole_map .area_name li.txt6{left: 87px;top: 241px;}
+.whole_map .area_name li.txt7{left: 117px;top: 175px;}
+.whole_map .area_name li.txt8{left: 193px;top: 234px;}
+.whole_map .area_name li.txt9{left: 203px;top: 292px;}
+.whole_map .area_name li.txt10{left: 54px;top: 306px;}
+.whole_map .area_name li.txt11{left: 31px;top: 408px;}
+.whole_map .area_name li.txt12{left: 42px;top: 374px;}
+.whole_map .area_name li.txt13{left: 150px;top: 352px;}
+.whole_map .area_name li.txt14{left: 263px;top: 327px;}
+.whole_map .area_name li.txt15{left: 232px;top: 367px;}
+.whole_map .area_name li.txt16{left: 287px;top: 452px;}
+
+
+.whole_map .map .map0{ width:20px; height:36px; background:url(../images/map0.png) no-repeat 0 0; left:40px; top:96px;}
+.whole_map .map .map1{ width:34px; height:27px; background:url(../images/map1.png) no-repeat 0 0; left:61px; top:93px;}
+.whole_map .map .map2{ width:123px; height:141px; background:url(../images/map2.png) no-repeat 0 0; left:15px; top:42px;}
+.whole_map .map .map3{ width:199px; height:167px; background:url(../images/map3.png) no-repeat 0 0; left:80px; top:0px;}
+.whole_map .map .map4{ width:130px; height:117px; background:url(../images/map4.png) no-repeat 0 0; left:0px; top:173px;}
+.whole_map .map .map5{ width:17px; height:30px; background:url(../images/map5.png) no-repeat 0 0; left:84px; top:208px;}
+.whole_map .map .map6{ width:24px; height:28px; background:url(../images/map6.png) no-repeat 0 0; left:95px; top:233px;}
+.whole_map .map .map7{ width:106px; height:127px; background:url(../images/map7.png) no-repeat 0 0; left:100px; top:152px;}
+.whole_map .map .map8{ width:199px; height:221px; background:url(../images/map8.png) no-repeat 0 0; left:148px; top:107px;}
+.whole_map .map .map9{ width:39px; height:42px; background:url(../images/map9.png) no-repeat 0 0; left:196px; top:281px;}
+.whole_map .map .map10{ width:134px; height:93px; background:url(../images/map10.png) no-repeat 0 0; left:18px; top:269px;}
+.whole_map .map .map11{ width:137px; height:112px; background:url(../images/map11.png) no-repeat 0 0; left:6px; top:348px;}
+.whole_map .map .map12{ width:38px; height:32px; background:url(../images/map12.png) no-repeat 0 0; left:38px; top:368px;}
+.whole_map .map .map13{ width:137px; height:126px; background:url(../images/map13.png) no-repeat 0 0; left:125px; top:296px;}
+.whole_map .map .map14{ width:41px; height:39px; background:url(../images/map14.png) no-repeat 0 0; left:253px; top:322px;}
+.whole_map .map .map15{ width:58px; height:41px; background:url(../images/map15.png) no-repeat 0 0; left:216px; top:348px;}
+.whole_map .map .map16{ width:69px; height:40px; background:url(../images/map16.png) no-repeat 0 0; left:277px; top:440px;}
+.whole_map .map .map0.on{ background-position:0 -36px;}
+.whole_map .map .map1.on{ background-position:0 -27px;}
+.whole_map .map .map2.on{ background-position:0 -141px;}
+.whole_map .map .map3.on{ background-position:0 -167px;}
+.whole_map .map .map4.on{ background-position:0 -117px;}
+.whole_map .map .map5.on{ background-position:0 -30px;}
+.whole_map .map .map6.on{ background-position:0 -28px;}
+.whole_map .map .map7.on{ background-position:0 -127px;}
+.whole_map .map .map8.on{ background-position:0 -221px;}
+.whole_map .map .map9.on{ background-position:0 -42px;}
+.whole_map .map .map10.on{ background-position:0 -93px;}
+.whole_map .map .map11.on{ background-position:0 -112px;}
+.whole_map .map .map12.on{ background-position:0 -32px;}
+.whole_map .map .map13.on{ background-position:0 -126px;}
+.whole_map .map .map14.on{ background-position:0 -39px;}
+.whole_map .map .map15.on{ background-position:0 -41px;}
+.whole_map .map .map16.on{ background-position:0 -40px;}
+
+
+
+/* ============================================================
+  지역지도 Map
+============================================================ */
+
+.area_map .map{ width:400px; height:400px;  position:relative; overflow:hidden; top:35px; left:53px; }
+.area_map .map .map_list > li{ width:400px; height:400px; position:absolute; top:0; left:400px;}
+.area_map .map .map_list > li .detail_map{ position:absolute;}
+.area_map .map .map_list > li .detail_map span[class^=map]{display:inline-block; overflow:hidden; position:absolute; z-index:1;} 
+.map_box{ position:absolute;}
+.area_map .area_name{ position:absolute; z-index:2; top:0; left:0;}
+.area_map .area_name > li{ position:absolute; width:80px; font-size:14px; font-weight:400;} 
+
+
+/* 인천 */
+.m_incheon{}
+.m_incheon .map_box{left:98px; top:71px; width:221px; height:256px;}
+.m_incheon .detail_map{ width:221px; height:256px; }
+.m_incheon .detail_map .map0{width:115px; height:110px; background:url(../images/incheon_whole0.png) no-repeat 0 0;left: 2px;top:0;}
+.m_incheon .detail_map .map1{width:221px; height:127px; background:url(../images/incheon_whole1.png) no-repeat 0 0;left: 0px;top: 81px;}
+.m_incheon .detail_map .map2{width:36px; height:31px; background:url(../images/incheon_whole2.png) no-repeat 0 0;left: 65px;top: 225px;}
+.m_incheon .detail_map .map0.on{ background-position:0 -110px;}
+.m_incheon .detail_map .map1.on{background-position:0 -127px;}
+.m_incheon .detail_map .map2.on{background-position:0 -31px;}
+.m_incheon .area_name > li.txt0{left: 59px;top: 43px;}
+.m_incheon .area_name > li.txt1{left: 157px;top: 130px;}
+.m_incheon .area_name > li.txt2{left: 71px;top: 233px;}
+
+
+/* 서울 */
+.m_seoul{ } 
+.m_seoul .map_box{left:37px; top:54px; width:320px; height:290px;}
+.m_seoul .detail_map{width:320px; height:290px;}
+.m_seoul .detail_map .map0{width:320px;height:290px;background:url(../images/seoul_whole.png) no-repeat 0 0;left:0;top:0;}
+.m_seoul .detail_map .map0.on{background-position:0 -290px; }
+.m_seoul .area_name > li.txt0{left: 160px;top: 123px;}
+
+
+/* 경기 */
+.m_gyeonggi{}
+.m_gyeonggi .map_box{left:46px; top:44px; width:304px; height:295px;}
+.m_gyeonggi .detail_map{ width:304px; height:295px; background:url(../images/gyeonggi_bg.png) no-repeat 0 209px;}
+.m_gyeonggi .detail_map .map0{width:77px;height:68px;background:url(../images/gyeonggi0.png) no-repeat 0 0;left: 81px;top:0;}
+.m_gyeonggi .detail_map .map1{width:78px;height:63px;background:url(../images/gyeonggi1.png) no-repeat 0 0;left: 42px;top: 56px;}
+.m_gyeonggi .detail_map .map2{width:42px;height:56px;background:url(../images/gyeonggi2.png) no-repeat 0 0;left: 102px;top: 68px;}
+.m_gyeonggi .detail_map .map3{width:25px;height:20px;background:url(../images/gyeonggi3.png) no-repeat 0 0;left: 124px;top: 65px;}
+.m_gyeonggi .detail_map .map4{width:72px;height:91px;background:url(../images/gyeonggi4.png) no-repeat 0 0;left: 145px;top: 18px;}
+.m_gyeonggi .detail_map .map5{width:60px;height:52px;background:url(../images/gyeonggi5.png) no-repeat 0 0;left: 16px;top: 100px;}
+.m_gyeonggi .detail_map .map6{width:63px;height:33px;background:url(../images/gyeonggi6.png) no-repeat 0 0;left: 58px;top: 112px;}
+.m_gyeonggi .detail_map .map7{width:25px;height:11px;background:url(../images/gyeonggi7.png) no-repeat 0 0;left: 124px;top: 112px;}
+.m_gyeonggi .detail_map .map8{width:19px;height:19px;background:url(../images/gyeonggi8.png) no-repeat 0 0;left: 64px;top: 153px;}
+.m_gyeonggi .detail_map .map9{width:18px;height:14px;background:url(../images/gyeonggi9.png) no-repeat 0 0;left: 82px;top: 165px;}
+.m_gyeonggi .detail_map .map10{width:15px;height:12px;background:url(../images/gyeonggi10.png) no-repeat 0 0;left: 114px;top: 171px;}
+.m_gyeonggi .detail_map .map11{width:33px;height:34px;background:url(../images/gyeonggi11.png) no-repeat 0 0;left: 53px;top: 170px;}
+.m_gyeonggi .detail_map .map12{width:29px;height:32px;background:url(../images/gyeonggi12.png) no-repeat 0 0;left: 85px;top: 176px;}
+.m_gyeonggi .detail_map .map13{width:20px;height:20px;background:url(../images/gyeonggi13.png) no-repeat 0 0;left: 111px;top: 179px;}
+.m_gyeonggi .detail_map .map14{width:30px;height:18px;background:url(../images/gyeonggi14.png) no-repeat 0 0;left: 106px;top: 199px;}
+.m_gyeonggi .detail_map .map15{width:136px;height:68px;background:url(../images/gyeonggi15.png) no-repeat 0 0;left: 17px;top: 199px;}
+.m_gyeonggi .detail_map .map16{width:16px;height:11px;background:url(../images/gyeonggi16.png) no-repeat 0 0;left: 117px;top: 223px;}
+.m_gyeonggi .detail_map .map17{width:77px;height:60px;background:url(../images/gyeonggi17.png) no-repeat 0 0;left: 74px;top: 233px;}
+.m_gyeonggi .detail_map .map18{width:72px;height:98px;background:url(../images/gyeonggi18.png) no-repeat 0 0;left: 180px;top: 48px;}
+.m_gyeonggi .detail_map .map19{width:54px;height:56px;background:url(../images/gyeonggi19.png) no-repeat 0 0;left: 142px;top: 104px;}
+.m_gyeonggi .detail_map .map20{width:38px;height:34px;background:url(../images/gyeonggi20.png) no-repeat 0 0;left: 143px;top: 134px;}
+.m_gyeonggi .detail_map .map21{width:116px;height:66px;background:url(../images/gyeonggi21.png) no-repeat 0 0;left: 188px;top: 128px;}
+.m_gyeonggi .detail_map .map22{width:30px;height:30px;background:url(../images/gyeonggi22.png) no-repeat 0 0;left: 132px;top: 168px;}
+.m_gyeonggi .detail_map .map23{width:65px;height:54px;background:url(../images/gyeonggi23.png) no-repeat 0 0;left: 150px;top: 157px;}
+.m_gyeonggi .detail_map .map24{width:69px;height:65px;background:url(../images/gyeonggi24.png) no-repeat 0 0;left: 217px;top: 177px;}
+.m_gyeonggi .detail_map .map25{width:65px;height:73px;background:url(../images/gyeonggi25.png) no-repeat 0 0;left: 193px;top: 194px;}
+.m_gyeonggi .detail_map .map26{width:78px;height:52px;background:url(../images/gyeonggi26.png) no-repeat 0 0;left: 132px;top: 197px;}
+.m_gyeonggi .detail_map .map27{width:87px;height:57px;background:url(../images/gyeonggi27.png) no-repeat 0 0;left: 145px;top: 238px;}
+.m_gyeonggi .detail_map .map28{width:26px;height:27px;background:url(../images/gyeonggi28.png) no-repeat 0 0;left: 58px;top: 183px;}
+.m_gyeonggi .detail_map .map0.on{background-position:0 -68px; }
+.m_gyeonggi .detail_map .map1.on{background-position:0 -63px; }
+.m_gyeonggi .detail_map .map2.on{background-position:0 -56px; }
+.m_gyeonggi .detail_map .map3.on{background-position:0 -20px; }
+.m_gyeonggi .detail_map .map4.on{background-position:0 -91px; }
+.m_gyeonggi .detail_map .map5.on{background-position:0 -52px; }
+.m_gyeonggi .detail_map .map6.on{background-position:0 -33px; }
+.m_gyeonggi .detail_map .map7.on{background-position:0 -11px; }
+.m_gyeonggi .detail_map .map8.on{background-position:0 -19px; }
+.m_gyeonggi .detail_map .map9.on{background-position:0 -14px; }
+.m_gyeonggi .detail_map .map10.on{background-position:0 -12px; }
+.m_gyeonggi .detail_map .map11.on{background-position:0 -34px; }
+.m_gyeonggi .detail_map .map12.on{background-position:0 -32px; }
+.m_gyeonggi .detail_map .map13.on{background-position:0 -20px; }
+.m_gyeonggi .detail_map .map14.on{background-position:0 -18px; }
+.m_gyeonggi .detail_map .map15.on{background-position:0 -68px; }
+.m_gyeonggi .detail_map .map16.on{background-position:0 -11px; }
+.m_gyeonggi .detail_map .map17.on{background-position:0 -60px; }
+.m_gyeonggi .detail_map .map18.on{background-position:0 -98px; }
+.m_gyeonggi .detail_map .map19.on{background-position:0 -56px; }
+.m_gyeonggi .detail_map .map20.on{background-position:0 -34px; }
+.m_gyeonggi .detail_map .map21.on{background-position:0 -66px; }
+.m_gyeonggi .detail_map .map22.on{background-position:0 -30px; }
+.m_gyeonggi .detail_map .map23.on{background-position:0 -54px; }
+.m_gyeonggi .detail_map .map24.on{background-position:0 -65px; }
+.m_gyeonggi .detail_map .map25.on{background-position:0 -74px; }
+.m_gyeonggi .detail_map .map26.on{background-position:0 -52px; }
+.m_gyeonggi .detail_map .map27.on{background-position:0 -57px; }
+.m_gyeonggi .detail_map .map28.on{background-position:0 -27px; }
+.m_gyeonggi .area_name > li.txt0{left: 111px;top: 24px;}
+.m_gyeonggi .area_name > li.txt1{left: 56px; top: 77px;}
+.m_gyeonggi .area_name > li.txt2{left: 104px;top: 90px;}
+.m_gyeonggi .area_name > li.txt3{left: 130px;top: 67px;}
+.m_gyeonggi .area_name > li.txt4{left: 160px;top: 42px;}
+.m_gyeonggi .area_name > li.txt5{left: 27px;top: 125px;}
+.m_gyeonggi .area_name > li.txt6{left: 79px;top: 121px;}
+.m_gyeonggi .area_name > li.txt7{left: 129px;top: 113px;}
+.m_gyeonggi .area_name > li.txt8{left: 52px;top: 152px;}
+.m_gyeonggi .area_name > li.txt9{left: 87px;top: 161px;}
+.m_gyeonggi .area_name > li.txt10{left: 117px;top: 165px;}
+.m_gyeonggi .area_name > li.txt11{left: 42px;top: 179px;}
+.m_gyeonggi .area_name > li.txt12{left: 89px;top: 182px;}
+.m_gyeonggi .area_name > li.txt13{left: 118px;top: 183px;}
+.m_gyeonggi .area_name > li.txt14{left: 110px;top: 201px;}
+.m_gyeonggi .area_name > li.txt15{left: 63px;top: 218px;}
+.m_gyeonggi .area_name > li.txt16{left: 119px;top: 222px;}
+.m_gyeonggi .area_name > li.txt17{left: 97px;top: 263px;}
+.m_gyeonggi .area_name > li.txt18{left: 193px;top: 88px;}
+.m_gyeonggi .area_name > li.txt19{left: 157px;top: 126px;}
+.m_gyeonggi .area_name > li.txt20{left: 158px;top: 150px;}
+.m_gyeonggi .area_name > li.txt21{left: 228px;top: 153px;}
+.m_gyeonggi .area_name > li.txt22{left: 143px;top: 174px;}
+.m_gyeonggi .area_name > li.txt23{left: 187px;top: 178px;}
+.m_gyeonggi .area_name > li.txt24{left: 240px;top: 199px;}
+.m_gyeonggi .area_name > li.txt25{left: 196px;top: 209px;}
+.m_gyeonggi .area_name > li.txt26{left: 143px;top: 209px;}
+.m_gyeonggi .area_name > li.txt27{left: 165px;top: 257px;}
+.m_gyeonggi .area_name > li.txt28{left: 51px;top: 197px;}
+
+
+/* 강원 */
+.m_gangwon{}
+.m_gangwon .map_box{left:27px; top:65px; width:350px; height:244px;}
+.m_gangwon .detail_map{width:350px; height:244px; background:url(../images/gangwon.png) no-repeat 0 0;}
+.m_gangwon .detail_map .map0{width:121px;height:38px;background:url(../images/gangwon0.png) no-repeat 0 0;left: 0;top: 42px;}
+.m_gangwon .detail_map .map1{width:73px;height:43px;background:url(../images/gangwon1.png) no-repeat 0 0;left: 52px;top: 51px;}
+.m_gangwon .detail_map .map2{width:47px;height:51px;background:url(../images/gangwon2.png) no-repeat 0 0;left: 119px;top: 42px;}
+.m_gangwon .detail_map .map3{width: 80px;height:87px;background:url(../images/gangwon3.png) no-repeat 0 0;left: 140px;top: 34px;}
+.m_gangwon .detail_map .map4{width:74px;height:60px;background:url(../images/gangwon4.png) no-repeat 0 0;left: 65px;top: 82px;}
+.m_gangwon .detail_map .map5{width:162px;height:57px;background:url(../images/gangwon5.png) no-repeat 0 0;left: 69px;top: 104px;}
+.m_gangwon .detail_map .map6{width:82px;height:55px;background:url(../images/gangwon6.png) no-repeat 0 0;left: 104px;top: 146px;}
+.m_gangwon .detail_map .map7{width:77px;height:80px;background:url(../images/gangwon7.png) no-repeat 0 0;left: 180px;top: 125px;}
+.m_gangwon .detail_map .map8{width:73px;height:53px;background:url(../images/gangwon8.png) no-repeat 0 0;left: 101px;top: 175px;}
+.m_gangwon .detail_map .map9{width:121px;height:56px;background:url(../images/gangwon9.png) no-repeat 0 0;left: 161px;top: 188px;}
+.m_gangwon .detail_map .map10{width:70px;height:65px;background:url(../images/gangwon10.png) no-repeat 0 0;left: 223px;top: 160px;}
+.m_gangwon .detail_map .map11{width:30px;height:40px;background:url(../images/gangwon11.png) no-repeat 0 0;left: 279px;top: 200px;}
+.m_gangwon .detail_map .map12{width:55px;height:62px;background:url(../images/gangwon12.png) no-repeat 0 0;left: 177px;top:0;}
+.m_gangwon .detail_map .map13{width:28px;height:11px;background:url(../images/gangwon13.png) no-repeat 0 0;left: 207px;top: 62px;}
+.m_gangwon .detail_map .map14{width:62px;height:43px;background:url(../images/gangwon14.png) no-repeat 0 0;left: 206px;top: 71px;}
+.m_gangwon .detail_map .map15{width:73px;height:60px;background:url(../images/gangwon15.png) no-repeat 0 0;left: 234px;top: 109px;}
+.m_gangwon .detail_map .map16{width:32px;height:25px;background:url(../images/gangwon16.png) no-repeat 0 0;left: 292px;top: 157px;}
+.m_gangwon .detail_map .map17{width:75px;height:65px;background:url(../images/gangwon17.png) no-repeat 0 0;left: 275px;top: 179px;}
+.m_gangwon .detail_map .map0.on{background-position:0 -38px; }
+.m_gangwon .detail_map .map1.on{background-position:0 -43px; }
+.m_gangwon .detail_map .map2.on{background-position:0 -51px; }
+.m_gangwon .detail_map .map3.on{background-position:0 -87px; }
+.m_gangwon .detail_map .map4.on{background-position:0 -60px; }
+.m_gangwon .detail_map .map5.on{background-position:0 -57px; }
+.m_gangwon .detail_map .map6.on{background-position:0 -55px; }
+.m_gangwon .detail_map .map7.on{background-position:0 -80px; }
+.m_gangwon .detail_map .map8.on{background-position:0 -53px; }
+.m_gangwon .detail_map .map9.on{background-position:0 -56px; }
+.m_gangwon .detail_map .map10.on{background-position:0 -65px; }
+.m_gangwon .detail_map .map11.on{background-position:0 -40px; }
+.m_gangwon .detail_map .map12.on{background-position:0 -62px; }
+.m_gangwon .detail_map .map13.on{background-position:0 -11px; }
+.m_gangwon .detail_map .map14.on{background-position:0 -43px; }
+.m_gangwon .detail_map .map15.on{background-position:0 -60px; }
+.m_gangwon .detail_map .map16.on{background-position:0 -25px; }
+.m_gangwon .detail_map .map17.on{background-position:0 -65px; }
+.m_gangwon .area_name > li.txt0{left: 17px;top: 49px;}
+.m_gangwon .area_name > li.txt1{left: 74px;top: 64px;}
+.m_gangwon .area_name > li.txt2{left: 128px;top: 56px;}
+.m_gangwon .area_name > li.txt3{left: 166px;top: 83px;}
+.m_gangwon .area_name > li.txt4{left: 87px;top: 99px;}
+.m_gangwon .area_name > li.txt5{left: 138px;top: 127px;}
+.m_gangwon .area_name > li.txt6{left: 132px;top: 159px;}
+.m_gangwon .area_name > li.txt7{left: 194px;top: 146px;}
+.m_gangwon .area_name > li.txt8{left: 106px;top: 193px;}
+.m_gangwon .area_name > li.txt9{left: 207px;top: 218px;}
+.m_gangwon .area_name > li.txt10{left: 232px;top: 180px;}
+.m_gangwon .area_name > li.txt11{left: 284px;top: 220px;}
+.m_gangwon .area_name > li.txt12{left: 189px;top: 25px;}
+.m_gangwon .area_name > li.txt13{left: 212px;top: 57px;}
+.m_gangwon .area_name > li.txt14{left: 226px;top: 86px;}
+.m_gangwon .area_name > li.txt15{left: 266px;top: 129px;}
+.m_gangwon .area_name > li.txt16{left: 295px;top: 165px;}
+.m_gangwon .area_name > li.txt17{left: 303px;top: 199px;}
+
+/* 충남 */
+.m_chungnam{}
+.m_chungnam .map_box{left:24px; top:74px; width:351px; height:252px;}
+.m_chungnam .detail_map{ width:351px; height:252px; }
+.m_chungnam .detail_map .map0{width:71px;height:133px;background:url(../images/chungnam0.png) no-repeat 0 0;left:0;top: 21px;}
+.m_chungnam .detail_map .map1{width:75px;height:103px;background:url(../images/chungnam1.png) no-repeat 0 0;left: 46px;top: 10px;}
+.m_chungnam .detail_map .map2{width:91px;height:70px;background:url(../images/chungnam2.png) no-repeat 0 0;left: 77px;top:0;}
+.m_chungnam .detail_map .map3{width:77px;height:51px;background:url(../images/chungnam3.png) no-repeat 0 0;left: 73px;top: 92px;}
+.m_chungnam .detail_map .map4{width:84px;height:64px;background:url(../images/chungnam4.png) no-repeat 0 0;left: 109px;top: 62px;}
+.m_chungnam .detail_map .map5{width:67px;height:66px;background:url(../images/chungnam5.png) no-repeat 0 0;left: 164px;top: 29px;}
+.m_chungnam .detail_map .map6{width:94px;height:77px;background:url(../images/chungnam6.png) no-repeat 0 0;left: 208px;top: 22px;}
+.m_chungnam .detail_map .map7{width:62px;height:69px;background:url(../images/chungnam7.png) no-repeat 0 0;left: 81px;top: 137px;}
+.m_chungnam .detail_map .map8{width:78px;height:59px;background:url(../images/chungnam8.png) no-repeat 0 0;left: 130px;top: 115px;}
+.m_chungnam .detail_map .map9{width:92px;height:88px;background:url(../images/chungnam9.png) no-repeat 0 0;left: 177px;top: 93px;}
+.m_chungnam .detail_map .map10{width:54px;height:70px;background:url(../images/chungnam10.png) no-repeat 0 0;left: 236px;top: 78px;}
+.m_chungnam .detail_map .map11{width:85px;height:44px;background:url(../images/chungnam11.png) no-repeat 0 0;left: 89px;top: 203px;}
+.m_chungnam .detail_map .map12{width:88px;height:69px;background:url(../images/chungnam12.png) no-repeat 0 0;left: 131px;top: 159px;}
+.m_chungnam .detail_map .map13{width:79px;height:62px;background:url(../images/chungnam13.png) no-repeat 0 0;left: 200px;top: 172px;}
+.m_chungnam .detail_map .map14{width:27px;height:23px;background:url(../images/chungnam14.png) no-repeat 0 0;left: 242px;top: 167px;}
+.m_chungnam .detail_map .map15{width:73px;height:70px;background:url(../images/chungnam15.png) no-repeat 0 0;left: 278px;top: 182px;}
+.m_chungnam .detail_map .map0.on{background-position:0 -133px; }
+.m_chungnam .detail_map .map1.on{background-position:0 -103px; }
+.m_chungnam .detail_map .map2.on{background-position:0 -70px; }
+.m_chungnam .detail_map .map3.on{background-position:0 -51px; }
+.m_chungnam .detail_map .map4.on{background-position:0 -64px; }
+.m_chungnam .detail_map .map5.on{background-position:0 -66px; }
+.m_chungnam .detail_map .map6.on{background-position:0 -77px; }
+.m_chungnam .detail_map .map7.on{background-position:0 -69px; }
+.m_chungnam .detail_map .map8.on{background-position:0 -59px; }
+.m_chungnam .detail_map .map9.on{background-position:0 -88px; }
+.m_chungnam .detail_map .map10.on{background-position:0 -70px; }
+.m_chungnam .detail_map .map11.on{background-position:0 -44px; }
+.m_chungnam .detail_map .map12.on{background-position:0 -69px; }
+.m_chungnam .detail_map .map13.on{background-position:0 -62px; }
+.m_chungnam .detail_map .map14.on{background-position:0 -23px; }
+.m_chungnam .detail_map .map15.on{background-position:0 -70px; }
+.m_chungnam .area_name > li.txt0{left: 11px;top: 59px;}
+.m_chungnam .area_name > li.txt1{left: 63px;top: 62px;}
+.m_chungnam .area_name > li.txt2{left: 108px;top: 30px;}
+.m_chungnam .area_name > li.txt3{left: 94px;top: 112px;}
+.m_chungnam .area_name > li.txt4{left: 148px;top: 85px;}
+.m_chungnam .area_name > li.txt5{left: 177px;top: 52px;}
+.m_chungnam .area_name > li.txt6{left: 240px;top: 53px;}
+.m_chungnam .area_name > li.txt7{left: 88px;top: 165px;}
+.m_chungnam .area_name > li.txt8{left: 142px;top: 139px;}
+.m_chungnam .area_name > li.txt9{left: 198px;top: 114px;}
+.m_chungnam .area_name > li.txt10{left: 249px;top: 93px;}
+.m_chungnam .area_name > li.txt11{left: 113px;top: 215px;}
+.m_chungnam .area_name > li.txt12{left: 154px;top: 183px;}
+.m_chungnam .area_name > li.txt13{left: 220px;top: 198px;}
+.m_chungnam .area_name > li.txt14{left: 249px;top: 171px;}
+.m_chungnam .area_name > li.txt15{left: 292px;top: 215px;}
+
+/* 세종 */
+.m_sejong{}
+.m_sejong .map_box{left:109px; top:64px; width:195px; height:280px;}
+.m_sejong .detail_map{width:195px; height:280px; background:url(../images/sejong.png) no-repeat 0 0;}
+.m_sejong .detail_map .map0{width:195px; height:280px; background:url(../images/sejong_whole.png) no-repeat 0 0; left:0; top:0;}
+.m_sejong .detail_map .map0.on{background-position:0 -280px; }
+.m_sejong .area_name > li.txt0{left: 69px;top: 123px;}
+
+
+/* 대전 */
+.m_daejeon{}
+.m_daejeon .map_box{left:66px; top:56px; width:258px; height:275px;}
+.m_daejeon .detail_map{ width:258px; height:275px;}
+.m_daejeon .detail_map .map0{ width:258px; height:275px; background:url(../images/daejeon_whole.png) no-repeat 0 0; left:0; top:0; }
+.m_daejeon .detail_map .map0.on{ background-position:0 -275px;}
+.m_daejeon .area_name > li.txt0{left: 98px; top:123px;}
+
+
+/* 충북 */
+.m_chungbuk{}
+.m_chungbuk .map_box{left:27px; top:50px; width:350px; height:321px;}
+.m_chungbuk .detail_map{ width:350px; height:321px; background:url(../images/chungbuk_bg.png) no-repeat 0 0;}
+.m_chungbuk .detail_map .map0{width:73px;height:63px;background:url(../images/chungbuk0.png) no-repeat 0 0;left: 4px;top: 63px;}
+.m_chungbuk .detail_map .map1{width:84px;height:78px;background:url(../images/chungbuk1.png) no-repeat 0 0;left: 45px;top: 27px;}
+.m_chungbuk .detail_map .map2{width:112px;height:105px;background:url(../images/chungbuk2.png) no-repeat 0 0;left: 97px;top: 9px;}
+.m_chungbuk .detail_map .map3{width:107px;height:115px;background:url(../images/chungbuk3.png) no-repeat 0 0;left: 166px;top:0;}
+.m_chungbuk .detail_map .map4{width:107px;height:91px;background:url(../images/chungbuk4.png) no-repeat 0 0;left: 243px;top: 26px;}
+.m_chungbuk .detail_map .map5{width:134px;height:86px;background:url(../images/chungbuk5.png) no-repeat 0 0;left: 71px;top: 83px;}
+.m_chungbuk .detail_map .map6{width:46px;height:36px;background:url(../images/chungbuk6.png) no-repeat 0 0;left: 26px;top: 139px;}
+.m_chungbuk .detail_map .map7{width:125px;height:89px;background:url(../images/chungbuk7.png) no-repeat 0 0;left: 00px;top: 124px;}
+.m_chungbuk .detail_map .map8{width:104px;height:59px;background:url(../images/chungbuk8.png) no-repeat 0 0;left: 58px;top: 168px;}
+.m_chungbuk .detail_map .map9{width:107px;height:66px;background:url(../images/chungbuk9.png) no-repeat 0 0;left: 55px;top: 210px;}
+.m_chungbuk .detail_map .map10{width:122px;height:77px;background:url(../images/chungbuk10.png) no-repeat 0 0;left: 82px;top: 244px;}
+.m_chungbuk .detail_map .map0.on{background-position:0 -63px; }
+.m_chungbuk .detail_map .map1.on{background-position:0 -78px; }
+.m_chungbuk .detail_map .map2.on{background-position:0 -105px; }
+.m_chungbuk .detail_map .map3.on{background-position:0 -115px; }
+.m_chungbuk .detail_map .map4.on{background-position:0 -91px; }
+.m_chungbuk .detail_map .map5.on{background-position:0 -86px; }
+.m_chungbuk .detail_map .map6.on{background-position:0 -35px; }
+.m_chungbuk .detail_map .map7.on{background-position:0 -89px; }
+.m_chungbuk .detail_map .map8.on{background-position:0 -59px; }
+.m_chungbuk .detail_map .map9.on{background-position:0 -66px; }
+.m_chungbuk .detail_map .map10.on{background-position:0 -77px; }
+.m_chungbuk .area_name > li.txt0{left: 16px;top: 87px;}
+.m_chungbuk .area_name > li.txt1{left: 54px;top: 62px;}
+.m_chungbuk .area_name > li.txt2{left: 138px;top: 53px;}
+.m_chungbuk .area_name > li.txt3{left: 204px;top: 24px;}
+.m_chungbuk .area_name > li.txt4{left: 267px;top: 55px;}
+.m_chungbuk .area_name > li.txt5{left: 118px;top: 117px;}
+.m_chungbuk .area_name > li.txt6{left: 34px;top: 151px;}
+.m_chungbuk .area_name > li.txt7{left: 29px;top: 182px;}
+.m_chungbuk .area_name > li.txt8{left: 99px;top: 187px;}
+.m_chungbuk .area_name > li.txt9{left: 70px;top: 233px;}
+.m_chungbuk .area_name > li.txt10{left: 114px;top: 279px;}
+
+
+/* 경북 */
+.m_gyeongbuk{}
+.m_gyeongbuk .map_box{left:26px; top:87px; width:348px; height:233px;}
+.m_gyeongbuk .detail_map{width:348px; height:233px; background:url(../images/gyeongbuk_bg.png) no-repeat 340px 6px;}
+.m_gyeongbuk .detail_map .map0{width:69px;height:48px;background:url(../images/gyeongbuk0.png) no-repeat 0 0;left: 15px;top: 43px;}
+.m_gyeongbuk .detail_map .map1{width:47px;height:54px;background:url(../images/gyeongbuk1.png) no-repeat 0 0;left: 70px;top: 46px;}
+.m_gyeongbuk .detail_map .map2{width:44px;height:52px;background:url(../images/gyeongbuk2.png) no-repeat 0 0;left: 94px;top: 14px;}
+.m_gyeongbuk .detail_map .map3{width:74px;height:50px;background:url(../images/gyeongbuk3.png) no-repeat 0 0;left: 128px;top: 8px;}
+.m_gyeongbuk .detail_map .map4{width:58px;height:72px;background:url(../images/gyeongbuk4.png) no-repeat 0 0;left: 190px; }
+.m_gyeongbuk .detail_map .map5{width:77px;height:58px;background:url(../images/gyeongbuk5.png) no-repeat 0 0;left:0;top: 75px;}
+.m_gyeongbuk .detail_map .map6{width:84px;height:46px;background:url(../images/gyeongbuk6.png) no-repeat 0 0;left: 75px;top: 93px;}
+.m_gyeongbuk .detail_map .map7{width:80px;height:72px;background:url(../images/gyeongbuk7.png) no-repeat 0 0;left: 95px;top: 51px;}
+.m_gyeongbuk .detail_map .map8{width:44px;height:53px;background:url(../images/gyeongbuk8.png) no-repeat 0 0;left: 176px;top: 41px;}
+.m_gyeongbuk .detail_map .map9{width:62px;height:62px;background:url(../images/gyeongbuk9.png) no-repeat 0 0;left: 9px;top: 132px;}
+.m_gyeongbuk .detail_map .map10{width:161px;height:41px;background:url(../images/gyeongbuk10.png) no-repeat 0 0;left: 50px;top: 117px;}
+.m_gyeongbuk .detail_map .map11{width:68px;height:44px;background:url(../images/gyeongbuk11.png) no-repeat 0 0;left: 93px;top: 123px;}
+.m_gyeongbuk .detail_map .map12{width:54px;height:59px;background:url(../images/gyeongbuk12.png) no-repeat 0 0;left: 159px;top: 84px;}
+.m_gyeongbuk .detail_map .map13{width:44px;height:57px;background:url(../images/gyeongbuk13.png) no-repeat 0 0;left: 200px;top: 72px;}
+.m_gyeongbuk .detail_map .map14{width: 52px;height:36px;background:url(../images/gyeongbuk14.png) no-repeat 0 0;left: 37px;top: 163px;}
+.m_gyeongbuk .detail_map .map15{width:47px;height:32px;background:url(../images/gyeongbuk15.png) no-repeat 0 0;left: 74px;top: 153px;}
+.m_gyeongbuk .detail_map .map16{width:59px;height:39px;background:url(../images/gyeongbuk16.png) no-repeat 0 0;left: 43px;top: 189px;}
+.m_gyeongbuk .detail_map .map17{width:65px;height:48px;background:url(../images/gyeongbuk17.png) no-repeat 0 0;left: 132px;top: 145px;}
+.m_gyeongbuk .detail_map .map18{width:81px;height:69px;background:url(../images/gyeongbuk18.png) no-repeat 0 0;left: 182px;top: 122px;}
+.m_gyeongbuk .detail_map .map19{width:39px;height:39px;background:url(../images/gyeongbuk19.png) no-repeat 0 0;left: 131px;top: 172px;}
+.m_gyeongbuk .detail_map .map20{width:81px;height:38px;background:url(../images/gyeongbuk20.png) no-repeat 0 0;left: 107px;top: 195px;}
+.m_gyeongbuk .detail_map .map21{width:79px;height:61px;background:url(../images/gyeongbuk21.png) no-repeat 0 0;left: 173px;top: 159px;}
+.m_gyeongbuk .detail_map .map22{width:14px;height:15px;background:url(../images/gyeongbuk22.png) no-repeat 0 0;left: 301px; }
+.m_gyeongbuk .detail_map .map0.on{background-position:0 -48px; }
+.m_gyeongbuk .detail_map .map1.on{background-position:0 -54px; }
+.m_gyeongbuk .detail_map .map2.on{background-position:0 -52px; }
+.m_gyeongbuk .detail_map .map3.on{background-position:0 -50px; }
+.m_gyeongbuk .detail_map .map4.on{background-position:0 -72px; }
+.m_gyeongbuk .detail_map .map5.on{background-position:0 -57px; }
+.m_gyeongbuk .detail_map .map6.on{background-position:0 -46px; }
+.m_gyeongbuk .detail_map .map7.on{background-position:0 -72px; }
+.m_gyeongbuk .detail_map .map8.on{background-position:0 -53px; }
+.m_gyeongbuk .detail_map .map9.on{background-position:0 -62px; }
+.m_gyeongbuk .detail_map .map10.on{background-position:0 -41px; }
+.m_gyeongbuk .detail_map .map11.on{background-position:0 -44px; }
+.m_gyeongbuk .detail_map .map12.on{background-position:0 -59px; }
+.m_gyeongbuk .detail_map .map13.on{background-position:0 -57px; }
+.m_gyeongbuk .detail_map .map14.on{background-position:0 -36px; }
+.m_gyeongbuk .detail_map .map15.on{background-position:0 -32px; }
+.m_gyeongbuk .detail_map .map16.on{background-position:0 -39px; }
+.m_gyeongbuk .detail_map .map17.on{background-position:0 -48px; }
+.m_gyeongbuk .detail_map .map18.on{background-position:0 -69px; }
+.m_gyeongbuk .detail_map .map19.on{background-position:0 -39px; }
+.m_gyeongbuk .detail_map .map20.on{background-position:0 -38px; }
+.m_gyeongbuk .detail_map .map21.on{background-position:0 -61px; }
+.m_gyeongbuk .detail_map .map22.on{background-position:0 -15px; }
+.m_gyeongbuk .area_name > li.txt0{left: 30px;top: 64px;}
+.m_gyeongbuk .area_name > li.txt1{left: 83px;top: 64px;}
+.m_gyeongbuk .area_name > li.txt2{left: 100px;top: 34px;}
+.m_gyeongbuk .area_name > li.txt3{left: 141px;top: 23px;}
+.m_gyeongbuk .area_name > li.txt4{left: 200px;top: 19px;}
+.m_gyeongbuk .area_name > li.txt5{left: 20px; top: 101px;}
+.m_gyeongbuk .area_name > li.txt6{left: 103px;top: 111px;}
+.m_gyeongbuk .area_name > li.txt7{left: 122px;top: 76px;}
+.m_gyeongbuk .area_name > li.txt8{left: 179px;top: 58px;}
+.m_gyeongbuk .area_name > li.txt9{left: 26px;top: 146px;}
+.m_gyeongbuk .area_name > li.txt10{left: 66px;top: 125px;}
+.m_gyeongbuk .area_name > li.txt11{left: 118px;top: 138px;}
+.m_gyeongbuk .area_name > li.txt12{left: 176px;top: 107px;}
+.m_gyeongbuk .area_name > li.txt13{left: 210px;top: 96px;}
+.m_gyeongbuk .area_name > li.txt14{left: 45px;top: 178px;}
+.m_gyeongbuk .area_name > li.txt15{left: 81px;top: 161px;}
+.m_gyeongbuk .area_name > li.txt16{left: 58px;top: 203px;}
+.m_gyeongbuk .area_name > li.txt17{left: 148px;top: 157px;}
+.m_gyeongbuk .area_name > li.txt18{left: 190px;top: 137px;}
+.m_gyeongbuk .area_name > li.txt19{left: 143px;top: 187px;}
+.m_gyeongbuk .area_name > li.txt20{left: 119px;top: 213px;}
+.m_gyeongbuk .area_name > li.txt21{left: 186px;top: 190px;}
+.m_gyeongbuk .area_name > li.txt22{left: 303px;top: -4px;}
+
+
+/* 대구 */
+.m_daegu{}
+.m_daegu .map_box{left:62px; top:78px; width:261px; height:258px;}
+.m_daegu .detail_map{width:261px; height:258px; background:url(../images/daegu.png) no-repeat 0 0;}
+.m_daegu .detail_map .map0{width:261px; height:258px; background:url(../images/daegu_whole.png) no-repeat 0 0;left: 0;top: 0;}
+.m_daegu .detail_map .map0.on{background-position:0 -258px; }
+.m_daegu .area_name > li.txt0{left: 130px;top: 100px;}
+
+/* 전북 */
+.m_jeonbuk{}
+.m_jeonbuk .map_box{left:25px; top:71px; width:351px; height:248px;}
+.m_jeonbuk .detail_map{width:351px; height:248px; background:url(../images/jeonbuk_bg.png) no-repeat 139px 81px;}
+.m_jeonbuk .detail_map .map0{width:84px;height:59px;background:url(../images/jeonbuk0.png) no-repeat 0 0;left: 32px;top: 21px;}
+.m_jeonbuk .detail_map .map1{width:75px;height:65px;background:url(../images/jeonbuk1.png) no-repeat 0 0;left: 94px;top:0;}
+.m_jeonbuk .detail_map .map2{width:88px;height:144px;background:url(../images/jeonbuk2.png) no-repeat 0 0;left: 146px;top: 7px;}
+.m_jeonbuk .detail_map .map3{width:99px;height:77px;background:url(../images/jeonbuk3.png) no-repeat 0 0;left: 58px;top: 62px;}
+.m_jeonbuk .detail_map .map4{width:51px;height:50px;background:url(../images/jeonbuk4.png) no-repeat 0 0;left: 143px;top: 66px;}
+.m_jeonbuk .detail_map .map5{width:84px;height:118px;background:url(../images/jeonbuk5.png) no-repeat 0 0;left: 205px;top: 35px;}
+.m_jeonbuk .detail_map .map6{width:77px;height:69px;background:url(../images/jeonbuk6.png) no-repeat 0 0;left: 275px;top: 31px;}
+.m_jeonbuk .detail_map .map7{width:87px;height:74px;background:url(../images/jeonbuk7.png) no-repeat 0 0;left: 9px;top: 95px;}
+.m_jeonbuk .detail_map .map8{width:95px;height:98px;background:url(../images/jeonbuk8.png) no-repeat 0 0;left: 71px;top: 112px;}
+.m_jeonbuk .detail_map .map9{width:80px;height:80px;background:url(../images/jeonbuk9.png) no-repeat 0 0;left:0;top: 168px;}
+.m_jeonbuk .detail_map .map10{width:82px;height:94px;background:url(../images/jeonbuk10.png) no-repeat 0 0;left: 160px;top: 108px;}
+.m_jeonbuk .detail_map .map11{width:110px;height:74px;background:url(../images/jeonbuk11.png) no-repeat 0 0;left: 104px;top: 174px;}
+.m_jeonbuk .detail_map .map12{width:80px;height:112px;background:url(../images/jeonbuk12.png) no-repeat 0 0;left: 230px;top: 91px;}
+.m_jeonbuk .detail_map .map13{width:113px;height:76px;background:url(../images/jeonbuk13.png) no-repeat 0 0;left: 185px;top: 172px;}
+.m_jeonbuk .detail_map .map0.on{background-position:0 -59px; }
+.m_jeonbuk .detail_map .map1.on{background-position:0 -65px; }
+.m_jeonbuk .detail_map .map2.on{background-position:0 -144px; }
+.m_jeonbuk .detail_map .map3.on{background-position:0 -77px; }
+.m_jeonbuk .detail_map .map4.on{background-position:0 -50px; }
+.m_jeonbuk .detail_map .map5.on{background-position:0 -118px; }
+.m_jeonbuk .detail_map .map6.on{background-position:0 -69px; }
+.m_jeonbuk .detail_map .map7.on{background-position:0 -73px; }
+.m_jeonbuk .detail_map .map8.on{background-position:0 -98px; }
+.m_jeonbuk .detail_map .map9.on{background-position:0 -80px; }
+.m_jeonbuk .detail_map .map10.on{background-position:0 -94px; }
+.m_jeonbuk .detail_map .map11.on{background-position:0 -74px; }
+.m_jeonbuk .detail_map .map12.on{background-position:0 -112px; }
+.m_jeonbuk .detail_map .map13.on{background-position:0 -76px; }
+.m_jeonbuk .area_name > li.txt0{left: 50px;top: 46px;}
+.m_jeonbuk .area_name > li.txt1{left: 121px;top: 28px;}
+.m_jeonbuk .area_name > li.txt2{left: 176px;top: 42px;}
+.m_jeonbuk .area_name > li.txt3{left: 91px;top: 83px;}
+.m_jeonbuk .area_name > li.txt4{left: 161px;top: 82px;}
+.m_jeonbuk .area_name > li.txt5{left: 232px;top: 73px;}
+.m_jeonbuk .area_name > li.txt6{left: 295px;top: 58px;}
+.m_jeonbuk .area_name > li.txt7{left: 27px;top: 132px;}
+.m_jeonbuk .area_name > li.txt8{left: 97px;top: 148px;}
+.m_jeonbuk .area_name > li.txt9{left: 28px;top: 195px;}
+.m_jeonbuk .area_name > li.txt10{left: 175px;top: 159px;}
+.m_jeonbuk .area_name > li.txt11{left: 126px;top: 191px;}
+.m_jeonbuk .area_name > li.txt12{left: 240px;top: 158px;}
+.m_jeonbuk .area_name > li.txt13{left: 223px;top: 209px;}
+
+
+/* 전남 */
+.m_jeonnam{}
+.m_jeonnam .map_box{left:24px; top:83px; width:348px; height:225px;}
+.m_jeonnam .detail_map{width:348px; height:225px; background:url(../images/jeonnam_bg.png) no-repeat 18px 59px;}
+.m_jeonnam .detail_map .map0{width:55px;height:46px;background:url(../images/jeonnam0.png) no-repeat 0 0;left:0;top: 89px;}
+.m_jeonnam .detail_map .map1{width:50px;height:37px;background:url(../images/jeonnam1.png) no-repeat 0 0;left: 38px;top: 148px;}
+.m_jeonnam .detail_map .map2{width:61px;height:43px;background:url(../images/jeonnam2.png) no-repeat 0 0;left: 75px;top: 9px;}
+.m_jeonnam .detail_map .map3{width: 60px;height:48px;background:url(../images/jeonnam3.png) no-repeat 0 0;left: 128px;top:0;}
+.m_jeonnam .detail_map .map4{width:45px;height:54px;background:url(../images/jeonnam4.png) no-repeat 0 0;left: 176px;top: 4px;}
+.m_jeonnam .detail_map .map5{width:50px;height:41px;background:url(../images/jeonnam5.png) no-repeat 0 0;left: 89px;top: 44px;}
+.m_jeonnam .detail_map .map6{width:61px;height:29px;background:url(../images/jeonnam6.png) no-repeat 0 0;left: 141px;top: 41px;}
+.m_jeonnam .detail_map .map7{width:17px;height:23px;background:url(../images/jeonnam7.png) no-repeat 0 0;left: 81px;top: 101px;}
+.m_jeonnam .detail_map .map8{width:67px;height:58px;background:url(../images/jeonnam8.png) no-repeat 0 0;left: 50px;top: 57px;}
+.m_jeonnam .detail_map .map9{width:65px;height:37px;background:url(../images/jeonnam9.png) no-repeat 0 0;left: 114px;top: 63px;}
+.m_jeonnam .detail_map .map10{width:80px;height:41px;background:url(../images/jeonnam10.png) no-repeat 0 0;left: 92px;top: 90px;}
+.m_jeonnam .detail_map .map11{width:56px;height:57px;background:url(../images/jeonnam11.png) no-repeat 0 0;left: 178px;top: 48px;}
+.m_jeonnam .detail_map .map12{width:54px;height:41px;background:url(../images/jeonnam12.png) no-repeat 0 0;left: 218px;top: 28px;}
+.m_jeonnam .detail_map .map13{width:46px;height:40px;background:url(../images/jeonnam13.png) no-repeat 0 0;left: 265px;top: 23px;}
+.m_jeonnam .detail_map .map14{width:81px;height:85px;background:url(../images/jeonnam14.png) no-repeat 0 0;left: 65px;top: 110px;}
+.m_jeonnam .detail_map .map15{width:48px;height:68px;background:url(../images/jeonnam15.png) no-repeat 0 0;left: 142px;top: 116px;}
+.m_jeonnam .detail_map .map16{width:41px;height:69px;background:url(../images/jeonnam16.png) no-repeat 0 0;left: 165px;top: 100px;}
+.m_jeonnam .detail_map .map17{width:75px;height:54px;background:url(../images/jeonnam17.png) no-repeat 0 0;left: 196px;top: 84px; }
+.m_jeonnam .detail_map .map18{width:72px;height:56px;background:url(../images/jeonnam18.png) no-repeat 0 0;left: 233px;top: 53px;}
+.m_jeonnam .detail_map .map19{width:41px;height:47px;background:url(../images/jeonnam19.png) no-repeat 0 0;left: 295px; top:50px;}
+.m_jeonnam .detail_map .map20{width:26px;height:21px;background:url(../images/jeonnam20.png) no-repeat 0 0;left: 134px;top: 176px;}
+.m_jeonnam .detail_map .map21{width:80px;height:61px;background:url(../images/jeonnam21.png) no-repeat 0 0;left: 219px;top: 116px;}
+.m_jeonnam .detail_map .map22{width:57px;height:58px;background:url(../images/jeonnam22.png) no-repeat 0 0;left: 287px;top: 91px;}
+.m_jeonnam .detail_map .map0.on{background-position:0 -46px; }
+.m_jeonnam .detail_map .map1.on{background-position:0 -37px; }
+.m_jeonnam .detail_map .map2.on{background-position:0 -43px; }
+.m_jeonnam .detail_map .map3.on{background-position:0 -48px; }
+.m_jeonnam .detail_map .map4.on{background-position:0 -54px; }
+.m_jeonnam .detail_map .map5.on{background-position:0 -41px; }
+.m_jeonnam .detail_map .map6.on{background-position:0 -29px; }
+.m_jeonnam .detail_map .map7.on{background-position:0 -23px; }
+.m_jeonnam .detail_map .map8.on{background-position:0 -58px; }
+.m_jeonnam .detail_map .map9.on{background-position:0 -37px; }
+.m_jeonnam .detail_map .map10.on{background-position:0 -41px; }
+.m_jeonnam .detail_map .map11.on{background-position:0 -57px; }
+.m_jeonnam .detail_map .map12.on{background-position:0 -41px; }
+.m_jeonnam .detail_map .map13.on{background-position:0 -40px; }
+.m_jeonnam .detail_map .map14.on{background-position:0 -85px; }
+.m_jeonnam .detail_map .map15.on{background-position:0 -68px; }
+.m_jeonnam .detail_map .map16.on{background-position:0 -69px; }
+.m_jeonnam .detail_map .map17.on{background-position:0 -54px; }
+.m_jeonnam .detail_map .map18.on{background-position:0 -56px; }
+.m_jeonnam .detail_map .map19.on{background-position:0 -47px; }
+.m_jeonnam .detail_map .map20.on{background-position:0 -21px; }
+.m_jeonnam .detail_map .map21.on{background-position:0 -61px; }
+.m_jeonnam .detail_map .map22.on{background-position:0 -58px; }
+.m_jeonnam .area_name > li.txt0{left: 7px;top: 112px;}
+.m_jeonnam .area_name > li.txt1{left: 45px;top: 164px;}
+.m_jeonnam .area_name > li.txt2{left: 85px;top: 28px;}
+.m_jeonnam .area_name > li.txt3{left: 140px;top: 25px;}
+.m_jeonnam .area_name > li.txt4{left: 185px;top: 23px;}
+.m_jeonnam .area_name > li.txt5{left: 101px;top: 55px;}
+.m_jeonnam .area_name > li.txt6{left: 156px;top: 48px;}
+.m_jeonnam .area_name > li.txt7{left: 82px;top: 105px;}
+.m_jeonnam .area_name > li.txt8{left: 79px;top: 80px;}
+.m_jeonnam .area_name > li.txt9{left: 132px;top: 74px;}
+.m_jeonnam .area_name > li.txt10{left: 122px;top: 100px;}
+.m_jeonnam .area_name > li.txt11{left: 185px;top: 69px;}
+.m_jeonnam .area_name > li.txt12{left: 226px;top: 33px;}
+.m_jeonnam .area_name > li.txt13{left: 274px;top: 32px;}
+.m_jeonnam .area_name > li.txt14{left: 95px;top: 138px;}
+.m_jeonnam .area_name > li.txt15{left: 149px;top: 134px;}
+.m_jeonnam .area_name > li.txt16{left: 176px;top: 112px;}
+.m_jeonnam .area_name > li.txt17{left: 212px;top: 103px;}
+.m_jeonnam .area_name > li.txt18{left: 246px;top: 76px;}
+.m_jeonnam .area_name > li.txt19{left: 299px;top: 69px;}
+.m_jeonnam .area_name > li.txt20{left: 143px;top: 181px;}
+.m_jeonnam .area_name > li.txt21{left: 239px;top: 139px;}
+.m_jeonnam .area_name > li.txt22{left: 299px;top: 107px;}
+
+
+/* 광주 */
+.m_gwangju{}
+.m_gwangju .map_box{left:42px; top:99px; width:319px; height:186px;}
+.m_gwangju .detail_map{width:319px; height:186px;}
+.m_gwangju .detail_map .map0{width:319px; height:186px; background:url(../images/gwangju_whole.png) no-repeat 0 0;left:0;top:0;}
+.m_gwangju .detail_map .map0.on{background-position:0 -186px; }
+.m_gwangju .area_name > li.txt0{left: 144px;top: 87px;}
+
+
+/* 경남 */
+.m_gyeongnam{}
+.m_gyeongnam .map_box{left:25px; top:72px; width:348px; height:261px;}
+.m_gyeongnam .detail_map{width:348px; height:261px; background:url(../images/gyeongnam_bg.png) no-repeat 126px 222px;}
+.m_gyeongnam .detail_map .map0{width:59px;height:93px;background:url(../images/gyeongnam0.png) no-repeat 0 0;left: 5px; top: 29px;}
+.m_gyeongnam .detail_map .map1{width:83px;height:80px;background:url(../images/gyeongnam1.png) no-repeat 0 0;left:24px; top:0px}
+.m_gyeongnam .detail_map .map2{width:74px;height:80px;background:url(../images/gyeongnam2.png) no-repeat 0 0;left: 0;top: 123px;}
+.m_gyeongnam .detail_map .map3{width:83px;height:72px;background:url(../images/gyeongnam3.png) no-repeat 0 0;left: 25px;top: 73px;}
+.m_gyeongnam .detail_map .map4{width:89px;height:96px;background:url(../images/gyeongnam4.png) no-repeat 0 0;left: 82px;top: 15px;}
+.m_gyeongnam .detail_map .map5{width:59px;height:50px;background:url(../images/gyeongnam5.png) no-repeat 0 0;left: 67px;top: 159px;}
+.m_gyeongnam .detail_map .map6{width:100px;height:61px;background:url(../images/gyeongnam6.png) no-repeat 0 0;left: 68px;top: 120px;}
+.m_gyeongnam .detail_map .map7{width:70px;height:53px;background:url(../images/gyeongnam7.png) no-repeat 0 0;left: 111px;top: 83px;}
+.m_gyeongnam .detail_map .map8{width:61px;height:64px;background:url(../images/gyeongnam8.png) no-repeat 0 0;left: 167px;top: 47px;}
+.m_gyeongnam .detail_map .map9{width:81px;height:48px;background:url(../images/gyeongnam9.png) no-repeat 0 0;left: 114px;top: 165px;}
+.m_gyeongnam .detail_map .map10{width:62px;height:47px;background:url(../images/gyeongnam10.png) no-repeat 0 0;left: 166px;top: 134px;}
+.m_gyeongnam .detail_map .map11{width:60px;height:46px;background:url(../images/gyeongnam11.png) no-repeat 0 0;left: 150px;top: 109px;}
+.m_gyeongnam .detail_map .map12{width:37px;height:46px;background:url(../images/gyeongnam12.png) no-repeat 0 0;left: 211px;top: 111px;}
+.m_gyeongnam .detail_map .map13{width:92px;height:62px;background:url(../images/gyeongnam13.png) no-repeat 0 0;left: 215px;top: 56px;}
+.m_gyeongnam .detail_map .map14{width:46px;height:23px;background:url(../images/gyeongnam14.png) no-repeat 0 0;left: 223px;top: 155px;}
+.m_gyeongnam .detail_map .map15{width:61px;height:48px;background:url(../images/gyeongnam15.png) no-repeat 0 0;left: 243px;top: 110px;}
+.m_gyeongnam .detail_map .map16{width:71px;height:56px;background:url(../images/gyeongnam16.png) no-repeat 0 0;left: 277px;top: 78px;}
+.m_gyeongnam .detail_map .map17{width:58px;height:50px;background:url(../images/gyeongnam17.png) no-repeat 0 0;left: 50px;top: 202px;}
+.m_gyeongnam .detail_map .map18{width:37px;height:50px;background:url(../images/gyeongnam18.png) no-repeat 0 0;left: 152px;top: 196px;}
+.m_gyeongnam .detail_map .map19{width:59px;height:74px;background:url(../images/gyeongnam19.png) no-repeat 0 0;left: 190px;top: 181px;}
+.m_gyeongnam .detail_map .map0.on{background-position:0 -93px; }
+.m_gyeongnam .detail_map .map1.on{background-position:0 -80px; }
+.m_gyeongnam .detail_map .map2.on{background-position:0 -80px; }
+.m_gyeongnam .detail_map .map3.on{background-position:0 -72px; }
+.m_gyeongnam .detail_map .map4.on{background-position:0 -96px; }
+.m_gyeongnam .detail_map .map5.on{background-position:0 -50px; }
+.m_gyeongnam .detail_map .map6.on{background-position:0 -61px; }
+.m_gyeongnam .detail_map .map7.on{background-position:0 -53px; }
+.m_gyeongnam .detail_map .map8.on{background-position:0 -64px; }
+.m_gyeongnam .detail_map .map9.on{background-position:0 -48px; }
+.m_gyeongnam .detail_map .map10.on{background-position:0 -47px; }
+.m_gyeongnam .detail_map .map11.on{background-position:0 -46px; }
+.m_gyeongnam .detail_map .map12.on{background-position:0 -46px; }
+.m_gyeongnam .detail_map .map13.on{background-position:0 -62px; }
+.m_gyeongnam .detail_map .map14.on{background-position:0 -23px; }
+.m_gyeongnam .detail_map .map15.on{background-position:0 -48px; }
+.m_gyeongnam .detail_map .map16.on{background-position:0 -56px; }
+.m_gyeongnam .detail_map .map17.on{background-position:0 -50px; }
+.m_gyeongnam .detail_map .map18.on{background-position:0 -50px; }
+.m_gyeongnam .detail_map .map19.on{background-position:0 -74px; }
+.m_gyeongnam .area_name > li.txt0{left: 13px;top: 60px;}
+.m_gyeongnam .area_name > li.txt1{left: 50px;top: 24px;}
+.m_gyeongnam .area_name > li.txt2{left: 21px;top: 150px;}
+.m_gyeongnam .area_name > li.txt3{left: 46px;top: 106px;}
+.m_gyeongnam .area_name > li.txt4{left: 105px;top: 62px;}
+.m_gyeongnam .area_name > li.txt5{left: 78px;top: 172px;}
+.m_gyeongnam .area_name > li.txt6{left: 93px;top: 140px;}
+.m_gyeongnam .area_name > li.txt7{left: 133px;top: 100px;}
+.m_gyeongnam .area_name > li.txt8{left: 173px;top: 66px;}
+.m_gyeongnam .area_name > li.txt9{left: 133px;top: 177px;}
+.m_gyeongnam .area_name > li.txt10{left: 175px;top: 158px;}
+.m_gyeongnam .area_name > li.txt11{left: 168px;top: 119px;}
+.m_gyeongnam .area_name > li.txt12{left: 214px;top: 116px;}
+.m_gyeongnam .area_name > li.txt13{left: 235px;top: 80px;}
+.m_gyeongnam .area_name > li.txt14{left: 235px;top: 160px;}
+.m_gyeongnam .area_name > li.txt15{left: 252px;top: 126px;}
+.m_gyeongnam .area_name > li.txt16{left: 290px;top: 100px;}
+.m_gyeongnam .area_name > li.txt17{left: 64px;top: 222px;}
+.m_gyeongnam .area_name > li.txt18{left: 142px;top: 214px;}
+.m_gyeongnam .area_name > li.txt19{left: 200px;top: 216px;}
+
+/* 울산 */
+.m_ulsan{}
+.m_ulsan .map_box{left:40px; top:85px; width:302px; height:245px;}
+.m_ulsan .detail_map{ width:302px; height:245px; background:url(../images/ulsan.png) no-repeat 0 0;}
+.m_ulsan .detail_map .map0{ width:302px; height:245px; background:url(../images/ulsan_whole.png) no-repeat 0 0; left:0; top:0;}
+.m_ulsan .detail_map .map0.on{background-position:0 -245px; }
+.m_ulsan .area_name > li.txt0{left: 145px; top:92px;}
+
+
+/* 부산 */
+.m_busan{}
+.m_busan .map_box{left:37px; top:80px; width:315px; height:236px;}
+.m_busan .detail_map{width:315px; height:236px; background:url(../images/busan.png) no-repeat 0 0;}
+.m_busan .detail_map .map0{width:315px; height:236px;background:url(../images/busan_whole.png) no-repeat 0 0;left:0;top: 0;}
+.m_busan .detail_map .map0.on{background-position:0 -236px; }
+.m_busan .area_name > li.txt0{left: 164px;top: 120px;}
+
+
+/* 제주 */
+.m_jeju{}
+.m_jeju .map_box{left:45px; top:106px; width:311px; height:187px; }
+.m_jeju .detail_map{width:311px; height:187px; background:url(../images/jeju_bg.png) no-repeat 0 0;}
+.m_jeju .detail_map .map0{width:311px; height:187px; background:url(../images/jeju_whole.png) no-repeat 0 0;left:0;top: 0;}
+.m_jeju .detail_map .map0.on{background-position:0 -187px; }
+.m_jeju .area_name > li.txt0{left: 123px;top: 83px;}
+
+

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.login.mapper.LoginMapper">
+	
+	<insert id="groupConcatMaxLenSet" parameterType="int">
+	    SET SESSION group_concat_max_len = 1000000;
+	</insert>
+	
+	<select id="user_info" parameterType="LoginVo" resultType="LoginVo">
+		
+		select 
+			u.id,
+		    u.nm,
+		    u.auth_no,
+		    u.email,
+		    u.phone,
+		    top_menu,
+		    left_menu,
+		    u.sido_cd,
+		    case when u.sido_cd = '00' then '전체' else (select sido_cd_nm from sido s where s.sido_cd = u.sido_cd) end as sido_cd_nm,
+		    ifnull(u.gugun_cd, '') as gugun_cd,
+		    ifnull((select gugun_cd_nm from gugun g where g.gugun_cd = u.gugun_cd ), '') as gugun_cd_nm,
+		    ifnull(u.cmntor_no,'') as cmntor_no,
+		    ifnull((select prfl_img from cmntor c where u.cmntor_no = c.cmntor_no),'') as prfl_img,
+		    main_chk_yn
+		from 
+			user u join
+		     (
+			   select 
+					auth_no,
+				    group_concat(concat(row_num, '`', menu_nm, '`' , menu_path)  order by row_num separator ',') as top_menu,
+				    group_concat(concat(row_num, ':', left_menu) order by row_num separator ';') as left_menu
+				from (
+					select
+						row_num, 
+					aa.auth_no,
+					     aa.menu_id, aa.menu_nm, aa.menu_path,
+					     group_concat( concat(bb.menu_id, '`', bb.menu_nm, '`', bb.menu_path,'`', bb.rnk) order by bb.menu_id separator ',' ) as left_menu
+					from (
+						select
+							@rownum:=@rownum+1  as row_num,
+		                    a.auth_no,
+							c.menu_id, 
+						    c.menu_nm,
+						    c.menu_path
+						from auth a join menu_auth b on a.auth_no = b.auth_no
+								join menu c on b.menu_id = c.menu_id
+						    join (select @rownum:=0) tmp on c.up_menu_id = '00'
+						where	
+							a.auth_no = (select auth_no from user where id= #{id})
+						order by c.menu_id
+						) aa
+						left join (
+							select
+								c.menu_id, 
+								c.up_menu_id,
+								c.menu_nm, ifnull(c.menu_path,'') menu_path,
+								( CASE c.up_menu_id WHEN @curType THEN @curRow := @curRow + 1 
+												ELSE @curRow := 1 AND @curType := c.up_menu_id END )  AS rnk
+							from auth a join menu_auth b on a.auth_no = b.auth_no
+								join menu c on b.menu_id = c.menu_id
+								join (SELECT @curRow := 0, @curType := '') r on c.up_menu_id &lt;&gt; '00'
+							where	
+								a.auth_no = (select auth_no from user where id= #{id})
+							order by c.up_menu_id, c.menu_id
+						) bb on aa.menu_id = bb.up_menu_id
+					group by
+						row_num,  aa.auth_no,
+					     aa.menu_id, aa.menu_nm, aa.menu_path
+					order by row_num
+				) bs
+			group by auth_no
+		    ) tmp on u.auth_no = tmp.auth_no
+		WHERE
+			id = #{id}
+	</select>
+	
+	
+	<select id="login_check" parameterType="LoginVo" resultType="String">
+		
+		select id
+		from user
+		where pw = password(#{pw})
+		<if test="nm == 2">
+			and id = #{id}
+			and auth_no = 1
+		</if>
+		<if test="nm == 1">
+			and ifnull(cnsm_org_yn, 'N') &lt;&gt; 'Y'
+			<choose>
+				<when test='sido_cd == "Z"'>
+					and auth_no = '1'
+					and id like 'mcst%'
+				</when>
+				<when test="(gugun_cd == null or gugun_cd == '') and sido_cd != null and sido_cd != ''">
+					and sido_cd = #{sido_cd}
+					and auth_no = '2'
+				</when>
+				<when test="gugun_cd != null and gugun_cd != '' and sido_cd != null and sido_cd != ''">
+					and gugun_cd = #{gugun_cd}
+					and auth_no = '3'
+				</when>
+				<otherwise>
+					and auth_no = '1'
+					and id not like 'mcst%'
+				</otherwise>
+			</choose>
+		</if>
+		<if test="nm == 3">
+			and ifnull(cnsm_org_yn, 'N') = 'Y'
+			<choose>
+				<when test="(gugun_cd == null or gugun_cd == '') and sido_cd != null and sido_cd != ''">
+					and sido_cd = #{sido_cd}
+					and auth_no = '2'
+				</when>
+				<when test="gugun_cd != null and gugun_cd != '' and sido_cd != null and sido_cd != ''">
+					and gugun_cd = #{gugun_cd}
+					and auth_no = '3'
+				</when>
+			</choose>
+		</if>		
+		<!-- insert into di_user 
+		values ('sweetk@dumin.co.kr',   hex(aes_encrypt('abcd1234',  'dumin')), '010-1234-1234', 'sweetk@dumin.co.kr', '001')
+		 #{pw} = aes_decrypt(unhex(pw),'kcti')
+		 -->
+		
+	</select>
+	
+	
+	<select id="find_user" parameterType="LoginVo" resultType="int">
+		select count(*)
+		from user
+		where id = #{id}
+		and email = #{email}
+	</select>
+	
+	<update id="user_pass_update" parameterType="LoginVo">
+		UPDATE user
+		SET pw =  password(#{pw})
+		where id = #{id}
+	
+	</update>
+	
+	<update id="main_check" parameterType="String">
+		UPDATE user
+		SET main_chk_yn = 'Y'
+		WHERE id = #{0}
+	
+	</update>
+	
+</mapper>

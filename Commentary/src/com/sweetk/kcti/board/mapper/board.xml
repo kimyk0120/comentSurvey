@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.board.mapper.BoardMapper">
+	
+	<!-- <select id="board_list_count" parameterType="BoardVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				a.*
+			FROM
+				board a left join user u on a.id = u.id
+			WHERE
+				1 = 1
+				<if test="srch_sido_cd != null and srch_sido_cd != '' and srch_sido_cd != '00'"> 
+					AND	a.sido_cd = #{srch_sido_cd}
+				</if>
+				<if test="(srch_sido_cd == null or srch_sido_cd == '00' ) and auth_no != 1">
+					AND (a.sido_cd = '00' OR a.sido_cd = #{user_sido_cd} )
+				</if>
+				<choose>
+				    <when test="srch_nm != null and srch_nm != '' and srch_title == 1"> 
+						AND	a.title like concat('%', #{srch_nm}, '%')
+					</when>
+					<when test="srch_nm != null and srch_nm != '' and srch_title == 2">
+						AND	u.nm like concat('%', #{srch_nm}, '%')
+					</when>
+				</choose>
+				<if test="srch_str_dt != null and srch_str_dt != '' "> 
+					AND	a.reg_dt &gt; #{srch_str_dt}
+				</if>
+				<if test="srch_end_dt != null and srch_end_dt != '' "> 
+					AND	a.reg_dt &lt; #{srch_end_dt}
+				</if>
+			) tt
+	</select>
+	
+	<select id="board_list" parameterType="BoardVo" resultType="BoardVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					board_seq,
+					a.title,
+					a.cntn,
+					a.sido_cd,
+					case when a.sido_cd = '00' then '전체'
+						 else (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) end as sido_cd_nm,
+					a.id,
+					u.nm,
+					a.reg_dt,
+					(select count(*) from board_file f where a.board_seq = board_seq ) as file_cnt,
+					open_yn
+				FROM
+					board a left join user u on a.id = u.id
+				WHERE
+					1 = 1
+					<if test="srch_sido_cd != null and srch_sido_cd != '' and srch_sido_cd != '00'"> 
+						AND	a.sido_cd = #{srch_sido_cd}
+					</if>
+					<if test="(srch_sido_cd == null or srch_sido_cd == '00' ) and auth_no != 1">
+						AND (a.sido_cd = '00' OR a.sido_cd = #{user_sido_cd} )
+					</if>
+					<choose>
+					    <when test="srch_nm != null and srch_nm != '' and srch_title == 1"> 
+							AND	a.title like concat('%', #{srch_nm}, '%')
+						</when>
+						<when test="srch_nm != null and srch_nm != '' and srch_title == 2">
+							AND	u.nm like concat('%', #{srch_nm}, '%')
+						</when>
+					</choose>
+					<if test="srch_str_dt != null and srch_str_dt != '' "> 
+						AND	a.reg_dt &gt; #{srch_str_dt}
+					</if>
+					<if test="srch_end_dt != null and srch_end_dt != '' "> 
+						AND	a.reg_dt &lt; #{srch_end_dt}
+					</if>
+				 ORDER BY
+				 	reg_dt
+				) tt , (select @rownum:=0) tmp
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<insert id="board_insert" parameterType="BoardVo">
+		INSERT INTO board (title, cntn, sido_cd, reg_dt, id, open_yn)
+		VALUES (#{title}, #{cntn}, #{sido_cd}, convert(CURDATE(), char(10)), #{id}, #{open_yn})
+		<selectKey resultType="int" keyProperty="board_seq" order="AFTER">
+			select max(board_seq) FROM board
+		</selectKey>
+	
+	</insert>
+	
+	<insert id="board_file_insert" parameterType="BoardVo">
+		INSERT INTO board_file (board_seq, file_seq, file_nm, org_file_nm)
+		SELECT #{board_seq}, 
+			   ifnull( (select max(file_seq) + 1 from board_file), 1) as file_seq,
+			   #{file_nm},
+			   #{org_file_nm}
+	</insert>
+	
+	<select id="board_info" parameterType="int" resultType="BoardVo">
+		SELECT 
+			board_seq,
+			title,
+			cntn,
+			sido_cd,
+			case when sido_cd = '00' then '전체'
+				 else (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) end as sido_cd_nm,
+			id,
+			(select nm from user u where a.id = u.id) as nm,
+			reg_dt,
+			open_yn
+		FROM
+			board a
+		WHERE
+			board_seq = #{0}
+	</select>
+	
+	<select id="board_file_list" parameterType="int" resultType="BoardVo">
+		SELECT 
+			board_seq,
+			file_seq,
+			file_nm,
+			org_file_nm
+		FROM
+			board_file a
+		WHERE
+			board_seq = #{0}
+	</select>
+	
+	<update id="board_update" parameterType="BoardVo">
+		UPDATE board 
+		SET 
+			title = #{title}
+			,cntn = #{cntn}
+			,sido_cd = #{sido_cd}
+			,open_yn = #{open_yn}
+		WHERE
+			board_seq = #{board_seq}
+	</update>
+	
+	<delete id="board_files_delete" parameterType="BoardVo">
+		DELETE FROM board_file
+		WHERE
+			board_seq = #{board_seq}
+			AND file_seq  IN ( 
+				<foreach item="item" index="index" collection="file_seqs" separator=",">#{item}</foreach>
+		 		)
+	</delete>
+	
+	<delete id="board_delete" parameterType="BoardVo">
+		DELETE FROM board
+		WHERE
+			board_seq = #{board_seq}
+	</delete>
+	
+	<select id="qna_list_count" parameterType="BoardVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				a.*
+			FROM
+				qna  a join user u on a.id = u.id
+			WHERE
+				1 = 1
+				<if test="srch_sido_cd != null and srch_sido_cd != '' and srch_sido_cd != '00'"> 
+					AND	a.sido_cd = #{srch_sido_cd}
+				</if>
+				<if test="(srch_sido_cd == null or srch_sido_cd == '00' ) and auth_no != 1">
+					AND (a.sido_cd = '00' OR a.sido_cd = #{user_sido_cd} )
+				</if>
+				<choose>
+				    <when test="srch_title != null  and srch_title == 1"> 
+						AND	a.title like concat('%', #{srch_nm}, '%')
+					</when>
+					<when test="srch_title != null  and srch_title == 2">
+						AND	u.nm like concat('%', #{srch_nm}, '%')
+					</when>
+				</choose>
+				<if test="srch_str_dt != null and srch_str_dt != '' "> 
+					AND	a.reg_dt &gt; #{srch_str_dt}
+				</if>
+				<if test="srch_end_dt != null and srch_end_dt != '' "> 
+					AND	a.reg_dt &lt; #{srch_end_dt}
+				</if>
+			) tt
+	</select>
+	
+	<select id="qna_list" parameterType="BoardVo" resultType="BoardVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					a.qna_seq,
+					a.title,
+					a.cntn,
+					a.sido_cd,
+					case when a.sido_cd = '00' then '전체'
+						 else (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) end as sido_cd_nm,
+					a.id,
+					u.nm,
+					a.reg_dt,
+					a.up_qna_seq
+				FROM
+					qna a join user u on a.id = u.id
+				WHERE
+					1 = 1
+					<if test="srch_sido_cd != null and srch_sido_cd != '' and srch_sido_cd != '00'"> 
+						AND	a.sido_cd = #{srch_sido_cd}
+					</if>
+					<if test="(srch_sido_cd == null or srch_sido_cd == '00' ) and auth_no != 1">
+						AND (a.sido_cd = '00' OR a.sido_cd = #{user_sido_cd} )
+					</if>
+					<choose>
+					    <when test="srch_title != null  and srch_title == 1"> 
+							AND	a.title like concat('%', #{srch_nm}, '%')
+						</when>
+						<when test="srch_title != null  and srch_title == 2">
+							AND	u.nm like concat('%', #{srch_nm}, '%')
+						</when>
+					</choose>
+					<if test="srch_str_dt != null and srch_str_dt != '' "> 
+						AND	a.reg_dt &gt; #{srch_str_dt}
+					</if>
+					<if test="srch_end_dt != null and srch_end_dt != '' "> 
+						AND	a.reg_dt &lt; #{srch_end_dt}
+					</if>
+				 ) tt , (select @rownum:=0) tmp
+		    ORDER BY
+			 	case when up_qna_seq = 0 then qna_seq else up_qna_seq end, qna_seq desc
+			) bs
+		order by row_num desc
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<insert id="qna_insert" parameterType="BoardVo">
+		INSERT INTO qna (title, cntn, sido_cd, reg_dt, id, up_qna_seq)
+		VALUES (#{title}, #{cntn}, #{sido_cd}, convert(CURDATE(), char(10)), #{id}, #{up_qna_seq})
+		<selectKey resultType="int" keyProperty="qna_seq" order="AFTER">
+			select max(qna_seq) FROM qna
+		</selectKey>
+	
+	</insert>
+	
+	<insert id="qna_file_insert" parameterType="BoardVo">
+		INSERT INTO qna_file (qna_seq, qna_file_seq, file_nm, org_file_nm)
+		SELECT #{qna_seq}, 
+			   ifnull( (select max(qna_file_seq) + 1 from qna_file), 1) as qna_file_seq,
+			   #{file_nm},
+			   #{org_file_nm}
+	</insert>
+	
+	<select id="qna_info" parameterType="int" resultType="BoardVo">
+		SELECT 
+			qna_seq,
+			title,
+			cntn,
+			sido_cd,
+			case when sido_cd = '00' then '전체'
+				 else (select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) end as sido_cd_nm,
+			id,
+			(select nm from user u where a.id = u.id) as nm,
+			reg_dt,
+			up_qna_seq
+		FROM
+			qna a
+		WHERE
+			qna_seq = #{0}
+	</select>
+	
+	<select id="qna_file_list" parameterType="int" resultType="BoardVo">
+		SELECT 
+			qna_seq,
+			qna_file_seq,
+			file_nm,
+			org_file_nm
+		FROM
+			qna_file a
+		WHERE
+			qna_seq = #{0}
+	</select>
+	
+	<update id="qna_update" parameterType="BoardVo">
+		UPDATE qna 
+		SET 
+			title = #{title}
+			,cntn = #{cntn}
+			,sido_cd = #{sido_cd}
+		WHERE
+			qna_seq = #{qna_seq}
+	</update>
+	
+	<delete id="qna_files_delete" parameterType="BoardVo">
+		DELETE FROM qna_file
+		WHERE
+			qna_seq = #{qna_seq}
+			AND qna_file_seq  IN ( 
+				<foreach item="item" index="index" collection="file_seqs" separator=",">#{item}</foreach>
+		 		)
+	</delete>
+	
+	<delete id="qna_delete" parameterType="BoardVo">
+		DELETE FROM qna
+		WHERE
+			qna_seq = #{qna_seq}
+	</delete>
+	
+	<select id="faq_list_count" parameterType="BoardVo" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM (
+			SELECT 
+				a.*
+			FROM
+				faq a
+			WHERE
+				1 = 1
+			) tt
+	</select>
+	
+	<select id="faq_list" parameterType="BoardVo" resultType="BoardVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT 
+					a.faq_seq,
+					a.qstn,
+					a.answ,
+					a.reg_dt
+				FROM
+					faq a
+				WHERE
+					1 = 1
+				 ORDER BY
+				 	faq_seq
+				) tt , (select @rownum:=0) tmp
+			) bs
+		order by row_num desc
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<insert id="faq_insert" parameterType="BoardVo">
+		INSERT INTO faq (qstn, answ, reg_dt)
+		VALUES (#{qstn}, #{answ}, convert(CURDATE(), char(10)) )
+		<selectKey resultType="int" keyProperty="faq_seq" order="AFTER">
+			select max(faq_seq) FROM faq
+		</selectKey>
+	
+	</insert>
+	
+	<select id="faq_info" parameterType="int" resultType="BoardVo">
+		SELECT 
+			faq_seq,
+			qstn,
+			answ,
+			reg_dt
+		FROM
+			faq a
+		WHERE
+			faq_seq = #{0}
+	</select>
+	
+	<update id="faq_update" parameterType="BoardVo">
+		UPDATE faq 
+		SET 
+			qstn = #{qstn}
+			,answ = #{answ}
+		WHERE
+			faq_seq = #{faq_seq}
+	</update>
+	
+	<delete id="faq_delete" parameterType="BoardVo">
+		DELETE FROM faq
+		WHERE
+			faq_seq = #{faq_seq}
+	</delete>
+	
+	<select id="comm_list_count" parameterType="BoardVo" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			community c
+		WHERE
+			1 = 1
+		    <if test="srch_nm != null and srch_nm != ''"> 
+				AND	(c.title like concat('%', #{srch_nm}, '%')
+					 OR c.cntn like concat('%', #{srch_nm}, '%')
+					 )
+			</if>
+			<if test="srch_str_dt != null and srch_str_dt != '' "> 
+				AND	convert(c.reg_dt, char(10)) &gt; #{srch_str_dt}
+			</if>
+			<if test="srch_end_dt != null and srch_end_dt != '' "> 
+				AND	convert(c.reg_dt, char(10)) &lt; #{srch_end_dt}
+			</if>
+	</select>
+	
+	<select id="comm_list" parameterType="BoardVo" resultType="BoardVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT
+					comm_seq,
+					title,
+					cntn,
+					reg_yn,
+					file_nm,
+					org_file_nm,
+					convert(c.reg_dt, char(10)) as reg_dt,
+					reg_id as id,
+					(select nm from user u where u.id = c.reg_id) as nm,
+					use_yn as open_yn,
+					concat(
+					    (select count(*) from community_ans a where c.comm_seq = a.comm_seq), '/', 
+					    (select count(*) from community_ans a2 where c.comm_seq = a2.comm_seq and a2.submit_yn = 'Y')
+					    ) as cnt
+				FROM
+					community c
+				WHERE
+					1 = 1
+				    <if test="srch_title != null and srch_title != ''"> 
+						AND	(c.title like concat('%', #{srch_nm}, '%')
+							 OR c.cntn like concat('%', #{srch_nm}, '%')
+							 )
+					</if>
+					<if test="srch_str_dt != null and srch_str_dt != '' "> 
+						AND	convert(c.reg_dt, char(10)) &gt; #{srch_str_dt}
+					</if>
+					<if test="srch_end_dt != null and srch_end_dt != '' "> 
+						AND	convert(c.reg_dt, char(10)) &lt; #{srch_end_dt}
+					</if>
+					<if test="srch_nm == 1"> 
+						AND	open_yn = 'Y'
+					</if>
+					<if test="srch_nm == 2"> 
+						AND	open_yn = 'N'
+					</if>
+				) tt , (select @rownum:=0) tmp
+			ORDER BY
+			 	reg_dt
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<insert id="comm_save" parameterType="BoardVo" useGeneratedKeys="true" keyProperty="comm_seq">
+		INSERT INTO community (title, cntn, reg_yn, file_nm, org_file_nm, reg_dt, reg_id, use_yn)
+		VALUES (#{title}, #{cntn}, 'Y', #{file_nm}, #{org_file_nm}, now(), #{id}, 'Y' )
+	</insert>
+	
+	<insert id="comm_sido_save" parameterType="BoardVo">
+		INSERT INTO community_ans (comm_seq, sido_cd, submit_yn)
+		VALUES (#{comm_seq}, #{sido_cd}, 'N')
+	</insert>
+	
+	<select id="comm_info" parameterType="BoardVo" resultType="BoardVo">
+		SELECT
+			comm_seq,
+			title,
+			cntn,
+			reg_yn,
+			file_nm,
+			org_file_nm,
+			convert(reg_dt, char(10)) as reg_dt,
+			use_yn as open_yn,
+			(select count(*) from community_ans a2 where c.comm_seq = a2.comm_seq and a2.reg_dt is not null) as cnt
+		FROM
+			community c
+		WHERE
+			comm_seq = #{comm_seq}
+	</select>
+
+	<select id="comm_ans_list" parameterType="BoardVo" resultType="BoardVo">
+		SELECT
+			sido_cd,
+			(select sido_cd_nm from sido s where c.sido_cd = s.sido_cd) as sido_cd_nm,
+			cntn,
+			file_nm,
+			org_file_nm,
+			submit_yn,
+			submit_dt,
+			convert(reg_dt, char(10)) as reg_dt
+		FROM
+			community_ans c
+		WHERE
+			comm_seq = #{comm_seq}
+	</select>
+	
+	<select id="comm_mylist_count" parameterType="BoardVo" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			community c join community_ans a on c.comm_seq = a.comm_seq
+		WHERE
+			a.sido_cd = #{sido_cd}
+		    <if test="srch_title != null and srch_title != ''"> 
+				AND	(c.title like concat('%', #{srch_title}, '%')
+					 OR c.cntn like concat('%', #{srch_title}, '%')
+					 )
+			</if>
+			<if test="srch_str_dt != null and srch_str_dt != '' "> 
+				AND	convert(c.reg_dt, char(10)) &gt; #{srch_str_dt}
+			</if>
+			<if test="srch_end_dt != null and srch_end_dt != '' "> 
+				AND	convert(c.reg_dt, char(10)) &lt; #{srch_end_dt}
+			</if>
+			<if test="srch_nm == 1"> 
+				AND	submit_yn = 'Y'
+			</if>
+			<if test="srch_nm == 2"> 
+				AND	submit_yn = 'N'
+			</if>
+	</select>
+	
+	<select id="comm_mylist" parameterType="BoardVo" resultType="BoardVo">
+		select 
+			bs.*
+		from (
+			SELECT
+				@rownum:=@rownum+1  as row_num,
+				tt.*
+			FROM (
+				SELECT
+					c.comm_seq,
+					c.title,
+					c.cntn,
+					reg_yn,
+					c.file_nm,
+					c.org_file_nm,
+					convert(c.reg_dt, char(10)) as reg_dt,
+					c.reg_id as id,
+					(select nm from user u where u.id = c.reg_id) as nm,
+					a.submit_yn,
+					a.submit_dt,
+					c.use_yn as open_yn
+				FROM
+					community c join community_ans a on c.comm_seq = a.comm_seq
+				WHERE
+					a.sido_cd = #{sido_cd}
+				    <if test="srch_nm != null and srch_nm != ''"> 
+						AND	(c.title like concat('%', #{srch_nm}, '%')
+							 OR c.cntn like concat('%', #{srch_nm}, '%')
+							 )
+					</if>
+					<if test="srch_str_dt != null and srch_str_dt != '' "> 
+						AND	convert(c.reg_dt, char(10)) &gt; #{srch_str_dt}
+					</if>
+					<if test="srch_end_dt != null and srch_end_dt != '' "> 
+						AND	convert(c.reg_dt, char(10)) &lt; #{srch_end_dt}
+					</if>
+					<if test="srch_nm == 1"> 
+						AND	submit_yn = 'Y'
+					</if>
+					<if test="srch_nm == 2"> 
+						AND	submit_yn = 'N'
+					</if>
+				) tt , (select @rownum:=0) tmp
+			ORDER BY
+			 	reg_dt
+			) bs
+		order by row_num desc      
+		limit #{startRow}, #{endRow}
+	</select>
+	
+	<select id="comm_myinfo" parameterType="BoardVo" resultType="BoardVo">
+		SELECT
+			c.comm_seq,
+			sido_cd,
+			(select sido_cd_nm from sido s where c.sido_cd = s.sido_cd) as sido_cd_nm,
+			cntn,
+			file_nm,
+			org_file_nm,
+			submit_yn,
+			submit_dt,
+			convert(reg_dt, char(10)) as reg_dt
+		FROM
+			community_ans c
+		WHERE
+			c.comm_seq = #{comm_seq}
+			AND c.sido_cd = #{sido_cd}
+	</select>
+	
+	<update id="comm_mysave" parameterType="BoardVo">
+		UPDATE community_ans
+		SET cntn = #{cntn},
+			<if test="file_nm != null and file_nm != ''"> 
+			file_nm = #{file_nm},
+			org_file_nm = #{org_file_nm},
+			</if>
+			<if test='submit_yn == "Y"'> 
+				submit_yn = #{submit_yn},
+				submit_dt = now(),
+			</if>
+			reg_dt = now(),
+			reg_id = #{id}
+		WHERE
+			comm_seq = #{comm_seq}
+			AND sido_cd = #{sido_cd}
+	</update>
+	
+	<update id="comm_update" parameterType="BoardVo">
+		UPDATE community 
+		SET title = #{title},
+			cntn = #{cntn}, 
+			reg_yn = 'Y', 
+			<if test="file_nm != null and file_nm != ''"> 
+			file_nm = #{file_nm},
+			org_file_nm = #{org_file_nm},
+			</if>
+			reg_dt = now(),
+			reg_id = #{id}
+		WHERE
+			comm_seq = #{comm_seq}
+	</update>
+	
+	<delete id="comm_sido_delete" parameterType="BoardVo">
+		DELETE FROM community_ans
+		WHERE comm_seq = #{comm_seq}
+	</delete>
+	
+	<update id="comm_close" parameterType="BoardVo">
+		UPDATE community 
+		SET use_yn = 'N'
+		WHERE
+			comm_seq = #{comm_seq}
+	</update>
+	
+	<select id="sido_email_info" parameterType="String" resultType="String">
+		SELECT
+			email
+		FROM 
+			user
+		WHERE
+			sido_cd = #{0}
+			AND auth_no = '2'
+			AND ifnull(CNSM_ORG_YN, '') != 'Y'
+	</select>
+	
+	
+	<select id="comm_delete" parameterType="String">
+		DELETE FROM community 
+		WHERE comm_seq = #{comm_seq}
+	</select>
+
+	<select id="comm_ans_delete" parameterType="String">
+		DELETE FROM community_ans 
+		WHERE comm_seq = #{comm_seq}
+	</select> -->
+	
+</mapper>

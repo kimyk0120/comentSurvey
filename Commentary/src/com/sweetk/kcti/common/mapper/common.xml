@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.common.mapper.CommonMapper">
+	
+	<select id="sido_list" parameterType="CommonVo" resultType="CommonVo">
+		SELECT
+			sido_cd,
+			sido_cd_nm,
+			gugun_yn
+		FROM
+			sido
+	</select>
+	
+	
+	<select id="gugun_list" parameterType="CommonVo" resultType="CommonVo">
+		SELECT
+			gugun_cd,
+			gugun_cd_nm
+		FROM
+			gugun
+		WHERE
+			sido_cd = #{sido_cd}
+		ORDER BY
+			case when gugun_cd_nm = '전체' then 'a' else gugun_cd_nm end
+	</select>
+	
+	<select id="gugun_check" parameterType="String" resultType="CommonVo">
+		SELECT
+			sido_cd,
+			sido_cd_nm,
+			gugun_yn
+		FROM
+			sido
+		WHERE
+			sido_cd = #{sido_cd}
+	</select>
+	
+	<insert id="user_act_insert" parameterType="CommonVo">
+		INSERT INTO user_act_hist (id, act_prt_cd, reg_tm, ip_info)
+		VALUES (#{id}, #{act_prt_cd}, now(), #{ip_info})
+	</insert>
+	<!-- 
+	<select id="topMenu_list" parameterType="CommonVo" resultType="CommonVo">
+		SELECT 
+			a.menu_id,
+			b.menu_name,
+			a.read_auth,
+			a.write_auth,
+			b.menu_path
+		FROM 
+			di_menu_auth a join di_menu b on a.menu_id = b.menu_id
+		WHERE
+			b.up_menu_id = '00'
+			AND a.auth = #{auth}
+			AND a.write_auth = 'Y'
+		
+	</select>
+	 -->
+	 
+	<select id="main_cnt_info" parameterType="CommonVo" resultType="CommonVo">
+		SELECT 
+			ifnull((
+				SELECT 
+					sum(ifnull(visitor_cnt,0)) as tot_visitor_cnt
+				FROM 
+					act_hist
+				WHERE 1=1
+					AND	work_ym between #{srch_str_ym}  and  #{srch_end_ym}
+				 ), 0) as tot_visitor_cnt
+			 ,
+			 ifnull((
+				SELECT 
+					count(cmntor_no) as tot_cmmt_cnt
+				FROM 
+					cmntor
+				WHERE
+					act_yn = 'Y'
+				 ), 0) as tot_cmmt_cnt
+	</select>
+	
+	<select id="cmmt_update_info" parameterType="CommonVo" resultType="CommonVo">
+		SELECT
+			bs.sido_cd,
+			(select sido_cd_nm from sido s where bs.sido_cd = s.sido_cd) as sido_cd_nm,
+			bs.cmntor_cnt,
+			ifnull(bs2.cmntor_update_cnt,0) as cmntor_update_cnt
+		FROM (select sido_cd, count(cmntor_no) as cmntor_cnt from cmntor where act_yn = 'Y' group by sido_cd) bs left join
+			(
+			SELECT 
+				a.sido_cd,
+				count(b.seq) as cmntor_update_cnt
+			FROM
+				cmntor a join user_act_hist b on a.cmntor_no = b.cmntor_no and b.act_prt_cd like '2%'
+			WHERE 1=1
+				AND	convert(reg_tm, char(10)) between concat(#{srch_str_ym}, '-01')  and  concat(#{srch_end_ym}, '-31')
+			GROUP BY
+				a.sido_cd
+			) bs2 on bs.sido_cd = bs2.sido_cd
+	</select>
+	
+	<select id="login_info" parameterType="CommonVo" resultType="CommonVo">
+		SELECT
+			bs.sido_cd,
+			ifnull( (select sido_cd_nm from sido s where bs.sido_cd = s.sido_cd), '비로그인') as sido_cd_nm,
+			bs.user_cnt,
+			bs2.login_cnt
+		FROM (select ifnull(sido_cd,'00') as sido_cd, count(id) as user_cnt from user where (sido_cd != null or sido_cd != '') group by ifnull(sido_cd,'00')) bs left join
+			(
+			SELECT 
+				ifnull(a.sido_cd,'00') as sido_cd,
+				count(b.seq) as login_cnt
+			FROM
+				user a join user_act_hist b on a.id = b.id and b.act_prt_cd = '11'
+			WHERE 1=1
+				AND	convert(reg_tm, char(10)) between concat(#{srch_str_ym}, '-01')  and  concat(#{srch_end_ym}, '-31')
+			GROUP BY
+				ifnull(a.sido_cd,'00')
+			) bs2 on bs.sido_cd = bs2.sido_cd
+	</select>
+	
+	
+	<select id="yyyy_list" resultType="CommonVo">
+		select 
+			yyyy,
+			concat(yyyy,'년') as yy
+		from (
+			select convert(CURDATE(), char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 1 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 2 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 3 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 4 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 5 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 6 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 7 year, char(4)) as yyyy
+			union all
+			select convert( CURDATE() - interval 8 year, char(4)) as yyyy
+			) bs
+	</select>
+	
+	<select id="month_list" resultType="CommonVo">
+		select 
+			ym,
+			concat(replace(ym,'-','년'),'월') as yymm
+	    from (
+			select
+				bs.n,
+				convert(date_add(concat(ym, '-01'), interval bs.n month), char(7)) as ym
+			from (
+				select (a.n*16 + b.n) as n
+				from (
+					  select 0 n union all select 1  union all select 2  union all
+					  select 3   union all select 4  union all select 5  union all
+					  select 6   union all select 7  union all select 8  union all
+					  select 9   union all select 10 union all select 11 union all
+					  select 12  union all select 13 union all select 14 union all
+					  select 15 ) a join 
+					(
+					  select 0 n union all select 1  union all select 2  union all
+					  select 3   union all select 4  union all select 5  union all
+					  select 6   union all select 7  union all select 8  union all
+					  select 9   union all select 10 union all select 11 union all
+					  select 12  union all select 13 union all select 14 union all
+					  select 15 ) b
+					) bs join (
+					SELECT min(work_ym) as ym,
+					TIMESTAMPDIFF(MONTH,  concat(min(work_ym),'-01'), convert(curdate(),char(10) )) dif
+					FROM act_hist
+					) c on bs.n &lt;= c.dif
+	            ) tt
+		order by n desc
+	</select>
+	
+	<select id="month_list2" resultType="CommonVo">
+		select 
+			ym,
+			concat(replace(ym,'-','년'),'월') as yymm
+	    from (
+			select
+				bs.n,
+				convert(date_add(concat(ym, '-01'), interval bs.n month), char(7)) as ym
+			from (
+				select (a.n*16 + b.n) as n
+				from (
+					  select 0 n union all select 1  union all select 2  union all
+					  select 3   union all select 4  union all select 5  union all
+					  select 6   union all select 7  union all select 8  union all
+					  select 9   union all select 10 union all select 11 union all
+					  select 12  union all select 13 union all select 14 union all
+					  select 15 ) a join 
+					(
+					  select 0 n union all select 1  union all select 2  union all
+					  select 3   union all select 4  union all select 5  union all
+					  select 6   union all select 7  union all select 8  union all
+					  select 9   union all select 10 union all select 11 union all
+					  select 12  union all select 13 union all select 14 union all
+					  select 15 ) b
+					) bs join (
+					SELECT work_ym as ym, TIMESTAMPDIFF(MONTH,  concat(work_ym,'-01'), convert(curdate(),char(10) )) dif
+					FROM (SELECT MIN(work_ym) as work_ym from act_hist where work_ym &gt; '2010-01') bb
+					) c on bs.n &lt;= c.dif
+	            ) tt
+		order by n desc
+	</select>
+	
+	<insert id="cmmt_info_hist_insert" parameterType="CommonVo">
+		INSERT INTO user_act_hist (id, act_prt_cd, reg_tm, ip_info, cmntor_no)
+		VALUES (#{id}, #{act_prt_cd}, now(), #{ip_info}, #{cmntor_no})
+	</insert>
+	
+	<select id="dup_check" parameterType="String" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM 
+			act_hist
+		WHERE
+			cmntor_no = #{0}
+			AND work_ym = #{1}
+	</select>
+	
+	<select id="dup_check2" parameterType="String" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM 
+			act_fee_pay_hist
+		WHERE
+			cmntor_no = #{0}
+			AND act_ym = #{1}
+	</select>
+	
+	<!-- <insert id="sign_input" parameterType="map">
+		Insert Into sign_test (sign_name, sign_addr, latitude, longitude) 
+		values (#{name}, #{addr}, #{lat}, #{lon})
+	</insert> -->
+	
+</mapper>

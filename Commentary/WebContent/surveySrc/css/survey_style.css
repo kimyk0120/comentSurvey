@@ -1,0 +1,319 @@
+/* common */
+button {
+    background-color:rgba(250,0,0,0) 
+}
+
+/* common class */
+
+.clearfix:after{content:'.'; display:block; clear:both; width: 0; height: 0; text-indent:-9999px; overflow: hidden;}
+.hide {display:none;}
+.screen_out {display:block; width: 0; height: 0; text-indent:-9999px; overflow:hidden;}
+.fl {float:left;}
+.fr {float: right;}
+.clear {clear: both;}
+.mb60 {margin-bottom: 60px;!important}
+.ml60 {margin-left: 60px;!important}
+.pl220 {padding-left: 230px;!important}
+
+
+
+/*common layout*/
+
+body {
+    width: 950px; margin: 0 auto; background-color:#ffffff; 
+    font-family: "NotoSansKR Regular", sans-serif; /*box-shadow:  0px 2px 2px #dddddd;*/
+} /*2017.02.10 수정*/
+
+#s_head {
+    height: 35px; margin-bottom: 30px; background-color:#f0f3ff; color:#999999; line-height:35px; padding-left: 15px; font-weight:bold; box-shadow:  0px 2px 2px #dddddd;
+}
+
+tr,td,th,div,form,fieldset,button,input {
+    box-sizing: border-box;
+}
+
+/*index_list style*/
+
+#s_contents {padding: 0 31px;}
+#s_button {
+    width: 100px; height: 28px; background-color:#ffffff; border:1px solid #66ccff; border-radius: 2px; color:#66ccff; line-height:28px; font-size:15px; float: right; margin-bottom: 13px; font-weight:bold; box-shadow:0px 2px 2px;
+}
+
+#survey_table {
+    text-align:center;
+    border-top:1px solid #cccccc; color:#cccccc; margin:0 auto;
+}
+
+#survey_title {
+    background-color:#efefef; height: 33px;;
+}
+
+tr {
+    border-bottom:1px solid #cccccc; color:#999999; height: 53px;
+}
+
+tr.ing td.situation {
+    color:#0066ff;
+}
+
+tr.end {
+    
+}
+
+td.situation {
+    width: 91px;
+}
+
+td.t_title {
+    width: 355px;
+}
+
+td.s_contents {
+    
+}
+
+tr.ing td.t_title p.s_contents {
+    color:#333333;
+}
+
+td p.t_data {
+   
+}
+
+td.p_number {
+     width: 68px;
+}
+
+td.m_data {
+    width: 89px;
+}
+
+td.preview {
+    width: 74px;
+}
+td.preview button {
+    background-color:rgba(250,0,0,0) 
+}
+
+td.modification {
+    width: 67px;
+}
+
+td.modification button {
+    background-color:rgba(250,0,0,0) 
+}
+
+td.delete {
+    width: 61px;
+}
+
+
+td.save {
+    width: 86px;
+}
+
+td.save button {
+    background-color:rgba(250,0,0,0) 
+}
+
+
+tr.ing td.situation, tr.ing td.t_title p.s_contents {
+    font-weight:bolder;
+}
+
+
+
+
+
+/* index_write */
+
+#sw_data, #sw_title, form#survey_write {
+    width: 790px; margin: 0 auto;
+}
+
+#sw_data {
+    text-align: right; margin-top: 66px; line-height: 30px; 
+}
+
+#sw_title {
+     height: 62px; text-align: center; line-height: 60px; font-size:20px; color: #4b5b9d; background-color:#c9cde1; border:1px solid #4b5b9d; font-weight: bold;
+}/*2017.02.10 수정*/
+form#survey_write {
+    color:#4b5b9d; margin-bottom: 100px;
+}
+
+
+
+/*2017.02.10 추가*/
+fieldset.basic_s {margin: 3% 3% 3% 0; padding: 0 0 0 3%; border-left:7px solid #dbdeeb;}
+fieldset.basic_s ul li {height: 35px; line-height: 35px; font-size:14px; color:#4b5b9d; font-weight: bold; }
+ul li#se_date input {height: 20px; margin: 0 20px 5px 20px ; width: 150px;} 
+ul li#se_date label:last-child {margin-left: 20px;}
+ul li#sort_s span, ul li#sort_s label {margin-right: 20px;}
+ul li#sort_s input {margin-bottom: 4px; margin-right: 10px;}
+fieldset.article div:first {height: 60px; }
+
+
+
+p.a_number {
+    width: 60px; height: 60px; border:1px solid #4b5b9d; color:#4b5b9d; background-color:#dbdeeb;font-size:35px; text-align:center; font-weight: 500; float:left; 
+}p.am_number {
+    width: 60px; height: 60px; border:1px solid #4b5b9d; color:#4b5b9d;  font-size:35px; text-align:center; font-weight: 500; float:left; line-height:58px; background:url(../img/write.png) no-repeat #dbdeeb center
+}
+p.aq_text {
+    font-size:16px; padding: 5px 0 0 15px; float: left; font-weight: bold;
+}
+
+
+/*2017.02.10 삭제*/
+
+
+input.t_input {
+    width: 390px; height: 30px; border:1px solid #4b5b9d; margin: 10px 0 71px 15px; color:#c9cde1;
+}
+
+ul.s_radio, ul.s_checkbox {
+    margin: 10px; float: left; margin-bottom: 45px;
+}
+
+ul.s_radio li, ul.s_checkbox li {
+    height: 30px; font-size:15px; letter-spacing: 1px
+}
+
+ul.s_radio li input.r_li ul.s_checkbox li input.r_li {
+    width: 20px; height: 20px;
+}
+
+fieldset.m_article div input.qw {
+    width: 667px; margin-left: 17px; float: left; height: 60px; border:1px dashed #a9a9b3; font-size:16px; line-height: 30px; padding:0 0 20px 10px; font-weight: bold; color:#4b5b9d;
+}/*2017.02.10 수정*/
+
+fieldset.m_article div button.b_del {width: 20px; height: 20px; background:url(../img/icon_X.png) no-repeat center; background-size:80%; margin-left: 25px;}/*2017.02.10 추가*/
+
+fieldset> div:nth-child(2) {
+    padding-left: 60px;
+}/*2017.02.10 추가*/
+
+div.sort {
+    float: left; padding: 15px 0 0 15px; width: 730px;
+}
+
+div.sort p {
+    height: 34px; float: left; line-height: 34px; font-size:15px; letter-spacing: 1px; font-weight: bold; color:#ff9600; margin-bottom: 10px;
+}
+
+div.sort button.arrow {
+    background:url(../img/arrow.png) no-repeat center; float: right; width: 17px; height: 34px;
+}
+
+div.sort button.sort_bt {
+    width: 310px; height: 70px; text-align:left; font-weight: bold; float: left; background-color:#f6f6f7; border:1px dotted #4b5b9d; border-radius: 5px; font-size:15px; line-height: 70px;
+}
+
+div.sort button.objective {margin-right: 50px;}
+
+
+div.sort button p.o_close {
+    background:url(../img/icon02.png) no-repeat center; width: 70px; height: 70px; margin-left: 60px; margin-right: 10px;;
+}
+
+div.sort button p.o_open {
+    background:url(../img/icon01.png) no-repeat center; width: 70px; height: 70px; margin-left: 60px; margin-right: 10px;;
+}
+
+div.sort button p.s_close {
+    background:url(../img/icon04.png) no-repeat center; width: 70px; height: 70px; margin-left: 60px; margin-right: 10px;;
+}
+
+div.sort button p.s_open {
+    background:url(../img/icon03.png) no-repeat center; width: 70px; height: 70px; margin-left: 60px; margin-right: 10px;;
+}
+
+button.close {
+    color:#bbbbbb;
+}
+
+button.open {color:#4b5b9d;}
+
+fieldset button.w_add {width: 60px; height: 60px; margin: 40px 365px; border:2px solid #4b5b9d; border-radius: 50%; background:url(../img/l_add.png) no-repeat center; background-size:80%;}/*2017.02.10 추가*/
+
+ul.s_radio li:after{content:'.'; display:block; clear:both; width: 0; height: 0; text-indent:-9999px; overflow: hidden;}
+
+ul.w_radio {
+    margin:25px 0 80px 75px;
+}
+
+ul.w_radio li input {float: left;}
+
+ul.w_radio li {float:left; margin-bottom: 10px;}
+
+
+
+ul.w_radio li input.m_radio {
+    height: 30px; width: 20px; 
+}
+
+button.r_add {
+    background:url(../img/s_add.png) no-repeat center; width: 25px; height: 25px; clear:both; 
+}
+
+input.tm_input {
+    width: 390px; height: 30px; border:1px solid #4b5b9d; margin-left:15px; margin-right: 20px;
+}
+
+button.r_delete {
+    background:url(../img/s_delete.png) no-repeat center; width: 20px; height: 30px; background-size:contain; 
+}
+
+
+fieldset#sending {
+    padding: 0 80px; margin-top: 50px;
+}/*2017.02.10 수정*/
+
+fieldset#sending button {
+    width: 270px; height: 61px; text-align:center; font-size:20px; background-color:#dbdeeb; border:1px solid #4b5b9d; font-weight: 800; color:#4b5b9d;
+}
+
+fieldset#sending button.save {
+    margin-left: 80px;
+}
+
+
+
+
+
+/* survey_result */
+
+html,body {height: 100%; width: 100%;}
+div.bg {
+    height: 45px; width: 100%; background-color:#003669;
+}
+div#sr_header{
+    margin-top: -2px;text-align:center; color:#ffffff; font-weight: bolder; background:linear-gradient(to bottom,#003669,#ffffff); height: 125px; width: 100%;
+}
+
+div#sr_header h1 {
+    position:relative; height: 60px;  padding: 0; text-align: center; margin: 0 auto; width: 240px;
+}
+
+div#sr_header h1 img {
+    margin-right: 15px; height: 60px;
+} 
+
+div#sr_header h1 p {
+    font-size:20px; line-height: 30px;
+}
+
+div#sr_contents {
+    width: 780px; margin: 0 auto; color:#4b5b9d;
+}
+p.sr_data {
+    text-align: right; line-height: 30px;
+}
+
+
+#sr_title {
+     height: 62px; text-align: center; line-height: 60px; font-size:20px; color: #4b5b9d; background-color:#c9cde1; border:1px solid #4b5b9d; margin-bottom: 40px; font-weight: bold;
+}
+
+input.r_li {}

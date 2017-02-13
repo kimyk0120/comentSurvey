@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.sweetk.kcti.stats.mapper.StatsMapper">
+	
+	<!-- <select id="stats_cmmt_age" parameterType="StatsVo" resultType="StatsVo">
+	
+		SELECT
+			bs.ages,
+			ifnull( (select sido_cd_nm from sido where sido_cd = #{srch_sido_cd}), '전체') as sido_cd_nm,
+			ifnull(bs2.female_cnt, 0) as female_cnt,
+			ifnull(bs2.male_cnt, 0) as male_cnt
+		FROM 
+			(SELECT '10' as ag, '20대 미만' as ages
+				UNION ALL SELECT '20' as ag, '20대' as ages
+				UNION ALL SELECT '30' as ag, '30대' as ages
+				UNION ALL SELECT '40' as ag, '40대' as ages
+				UNION ALL SELECT '50' as ag, '50대' as ages
+				UNION ALL SELECT '60' as ag, '60대' as ages
+				UNION ALL SELECT '70' as ag, '70대 이상' as ages
+                UNION ALL SELECT 'tot' as ag, '총 계' as ages
+			) bs left join
+		    (
+			select 
+				ifnull(ag, 'tot') as ag,
+			    sum(case when gender = 'F' then 1 else 0 end) as female_cnt,
+			    sum(case when gender = 'M' then 1 else 0 end) as male_cnt
+			from (
+				select case when age &lt; 20 then '10'
+							when age &lt; 30 then '20'
+							when age &lt; 40 then '30'
+							when age &lt; 50 then '40'
+							when age &lt; 60 then '50'
+							when age &lt; 70 then '60'
+							when age &gt; 69 then '70'  end as ag,
+						cmntor_no,
+						gender
+				from (
+					select cmntor_no, birth_dt, year(curdate()) - convert(substr(birth_dt,1,4), decimal) as age, gender
+					from cmntor
+					where 1 = 1
+					    <if test="srch_sido_cd != null and srch_sido_cd != '' "> 
+					    AND sido_cd = case when #{srch_sido_cd} = '00' then sido_cd else #{srch_sido_cd} end
+					    </if>
+					) a
+				) b
+			group by ag with rollup
+			) bs2 on bs.ag = bs2.ag
+	</select> -->
+	
+	<select id="stats_cmmt_age" parameterType="StatsVo" resultType="StatsVo">
+		select 
+			cmntor_no, 
+			ifnull( (select sido_cd_nm from sido where sido_cd = #{srch_sido_cd}), '전체') as sido_cd_nm,
+			birth_dt as ages, gender as cmmt_cnt
+		from cmntor
+		where length(birth_dt) &gt; 9
+			AND gender in ('M','F')
+		    <if test="srch_sido_cd != null and srch_sido_cd != '' "> 
+		    AND sido_cd = case when #{srch_sido_cd} = '00' then sido_cd else #{srch_sido_cd} end
+		    </if>
+	</select>
+	
+	
+	<select id="stats_cmmt_age2" parameterType="StatsVo" resultType="StatsVo">
+		select 	
+			cmntor_no, birth_dt as ages, gender as cmmt_cnt,
+				ifnull( (select gugun_cd_nm from gugun where gugun_cd = #{srch_gugun_cd}), '전체') as gugun_cd_nm
+		from cmntor
+		where length(birth_dt) &gt; 9
+		AND gender in ('M','F')
+			<if test="srch_sido_cd != null and srch_sido_cd != '' "> 
+		    AND sido_cd = #{srch_sido_cd}
+		    </if>
+			<if test="srch_gugun_cd != null and srch_gugun_cd != '' "> 
+		    AND	gugun_cd = case when #{srch_gugun_cd} like '%000' then gugun_cd else #{srch_gugun_cd} end 
+		    </if>
+					
+	</select>
+<!-- 	<select id="stats_cmmt_age2" parameterType="StatsVo" resultType="StatsVo">
+	
+		SELECT
+			bs.ages,
+			ifnull( (select gugun_cd_nm from gugun where gugun_cd = #{srch_gugun_cd}), '전체') as gugun_cd_nm,
+			ifnull(bs2.female_cnt, 0) as female_cnt,
+			ifnull(bs2.male_cnt, 0) as male_cnt
+		FROM 
+			(SELECT '10' as ag, '20대 미만' as ages
+				UNION ALL SELECT '20' as ag, '20대' as ages
+				UNION ALL SELECT '30' as ag, '30대' as ages
+				UNION ALL SELECT '40' as ag, '40대' as ages
+				UNION ALL SELECT '50' as ag, '50대' as ages
+				UNION ALL SELECT '60' as ag, '60대' as ages
+				UNION ALL SELECT '70' as ag, '70대 이상' as ages
+                UNION ALL SELECT 'tot' as ag, '총 계' as ages
+			) bs left join
+		    (
+			select 
+				ifnull(ag, 'tot') as ag,
+			    sum(case when gender = 'F' then 1 else 0 end) as female_cnt,
+			    sum(case when gender = 'M' then 1 else 0 end) as male_cnt
+			from (
+				select case when age &lt; 20 then '10' 
+									when age &lt; 30 then '20'
+									when age &lt; 40 then '30'
+									when age &lt; 50 then '40'
+									when age &lt; 60 then '50'
+									when age &lt; 70 then '60'
+									when age &gt; 69 then '70'  end as ag,
+									cmntor_no,
+									gender
+				from (
+					select cmntor_no, birth_dt, year(curdate()) - convert(substr(birth_dt,1,4), decimal) as age, gender
+					from cmntor
+					where 1 = 1
+						<if test="srch_sido_cd != null and srch_sido_cd != '' "> 
+					    AND sido_cd = #{srch_sido_cd}
+					    </if>
+						<if test="srch_gugun_cd != null and srch_gugun_cd != '' "> 
+					    AND	gugun_cd = case when #{srch_gugun_cd} like '%000' then gugun_cd else #{srch_gugun_cd} end 
+					    </if>
+					) a
+				) b
+			group by ag with rollup
+			) bs2 on bs.ag = bs2.ag
+	</select> -->
+	
+	<select id="stats_cmmt_work" parameterType="StatsVo" resultType="StatsVo">
+		SELECT
+			sido_cd,
+		    (select sido_cd_nm from sido s where c.sido_cd = s.sido_cd) as sido_cd_nm, 
+            round(cmntor_mon_cnt, 2) as cmntor_mon_cnt,
+		    round(cmntor_dly_tm, 2) as cmntor_dly_tm, 
+		    round(cmntor_mon_work, 2) as cmntor_mon_work,
+		    round(cmntor_min_work, 2) as cmntor_min_work, 
+		    round(cmntor_max_work, 2) as cmntor_max_work       
+		FROM (
+			SELECT 
+				a.sido_cd,
+				avg(work_dt_cnt) as cmntor_mon_cnt,
+				avg(round(work_tm / work_dt_cnt,2)) as cmntor_dly_tm,
+                avg(work_tm) as cmntor_mon_work,
+                min(round(work_tm / work_dt_cnt,2)) as cmntor_min_work,
+                max(round(work_tm / work_dt_cnt,2)) as cmntor_max_work
+			FROM 
+				cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+			WHERE
+				work_ym between #{srch_str_ym}  and  #{srch_end_ym}
+			GROUP BY
+				a.sido_cd
+			) c
+	</select>
+	
+	<select id="stats_local_cmmt_work" parameterType="StatsVo" resultType="StatsVo">
+		SELECT
+			gugun_cd,
+		    (select gugun_cd_nm from gugun g where c.gugun_cd = g.gugun_cd) as sido_cd_nm, 
+            round(cmntor_mon_cnt, 2) as cmntor_mon_cnt,
+		    round(cmntor_dly_tm, 2) as cmntor_dly_tm, 
+		    round(cmntor_mon_work, 2) as cmntor_mon_work,
+		    round(cmntor_min_work, 2) as cmntor_min_work, 
+		    round(cmntor_max_work, 2) as cmntor_max_work       
+		FROM (
+			SELECT 
+				a.gugun_cd,
+				avg(work_dt_cnt) as cmntor_mon_cnt,
+				avg(round(work_tm / work_dt_cnt,2)) as cmntor_dly_tm,
+                avg(work_tm) as cmntor_mon_work,
+                min(round(work_tm / work_dt_cnt,2)) as cmntor_min_work,
+                max(round(work_tm / work_dt_cnt,2)) as cmntor_max_work
+			FROM 
+				cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+			WHERE
+				work_ym between #{srch_str_ym}  and  #{srch_end_ym}
+			AND
+				a.sido_cd = #{sido_cd}
+			GROUP BY
+				a.gugun_cd
+			) c
+	
+		<!-- SELECT
+			gugun_cd,
+		    (select gugun_cd from gugun g where c.gugun_cd = g.gugun_cd) as gugun_cd_nm, 
+		    round(cnt, 2) as cmntor_mon_cnt, 
+		    round(hour(avg_work_tm) + minute(avg_work_tm)/60,2) as cmntor_dly_tm,
+ 			round(hour(sum_work_tm) + minute(sum_work_tm)/60,2) as cmntor_mon_work,
+ 			convert(cmntor_min_work, char(5)) as cmntor_min_work,
+			convert(cmntor_max_work, char(5)) as cmntor_max_work
+		FROM (
+			SELECT
+				gugun_cd,
+				avg(cnt) as cnt,
+				sec_to_time(avg(time_to_sec(avg_work_tm))) as avg_work_tm,
+				sec_to_time(avg(time_to_sec(sum_work_tm))) as sum_work_tm,
+				min(cmntor_min_work) as cmntor_min_work,
+				max(cmntor_max_work) as cmntor_max_work
+			FROM (
+				SELECT
+					ym,
+					sido_cd,
+					gugun_cd,
+					avg(cnt) as cnt,
+					sec_to_time(avg(time_to_sec(avg_work_tm))) as avg_work_tm,
+					sec_to_time(avg(time_to_sec(sum_work_tm))) as sum_work_tm,
+					min(cmntor_min_work) as cmntor_min_work,
+					max(cmntor_max_work) as cmntor_max_work
+				FROM (
+					SELECT 
+						a.cmntor_no, 
+						substr(work_dt,1,7) as ym, 
+						a.sido_cd,
+						a.gugun_cd,
+					    count(*) as cnt,
+						sec_to_time(avg(time_to_sec(TIMEDIFF(work_end_tm, work_str_tm)))) as avg_work_tm,
+					    sec_to_time(sum(time_to_sec(TIMEDIFF(work_end_tm, work_str_tm)))) as sum_work_tm,
+						sec_to_time(min(time_to_sec(TIMEDIFF(work_end_tm, work_str_tm)))) as cmntor_min_work,
+					    sec_to_time(max(time_to_sec(TIMEDIFF(work_end_tm, work_str_tm)))) as cmntor_max_work
+					FROM 
+						cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+					WHERE 1=1
+						<choose>
+						    <when test="srch_dt_prt != null  and srch_dt_prt == 1"> 
+								AND	work_dt between concat(#{srch_ym}, '-01')  and  concat(#{srch_ym}, '-31')
+							</when>
+							<when test="srch_dt_prt != null  and srch_dt_prt == 2">
+								AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -2 month), char)   and  concat(#{srch_ym}, '-31')
+							</when>
+							<when test="srch_dt_prt != null  and srch_dt_prt == 3">
+								AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -5 month), char)   and  concat(#{srch_ym}, '-31')
+							</when>
+							<when test="srch_dt_prt != null  and srch_dt_prt == 4">
+								AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -11 month), char)   and  concat(#{srch_ym}, '-31')
+							</when>
+					    </choose>
+					GROUP BY 
+						a.cmntor_no, substr(work_dt,1,7), a.sido_cd, a.gugun_cd
+					) a
+				GROUP BY
+					ym, sido_cd, gugun_cd
+				) b
+			GROUP BY
+				gugun_cd
+			) c -->
+	</select>
+	
+	<select id="stats_cmmt_work2" parameterType="StatsVo" resultType="StatsVo">
+		
+		SELECT
+			sido_cd,
+			(select sido_cd_nm from sido s where b.sido_cd = s.sido_cd) as sido_cd_nm,
+			work_place,
+			max(round(cmmt_cnt, 2)) as cmmt_cnt, 
+			max(round(avg_visitor, 2)) as avg_visitor, 
+			max(round(avg_cmmt_cnt, 2)) as avg_cmmt_cnt
+		FROM (
+			SELECT
+				sido_cd,
+				work_place,
+				'' as cmmt_cnt, 
+				avg_visitor,
+				avg_cmmt_cnt
+			FROM (
+				SELECT 
+					a.sido_cd,
+					h.work_place,
+					avg(visitor_cnt) as avg_visitor,
+					avg(cmmt_cnt) as avg_cmmt_cnt
+				FROM 
+					cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+				WHERE 
+				    work_ym between #{srch_str_ym} and #{srch_end_ym}
+				GROUP BY 
+					a.sido_cd, h.work_place
+				) a
+			UNION ALL
+			SELECT
+				sido_cd,
+				arrg_place as work_place,
+				count(*) as cmmt_cnt,
+				'' as avg_visitor,
+				'' as avg_cmmt_cnt
+			FROM 
+				cmntor
+			WHERE
+				act_yn = 'Y'
+			GROUP BY
+				sido_cd, arrg_place
+			) b
+		GROUP BY
+			sido_cd, work_place
+	</select>
+	
+	<select id="stats_local_cmmt_work2" parameterType="StatsVo" resultType="StatsVo">
+		
+		SELECT
+			gugun_cd,
+			(select gugun_cd_nm from gugun s where b.gugun_cd = s.gugun_cd) as sido_cd_nm,
+			work_place,
+			max(round(cmmt_cnt, 2)) as cmmt_cnt, 
+			max(round(avg_visitor, 2)) as avg_visitor, 
+			max(round(avg_cmmt_cnt, 2)) as avg_cmmt_cnt
+		FROM (
+			SELECT
+				gugun_cd,
+				work_place,
+				'' as cmmt_cnt, 
+				avg_visitor,
+				avg_cmmt_cnt
+			FROM (
+				SELECT 
+					a.gugun_cd,
+					h.work_place,
+					avg(visitor_cnt) as avg_visitor,
+					avg(cmmt_cnt) as avg_cmmt_cnt
+				FROM 
+					cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+				WHERE 
+				    work_ym between #{srch_str_ym} and #{srch_end_ym}
+				    AND a.sido_cd = #{sido_cd}
+				GROUP BY 
+					a.gugun_cd, h.work_place
+				) a
+			UNION ALL
+			SELECT
+				gugun_cd,
+				arrg_place as work_place,
+				count(*) as cmmt_cnt,
+				'' as avg_visitor,
+				'' as avg_cmmt_cnt
+			FROM 
+				cmntor
+			WHERE
+				act_yn = 'Y'
+				AND sido_cd = #{sido_cd}
+			GROUP BY
+				gugun_cd, arrg_place
+			) b
+		GROUP BY
+			gugun_cd, work_place
+		
+		<!-- SELECT
+			gugun_cd,
+			(select gugun_cd_nm from gugun s where b.gugun_cd = s.gugun_cd) as gugun_cd_nm,
+			work_place,
+			max(round(cmmt_cnt, 2)) as cmmt_cnt, 
+			max(round(avg_visitor, 2)) as avg_visitor, 
+			max(round(avg_cmmt_cnt, 2)) as avg_cmmt_cnt
+		FROM (
+			SELECT
+				gugun_cd,
+				work_place,
+				'' as cmmt_cnt,
+				avg(avg_visitor) as avg_visitor,
+				avg(avg_cmmt_cnt) as avg_cmmt_cnt
+			FROM (
+				SELECT 
+					substr(work_dt,1,7) as ym, 
+					a.gugun_cd,
+					h.work_place,
+				    count(*) as cnt,
+					sum(visitor_cnt) as avg_visitor,
+					sum(cmmt_cnt) as avg_cmmt_cnt
+				FROM 
+					cmntor a left join act_hist h on a.cmntor_no = h.cmntor_no 
+				WHERE 1=1
+					<choose>
+					    <when test="srch_dt_prt != null  and srch_dt_prt == 1"> 
+							AND	work_dt between concat(#{srch_ym}, '-01')  and  concat(#{srch_ym}, '-31')
+						</when>
+						<when test="srch_dt_prt != null  and srch_dt_prt == 2">
+							AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -2 month), char)   and  concat(#{srch_ym}, '-31')
+						</when>
+						<when test="srch_dt_prt != null  and srch_dt_prt == 3">
+							AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -5 month), char)   and  concat(#{srch_ym}, '-31')
+						</when>
+						<when test="srch_dt_prt != null  and srch_dt_prt == 4">
+							AND	work_dt between convert(date_add(concat(#{srch_ym}, '-01'), interval -11 month), char)   and  concat(#{srch_ym}, '-31')
+						</when>
+				    </choose>
+				GROUP BY 
+					substr(work_dt,1,7), a.gugun_cd, h.work_place
+				) a
+			GROUP BY
+				gugun_cd, work_place
+			UNION ALL
+			SELECT
+				gugun_cd,
+				arrg_place as work_place,
+				count(*) as cmmt_cnt,
+				'' as avg_visitor,
+				'' as avg_cmmt_cnt
+			FROM 
+				cmntor
+			WHERE
+				act_yn = 'Y'
+			GROUP BY
+				gugun_cd, arrg_place
+			) b
+		GROUP BY
+			gugun_cd, work_place -->
+	</select>
+	
+	<select id="stats_cmmt_edu" parameterType="StatsVo" resultType="StatsVo">
+	
+		SELECT 
+			a.sido_cd,
+			(select sido_cd_nm from sido s where a.sido_cd = s.sido_cd) as sido_cd_nm,
+			case when count(h.cmntor_no) > 0 then '실시' else '미실시' end as edu_yn,
+		    max(h.edu_place) as edu_place,
+			max(h.edu_tm) as edu_tm,
+			count(case when h.edu_cmpl = 'Y' then h.cmntor_no else null end) as edu_cnt
+		FROM 
+			cmntor a left join edu_cmpl_hist h on a.cmntor_no = h.cmntor_no and h.yyyy = substr(#{srch_ym},1,4)
+		WHERE 
+			act_yn = 'Y'
+		GROUP BY 
+			a.sido_cd
+			
+	</select>
+	
+	<select id="stats_local_cmmt_edu" parameterType="StatsVo" resultType="StatsVo">
+	
+		SELECT 
+			a.gugun_cd,
+			(select gugun_cd_nm from gugun s where a.gugun_cd = s.gugun_cd) as sido_cd_nm,
+			case when count(h.cmntor_no) > 0 then '실시' else '미실시' end as edu_yn,
+		    max(h.edu_nm) as edu_nm,
+			max(h.edu_tm) as edu_tm,
+			count(case when h.edu_cmpl = 'Y' then h.cmntor_no else null end) as edu_cnt
+		FROM 
+			cmntor a left join edu_cmpl_hist h on a.cmntor_no = h.cmntor_no and h.yyyy = substr(#{srch_ym},1,4)
+		WHERE 
+			act_yn = 'Y'
+			AND a.sido_cd = #{sido_cd}
+		GROUP BY 
+			a.gugun_cd
+			
+	</select>
+	
+	<select id="stats_user_visit" parameterType="StatsVo" resultType="StatsVo">
+		
+		SELECT 
+			count(distinct id) as visit_user_cnt,
+			count(*) as visit_tot_cnt
+		FROM 
+			user_act_hist 
+		WHERE act_prt_cd = '11'
+			AND	convert(reg_tm, char(10)) between concat(#{srch_str_ym}, '-01')  and  concat(#{srch_end_ym}, '-31')
+				
+	</select>
+	
+	<select id="stats_visit_url" parameterType="StatsVo" resultType="StatsVo">
+		SELECT 	@rownum:=@rownum+1  as rnk, a.*
+    	FROM (
+			SELECT 
+				ip_info,
+				count(*) as visit_url
+			FROM 
+				user_act_hist 
+			WHERE act_prt_cd = '12'
+			AND	convert(reg_tm, char(10)) between concat(#{srch_str_ym}, '-01')  and  concat(#{srch_end_ym}, '-31')
+			GROUP BY ip_info
+			ORDER BY 2 desc
+		) a, (select @rownum:=0) tmp
+        LIMIT 0,5	
+	</select>
+	
+</mapper>
