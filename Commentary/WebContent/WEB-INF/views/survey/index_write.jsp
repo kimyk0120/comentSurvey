@@ -68,15 +68,20 @@ $(function(){
 		
 	});
 	
-	
 	// 객관식 영역에서 항목 삭제버튼 선택시
-	$(".r_delete").on("click",function(){
+	$(document).on("click",".r_delete",function(){
 		$(this).parent().remove();		
 	});
 	
 	// 객관식 영역에서 항목 추가버튼 선택시
 	$(".r_add").on("click",function(){
-		$(this).parent().remove();		
+		var liStr="";
+		liStr += "<li>";
+		liStr +=	"<input type='radio' class='m_radio' value='r_04' name='r_rardio1'>"; 
+		liStr +=	"<input type='text'  class='tm_input' placeholder='객관식 답변을 입력해주세요(선택)'>";
+		liStr +=	"<button type='button' class='r_delete'></button>";
+		liStr += "</li>";
+		$(this).parent().before(liStr);
 	});
 	
 })// endDomReady
@@ -110,7 +115,7 @@ $(function(){
         
         
         <!-- 1번 예시 -->
-        <fieldset class="article">
+        <!-- <fieldset class="article">
             <div>
                 <p class="a_number">1</p>
                 <p class="aq_text">관리 담당 지역은 어디입니까?</p>
@@ -119,12 +124,12 @@ $(function(){
             <div class="clear">                
                 <input type="text" class="t_input" id="chargeLocText">
             </div>            
-        </fieldset>
+        </fieldset> -->
         <!-- .1번 -->
         
         
         <!-- 2번 예시 -->
-        <fieldset class="article">
+       <!--  <fieldset class="article">
             <div>
                 <p class="a_number">2</p>
                 <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
@@ -149,7 +154,7 @@ $(function(){
                     </li>
                 </ul>
             </div>            
-        </fieldset> 
+        </fieldset>  -->
         <!-- .2번 -->
         
         
@@ -193,10 +198,12 @@ $(function(){
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
+						
 	                    <li class="pl220">
 	                        <button type="button" class="r_add"></button>
-	                    </li>
+	                    </li> 
 	                </ul>
+	                
                 </div>
             </div>
             <div class="clear"></div>
