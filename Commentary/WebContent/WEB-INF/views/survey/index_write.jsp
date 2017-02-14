@@ -8,10 +8,13 @@
 <link rel="stylesheet" href="/surveySrc/css/style.css">
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/surveySrc/lib/js/alertify.js"></script>
 <script type="text/javascript">
 $(function(){
 	
-	// 하단 버튼 선택시 (임시저장 , 저장하기)
+	alertify.alert("Message");
+	
+	// 하단 버튼 선택시 (임시저장 , 저장하기)  , *설문대상과 발송방법은 하나라도 체크되어야함
 	$("button[name=saveBtn]").on("click",function(){
 		
 		var $selElId = $(this).attr("id");
@@ -21,6 +24,8 @@ $(function(){
 		var $endDate = $("input[id=end_s]").val();  // 종료일
 		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지자체 
 		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
+		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
+		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
 		
 		// 임시저장
 		if($selElId=="temp"){
@@ -34,11 +39,14 @@ $(function(){
 	
 	
 	
+	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
+	
 	//객관식 버튼 선택시
 	$(".objective.close.sort_bt").on("click",function(){
 		//alert("객관식 버튼 선택");
 		var hasClassFlag = $(this).hasClass("close");
-		console.log("hasClassFlag : " + hasClassFlag);
+		//console.log("hasClassFlag : " + hasClassFlag);
+		ObOrSubFlag = true;
 		
 		// 버튼 css 변경 토글 
 		if(hasClassFlag){ 
@@ -53,9 +61,9 @@ $(function(){
 	
 	//주관식 버튼 선택시
 	$(".subjective.open.sort_bt").on("click",function(){
-		
 		var hasClassFlag = $(this).hasClass("close");
-		console.log("hasClassFlag : " + hasClassFlag);
+		//console.log("hasClassFlag : " + hasClassFlag);
+		ObOrSubFlag = false;
 		
 		// 버튼 css 변경 토글 
 		if(hasClassFlag){ 
@@ -84,6 +92,31 @@ $(function(){
 		$(this).parent().before(liStr);
 	});
 	
+
+	// 문제 추가 버튼 선택시
+	$("#wAdd").on("click",function(){
+		var $rTopVal = $("#r_topQ").val();
+		//console.log("ObOrSubFlag :  " + ObOrSubFlag); // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
+		if(ObOrSubFlag){ // 객관식일 때
+			console.log("객관식 선택");
+			
+		}else{ // 주관식일 때
+			console.log("주관식 선택");
+			console.log("$rTopVal : " + $rTopVal);
+
+			if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
+				alert("질문을 입력해주세요.");
+				alertify.alert("Message");
+			}else{
+				alert("질문은? : " + $rTopVal);
+				
+				
+				
+			}
+		}
+				
+	});// .문제추가버튼선택
+	
 })// endDomReady
 </script>
 </head>
@@ -110,6 +143,11 @@ $(function(){
                     <label><input type="checkbox" value="group" name="surveyTarget_1">지자체</label>
                     <label><input type="checkbox" value="commentator" name="surveyTarget_2">해설사</label>
                 </li>
+                <li id="sort_s">
+                    <span>발송방법</span>
+                    <label><input type="checkbox" value="textMassage" name="surveyMethod_1">문자</label>
+                    <label><input type="checkbox" value="email" name="surveyMethod_2">이메일</label>
+                </li>
             </ul>           
         </fieldset>
         
@@ -124,7 +162,7 @@ $(function(){
             <div class="clear">                
                 <input type="text" class="t_input" id="chargeLocText">
             </div>            
-        </fieldset> -->
+        </fieldset>  -->
         <!-- .1번 -->
         
         
@@ -159,10 +197,10 @@ $(function(){
         
         
         <!-- 질문 작성 영역 -->
-        <fieldset class="m_article mb60">
+        <fieldset class="m_article mb2">
             <div>
                 <p class="am_number"></p>
-                <input type="text" class="qw" placeholder="질문을 입력해주세요.">
+                <input type="text" class="qw" placeholder="질문을 입력해주세요." id="r_topQ">
             </div>
             <div class="clear">                
                 <div class="sort">
@@ -207,9 +245,10 @@ $(function(){
                 </div>
             </div>
             <div class="clear"></div>
-            <button class="w_add"></button>
         </fieldset>
         
+        <!-- 문제추가버튼 -->
+        <button type="button" class="w_add" name="addQBtn" id="wAdd"></button>
         
         <!-- 버튼 영역 -->
         <fieldset id="sending">

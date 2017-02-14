@@ -33,9 +33,16 @@ public class SurveyController {
 	protected ModelAndView survey_write(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		ModelAndView mav = new ModelAndView("survey/index_write");
 		
-		
 		return mav;
 	}
+    
+    // 설문 작성 - 문제 템프 로드
+//    @RequestMapping("/survey_write_temp_load.ajax")
+//    protected ModelAndView survey_write_temp_load(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+//    	ModelAndView mav = new ModelAndView("survey/index_write_temp");
+//    	
+//    	return mav;
+//    }
     
     
 	@RequestMapping("/survey_list.do")
