@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="/surveySrc/css/style.css">
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
 <link rel="stylesheet" href="/surveySrc/css/alertify.css">
+<link rel="stylesheet" href="/surveySrc/css/font-awesome.min.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
 <!-- jquery UI -->
 <script src="/surveySrc/js/jquery-ui.js"></script>
