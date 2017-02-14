@@ -20,7 +20,7 @@ $(function(){
 	
 	//init
 	$("#start_s,#end_s").datepicker({
-	    dateFormat: 'yy - mm - dd',
+	    dateFormat: 'yy-mm-dd',
 	    prevText: '이전 달',
 	    nextText: '다음 달',
 	    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
@@ -52,18 +52,37 @@ $(function(){
 		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
 		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
+		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
+		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
-		console.log("$stDate : " + $stDate);
-		console.log("$endDate : " + $endDate);
-		
-		// 임시저장
-		if($selElId=="temp"){
-			//console.log("임시저장")
-		
-		// 저장하기
-		}else if($selElId=="save"){
-			//console.log("저장하기")
+		if($stDate == "" || $stDate ==null){
+			alertMsg("시작일을 선택해주세요.");
+			return false;
+		}else if($endDate == "" || $endDate == null){
+			alertMsg("종료일을 선택해주세요");
+			return false;
+		}else if(parseStartDt>parseEndtDt){
+			alertMsg("설정 기간이 올바르지 않습니다.");
+			return false;
+		}else if(!$surveyTarget1 && !$surveyTarget2){
+			alertMsg("설문 대상을 선택해주세요.");
+			return false;
+		}else if(!$surveyMethod1 && !$surveyMethod2){
+			alertMsg("발송 방법을 선택해주세요.");
+			return false;
+		}else{
+			
+			alertMsg("문제가져와서 저장");
+			// 임시저장
+			if($selElId=="temp"){
+				//console.log("임시저장")
+			
+			// 저장하기
+			}else if($selElId=="save"){
+				//console.log("저장하기")
+			}
 		} 
+		 
 	}); //..하단버튼선End
 	
 	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
@@ -123,8 +142,7 @@ $(function(){
 		var $rTopVal = $("#r_topQ").val(); // 작성 질문
 		//console.log("ObOrSubFlag :  " + ObOrSubFlag); // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 		if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
-				alertify.alert("질문을 입력해주세요"); 
-				alertify.error("질문을 입력해주세요");
+				alertMsg("질문을 입력해주세요"); 
 				return false;
 		}
 		
@@ -137,8 +155,7 @@ $(function(){
 				var obResult = $(this).next().val();
 				//console.log("obResult : " + obResult);
 				if(obResult == "" || obResult == null){
-					alertify.alert("객관식 답변을 모두 입력해주세요"); 
-					alertify.error("객관식 답변을 모두 입력해주세요");
+					alertMsg("객관식 답변을 모두 입력해주세요"); 
 					return false;
 				}else{
 					rArray.push(obResult);
@@ -205,12 +222,18 @@ $(function(){
 		
 	});
 	
-	// 문제 항목 초기화
+	// 문제 항목 초기화 func
 	function setDefault(){
 		$("#r_topQ").val("");
 		$("input[name=r_rardio]").each(function(index,element){
 			$(this).next().val("");
 		});		
+	}
+	
+	// 미선택시 알럿메세지 func
+	function alertMsg(str){
+		alertify.alert(str);
+		alertify.error(str); 
 	}
 	
 })// endDomReady
