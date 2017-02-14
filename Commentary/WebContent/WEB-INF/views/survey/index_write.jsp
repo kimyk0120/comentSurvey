@@ -9,10 +9,38 @@
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
 <link rel="stylesheet" href="/surveySrc/css/alertify.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
+<!-- jquery UI -->
+<script src="/surveySrc/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="/surveySrc/css/jquery-ui.css">
 <script type="text/javascript">
 $(function(){
 	
+
+	/* $( function() {
+		$( "#datepicker" ).datepicker({
+			showOn: "button",
+			buttonImage: "images/calendar.gif",
+			buttonImageOnly: true,
+			buttonText: "Select date"
+		});
+	} );
+	 */
+	
 	//init
+	$("#start_s,#end_s").datepicker({
+		dateFormat: 'yy-mm-dd',
+	    prevText: '이전 달',
+	    nextText: '다음 달',
+	    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+	    monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+	    dayNames: ['일','월','화','수','목','금','토'],
+	    dayNamesShort: ['일','월','화','수','목','금','토'],
+	    dayNamesMin: ['일','월','화','수','목','금','토'],
+	    showMonthAfterYear: true,
+	    changeMonth: true,
+	    changeYear: true,
+	    yearSuffix: '년',
+	});
 	var Qnum = 1; // 생성되는 문제번호
 	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
 	
@@ -141,7 +169,8 @@ $(function(){
 				qStr+=        "</ul>";
 				qStr+=    "</div>";            
 				qStr+="</fieldset>"; 
-				$(".m_article.mb2").before(qStr);			
+				$(".m_article.mb2").before(qStr);
+				QmNum++;
 			}
 		}else{ // 주관식일 때
 			//console.log("주관식 선택");
@@ -188,9 +217,13 @@ $(function(){
         <fieldset class="basic_s">
             <ul>
                 <li id="se_date">
-                    <label for="start_s">시작일<input type="date" id="start_s" placeholder="연도-월-일"></label>
+                    <label for="start_s">시작일<input type="text" id="start_s" placeholder="연도-월-일">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </label>
                     ~
-                    <label for="end_s">종료일<input type="date" id="end_s"placeholder="연도-월-일"></label>
+                    <label for="end_s">종료일<input type="text" id="end_s"placeholder="연도-월-일">
+                    </label>
+                    
                 </li>
                 <li id="sort_s">
                     <span>설문대상</span>
