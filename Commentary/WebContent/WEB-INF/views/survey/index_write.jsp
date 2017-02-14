@@ -53,6 +53,9 @@ $(function(){
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
 		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
 		
+		console.log("$stDate : " + $stDate);
+		console.log("$endDate : " + $endDate);
+		
 		// 임시저장
 		if($selElId=="temp"){
 			//console.log("임시저장")
@@ -161,7 +164,10 @@ $(function(){
 				qStr+=    "</div>";            
 				qStr+="</fieldset>"; 
 				$(".m_article.mb2").before(qStr);
+				Qnum++; 
 				QmNum++;
+				// 항목 초기화
+				setDefault();
 			}
 		}else{ // 주관식일 때
 			//console.log("주관식 선택");
@@ -178,18 +184,34 @@ $(function(){
 			qStr+=        "<input type='text' class='t_input' id=''>";
 			qStr+=    "</div>";            
 			qStr+="</fieldset>";
-			$(".m_article.mb2").before(qStr);			
+			$(".m_article.mb2").before(qStr);
+			Qnum++;
+			// 항목 초기화
+			setDefault();
 		}
 		
-		Qnum++;
 	});// .문제추가버튼선택
-	
 	
 	// 추가된 문제에서 우측 삭제버튼 선택시 - 선택 항목 삭제
 	$(document).on("click",".b_del",function(){
 		$(this).parent().parent().remove();
 		Qnum--;
+		/* var pLeng = $("p.a_number").length;
+		console.log("pLeng : " + pLeng); */
+		// 삭제후에 문제번호 재배열
+		$("p.a_number").each(function(index,element){
+			$(this).text(index+1);
+		});
+		
 	});
+	
+	// 문제 항목 초기화
+	function setDefault(){
+		$("#r_topQ").val("");
+		$("input[name=r_rardio]").each(function(index,element){
+			$(this).next().val("");
+		});		
+	}
 	
 })// endDomReady
 </script>
@@ -332,7 +354,7 @@ $(function(){
         <!-- 버튼 영역 -->
         <fieldset id="sending">
             <button type="button" name="saveBtn" id="temp">임시저장</button>
-            <button type="submit" name="saveBtn" id="save" class="save">저장하기</button>
+            <button type="button" name="saveBtn" id="save" class="save">저장하기</button>
         </fieldset>
         <!-- .버튼 영역 -->
     </form>
