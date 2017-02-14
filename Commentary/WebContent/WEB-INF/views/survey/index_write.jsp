@@ -35,19 +35,14 @@ $(function(){
 	var Qnum = 1; // 생성되는 문제번호
 	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
 	
-	//alertify.alert("Message");
-	/* alertify.log("Standard log message");
-	alertify.success("Success log message");
-	alertify.error("Error log message"); */
-	
 	// 하단 버튼 선택시 (임시저장 , 저장하기)  , *설문대상과 발송방법은 하나라도 체크되어야함
 	$("button[name=saveBtn]").on("click",function(){
 		
 		var $selElId = $(this).attr("id");
 		/* console.log("$selElId: "+ $selElId); */
 		/* 상단 val */
-		var $stDate = $("input[id=start_s]").val(); // 시작일
-		var $endDate = $("input[id=end_s]").val();  // 종료일
+		var $stDate = $("input[id=start_s]").val(); // 시작일  format yyyy-mm-dd
+		var $endDate = $("input[id=end_s]").val();  // 종료일  format yyyy-mm-dd
 		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지자체 
 		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
@@ -118,7 +113,6 @@ $(function(){
 			$(this).prev().find("p").attr("class","o_close"); // 객관식 이미지 비활성
 			$(this).parent().next().hide(); // 객관식 히든 영역 숨김
 		}
-		
 	});
 	
 	// 객관식 영역에서 항목 삭제버튼 선택시 css
@@ -235,6 +229,12 @@ $(function(){
 		alertify.alert(str);
 		alertify.error(str); 
 	}
+	
+	// alertify 예시
+	//alertify.alert("Message");
+	/* alertify.log("Standard log message");
+	alertify.success("Success log message");
+	alertify.error("Error log message"); */
 	
 })// endDomReady
 </script>
