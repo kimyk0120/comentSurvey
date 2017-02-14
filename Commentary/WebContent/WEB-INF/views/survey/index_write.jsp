@@ -7,12 +7,18 @@
 <link rel="shortcut icon" type="image/png" href=""/>
 <link rel="stylesheet" href="/surveySrc/css/style.css">
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
+<link rel="stylesheet" href="/surveySrc/css/alertify.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/surveySrc/lib/js/alertify.js"></script>
 <script type="text/javascript">
 $(function(){
 	
-	alertify.alert("Message");
+	//init
+	var Qnum = 1; // 생성되는 문제번호
+	
+	//alertify.alert("Message");
+	/* alertify.log("Standard log message");
+	alertify.success("Success log message");
+	alertify.error("Error log message"); */
 	
 	// 하단 버튼 선택시 (임시저장 , 저장하기)  , *설문대상과 발송방법은 하나라도 체크되어야함
 	$("button[name=saveBtn]").on("click",function(){
@@ -36,8 +42,6 @@ $(function(){
 			//console.log("저장하기")
 		} 
 	}); //..하단버튼선End
-	
-	
 	
 	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 	
@@ -85,7 +89,7 @@ $(function(){
 	$(".r_add").on("click",function(){
 		var liStr="";
 		liStr += "<li>";
-		liStr +=	"<input type='radio' class='m_radio' value='r_04' name='r_rardio1'>"; 
+		liStr +=	"<input type='radio' class='m_radio' value='r_04' name='r_rardio'>"; 
 		liStr +=	"<input type='text'  class='tm_input' placeholder='객관식 답변을 입력해주세요(선택)'>";
 		liStr +=	"<button type='button' class='r_delete'></button>";
 		liStr += "</li>";
@@ -97,25 +101,41 @@ $(function(){
 	$("#wAdd").on("click",function(){
 		var $rTopVal = $("#r_topQ").val();
 		//console.log("ObOrSubFlag :  " + ObOrSubFlag); // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
+		if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
+				alertify.alert("질문을 입력해주세요"); 
+				alertify.error("질문을 입력해주세요");
+				return false;
+		}
+		
 		if(ObOrSubFlag){ // 객관식일 때
 			console.log("객관식 선택");
 			
 		}else{ // 주관식일 때
-			console.log("주관식 선택");
-			console.log("$rTopVal : " + $rTopVal);
-
-			if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
-				alert("질문을 입력해주세요.");
-				alertify.alert("Message");
-			}else{
-				alert("질문은? : " + $rTopVal);
-				
-				
-				
-			}
+			//console.log("주관식 선택");
+			//console.log("$rTopVal : " + $rTopVal);
+			//alert("질문은? : " + $rTopVal);
+			var qStr="";
+			qStr+="<fieldset class='article'>";
+			qStr+=    "<div>";
+			qStr+=        "<p class='a_number'>"+Qnum+"</p>"
+			qStr+=        "<p class='aq_text'>"+$rTopVal+"</p>";
+			qStr+=        "<button class='b_del'></button>";
+			qStr+=    "</div>";
+			qStr+=    "<div class='clear'>";                
+			qStr+=        "<input type='text' class='t_input' id=''>";
+			qStr+=    "</div>";            
+			qStr+="</fieldset>";
+			$(".m_article.mb2").before(qStr);			
+			Qnum++;
 		}
 				
 	});// .문제추가버튼선택
+	
+	
+	// 추가된 문제에서 우측 삭제버튼 선택시 - 선택 항목 삭제
+	$(document).on("click",".b_del",function(){
+		$(this).parent().parent().remove();
+	});
 	
 })// endDomReady
 </script>
@@ -219,20 +239,20 @@ $(function(){
 	                <div class="clear"></div>
 	                <ul class="w_radio">
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_01" name="r_rardio1"> 
+	                        <input type="radio" class="m_radio" value="r_01" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_02" name="r_rardio1"> 
+	                        <input type="radio" class="m_radio" value="r_02" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_03" name="r_rardio1"> 
+	                        <input type="radio" class="m_radio" value="r_03" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_04" name="r_rardio1"> 
+	                        <input type="radio" class="m_radio" value="r_04" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
@@ -256,7 +276,10 @@ $(function(){
             <button type="submit" name="saveBtn" id="save" class="save">저장하기</button>
         </fieldset>
         <!-- .버튼 영역 -->
-        
     </form>
+    
+ <!-- aelrt.js library -->
+<script src="/surveySrc/js/alertify.js"></script>
+    
 </body>
 </html>

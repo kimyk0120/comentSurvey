@@ -158,7 +158,7 @@ fieldset.article div:first {height: 60px; }
 
 
 p.a_number {
-    width: 60px; height: 60px; border:1px solid #4b5b9d; color:#4b5b9d; background-color:#dbdeeb;font-size:35px; text-align:center; font-weight: 500; float:left; 
+    width: 60px;  border:1px solid #4b5b9d; color:#4b5b9d; background-color:#dbdeeb;font-size:35px; text-align:center; font-weight: 500; float:left; 
 }p.am_number {
     width: 60px; height: 60px; border:1px solid #4b5b9d; color:#4b5b9d;  font-size:35px; text-align:center; font-weight: 500; float:left; line-height:58px; background:url(../img/write.png) no-repeat #dbdeeb center
 }
@@ -332,4 +332,6 @@ input.r_li {}
 }
 
 .mb2 {margin-bottom: 2em;!important}
+
+.b_del {width: 20px; height: 20px; background:url(../img/icon_X.png) no-repeat center; background-size:80%; margin-left: 25px;margin-top: 0.27em;}
 
