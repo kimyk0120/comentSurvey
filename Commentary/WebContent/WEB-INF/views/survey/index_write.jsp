@@ -14,6 +14,7 @@ $(function(){
 	
 	//init
 	var Qnum = 1; // 생성되는 문제번호
+	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
 	
 	//alertify.alert("Message");
 	/* alertify.log("Standard log message");
@@ -45,7 +46,7 @@ $(function(){
 	
 	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 	
-	//객관식 버튼 선택시
+	//객관식 버튼 선택시 css
 	$(".objective.close.sort_bt").on("click",function(){
 		//alert("객관식 버튼 선택");
 		var hasClassFlag = $(this).hasClass("close");
@@ -62,8 +63,7 @@ $(function(){
 		}
 	});
 	
-	
-	//주관식 버튼 선택시
+	//주관식 버튼 선택시 css
 	$(".subjective.open.sort_bt").on("click",function(){
 		var hasClassFlag = $(this).hasClass("close");
 		//console.log("hasClassFlag : " + hasClassFlag);
@@ -80,26 +80,25 @@ $(function(){
 		
 	});
 	
-	// 객관식 영역에서 항목 삭제버튼 선택시
+	// 객관식 영역에서 항목 삭제버튼 선택시 css
 	$(document).on("click",".r_delete",function(){
 		$(this).parent().remove();		
 	});
 	
-	// 객관식 영역에서 항목 추가버튼 선택시
+	// 객관식 영역에서 항목 추가버튼 선택시 css
 	$(".r_add").on("click",function(){
 		var liStr="";
 		liStr += "<li>";
-		liStr +=	"<input type='radio' class='m_radio' value='r_04' name='r_rardio'>"; 
+		liStr +=	"<input type='radio' class='m_radio' value='' name='r_rardio'>"; 
 		liStr +=	"<input type='text'  class='tm_input' placeholder='객관식 답변을 입력해주세요(선택)'>";
 		liStr +=	"<button type='button' class='r_delete'></button>";
 		liStr += "</li>";
 		$(this).parent().before(liStr);
 	});
 	
-
 	// 문제 추가 버튼 선택시
 	$("#wAdd").on("click",function(){
-		var $rTopVal = $("#r_topQ").val();
+		var $rTopVal = $("#r_topQ").val(); // 작성 질문
 		//console.log("ObOrSubFlag :  " + ObOrSubFlag); // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 		if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
 				alertify.alert("질문을 입력해주세요"); 
@@ -108,8 +107,42 @@ $(function(){
 		}
 		
 		if(ObOrSubFlag){ // 객관식일 때
-			console.log("객관식 선택");
-			
+			//console.log("객관식 선택");
+			var leng = $("input[name=r_rardio]").length 
+			//console.log("leng : " + leng);
+			var rArray = [];
+			$("input[name=r_rardio]").each(function(){
+				var obResult = $(this).next().val();
+				//console.log("obResult : " + obResult);
+				if(obResult == "" || obResult == null){
+					alertify.alert("객관식 답변을 모두 입력해주세요"); 
+					alertify.error("객관식 답변을 모두 입력해주세요");
+					return false;
+				}else{
+					rArray.push(obResult);
+				}
+			});
+			/* console.log("rArray.length : " + rArray.length);
+			console.log("leng : " + leng);
+			console.log("rArray : " + rArray); */
+			if(rArray.length == leng){
+				var qStr="";
+				qStr+="<fieldset class='article'>"
+				qStr+=    "<div>";
+				qStr+=        "<p class='a_number'>"+Qnum+"</p>"
+				qStr+=        "<p class='aq_text'>"+$rTopVal+"</p>";
+				qStr+=        "<button class='b_del'></button>";
+				qStr+=    "</div>";
+				qStr+=    "<div class='clear'>";                
+				qStr+=        "<ul class='s_radio'>";
+				for(var i=0;i<rArray.length;i++){
+					qStr+= "<li><label><input type='radio' class='r_li' value='' name='QmNum"+QmNum+"'><span class='rText'>"+rArray[i]+"</span></label></li>";
+				}			
+				qStr+=        "</ul>";
+				qStr+=    "</div>";            
+				qStr+="</fieldset>"; 
+				$(".m_article.mb2").before(qStr);			
+			}
 		}else{ // 주관식일 때
 			//console.log("주관식 선택");
 			//console.log("$rTopVal : " + $rTopVal);
@@ -126,15 +159,16 @@ $(function(){
 			qStr+=    "</div>";            
 			qStr+="</fieldset>";
 			$(".m_article.mb2").before(qStr);			
-			Qnum++;
 		}
-				
+		
+		Qnum++;
 	});// .문제추가버튼선택
 	
 	
 	// 추가된 문제에서 우측 삭제버튼 선택시 - 선택 항목 삭제
 	$(document).on("click",".b_del",function(){
 		$(this).parent().parent().remove();
+		Qnum--;
 	});
 	
 })// endDomReady
@@ -187,7 +221,7 @@ $(function(){
         
         
         <!-- 2번 예시 -->
-       <!--  <fieldset class="article">
+       <!-- <fieldset class="article">
             <div>
                 <p class="a_number">2</p>
                 <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
@@ -196,7 +230,7 @@ $(function(){
             <div class="clear">                
                 <ul class="s_radio">
                     <li>
-                        <label><input type="radio" class="r_li" value="r_01" name=""> 1~10명</label>
+                        <label><input type="radio" class="r_li" value="r_01" name=""> <span>1~10명</span></label>
                     </li>
                     <li>
                         <label><input type="radio" class="r_li" value="r_02" name=""> 11~20명</label>
@@ -239,20 +273,20 @@ $(function(){
 	                <div class="clear"></div>
 	                <ul class="w_radio">
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_01" name="r_rardio"> 
+	                        <input type="radio" class="m_radio" value="" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_02" name="r_rardio"> 
+	                        <input type="radio" class="m_radio" value="" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(필수)" required>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_03" name="r_rardio"> 
+	                        <input type="radio" class="m_radio" value="" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>
 	                    <li>
-	                        <input type="radio" class="m_radio" value="r_04" name="r_rardio"> 
+	                        <input type="radio" class="m_radio" value="" name="r_rardio"> 
 	                        <input type="text"  class="tm_input" placeholder="객관식 답변을 입력해주세요(선택)">
 	                        <button type="button" class="r_delete"></button>
 	                    </li>

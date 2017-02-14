@@ -335,3 +335,6 @@ input.r_li {}
 
 .b_del {width: 20px; height: 20px; background:url(../img/icon_X.png) no-repeat center; background-size:80%; margin-left: 25px;margin-top: 0.27em;}
 
+.rText{
+	margin-left: 0.5em;
+}
