@@ -49,7 +49,8 @@ tr,td,th,div,form,fieldset,button,input {
 }
 
 tr {
-    border-bottom:1px solid #cccccc; color:#999999; height: 53px;
+/*     border-bottom:1px solid #cccccc; color:#999999; height: 53px; */
+    border-bottom:1px solid #cccccc; color:#999999; height: auto;
 }
 
 tr.ing td.situation {
@@ -149,7 +150,11 @@ form#survey_write {
 /*2017.02.10 추가*/
 fieldset.basic_s {margin: 3% 3% 3% 0; padding: 0 0 0 3%; border-left:7px solid #dbdeeb;}
 fieldset.basic_s ul li {height: 35px; line-height: 35px; font-size:14px; color:#4b5b9d; font-weight: bold; }
-ul li#se_date input {height: 20px; margin: 0 20px 5px 20px ; width: 150px;} 
+ul li#se_date input {
+	height: 20px; margin: 0 5px 5px 20px ;
+	width: 120px;
+    text-align: center;
+} 
 ul li#se_date label:last-child {margin-left: 20px;}
 ul li#sort_s span, ul li#sort_s label {margin-right: 20px;}
 ul li#sort_s input {margin-bottom: 4px; margin-right: 10px;}
@@ -337,4 +342,8 @@ input.r_li {}
 
 .rText{
 	margin-left: 0.5em;
+}
+
+.mr15{
+	margin-right: 1.5em;
 }

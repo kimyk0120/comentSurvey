@@ -7,29 +7,20 @@
 <link rel="shortcut icon" type="image/png" href=""/>
 <link rel="stylesheet" href="/surveySrc/css/style.css">
 <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
-<link rel="stylesheet" href="/surveySrc/css/alertify.css">
-<link rel="stylesheet" href="/surveySrc/css/font-awesome.min.css">
 <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
+<!-- alertify -->
+<link rel="stylesheet" href="/surveySrc/css/alertify.css">
 <!-- jquery UI -->
 <script src="/surveySrc/js/jquery-ui.js"></script>
 <link rel="stylesheet" href="/surveySrc/css/jquery-ui.css">
+<!-- font-awesome -->
+<link rel="stylesheet" href="/surveySrc/css/font-awesome.min.css"> 
 <script type="text/javascript">
 $(function(){
 	
-
-	/* $( function() {
-		$( "#datepicker" ).datepicker({
-			showOn: "button",
-			buttonImage: "images/calendar.gif",
-			buttonImageOnly: true,
-			buttonText: "Select date"
-		});
-	} );
-	 */
-	
 	//init
 	$("#start_s,#end_s").datepicker({
-		dateFormat: 'yy-mm-dd',
+	    dateFormat: 'yy-mm-dd',
 	    prevText: '이전 달',
 	    nextText: '다음 달',
 	    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
@@ -39,8 +30,7 @@ $(function(){
 	    dayNamesMin: ['일','월','화','수','목','금','토'],
 	    showMonthAfterYear: true,
 	    changeMonth: true,
-	    changeYear: true,
-	    yearSuffix: '년',
+	    changeYear: true
 	});
 	var Qnum = 1; // 생성되는 문제번호
 	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
@@ -218,11 +208,12 @@ $(function(){
         <fieldset class="basic_s">
             <ul>
                 <li id="se_date">
-                    <label for="start_s">시작일<input type="text" id="start_s" placeholder="연도-월-일">
+                    <label for="start_s" class="mr15">시작일<input type="text" id="start_s" placeholder="연도 - 월 - 일">
                     <i class="fa fa-calendar" aria-hidden="true"></i>
                     </label>
                     ~
-                    <label for="end_s">종료일<input type="text" id="end_s"placeholder="연도-월-일">
+                    <label for="end_s">종료일<input type="text" id="end_s"placeholder="연도 - 월 - 일">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
                     </label>
                     
                 </li>
