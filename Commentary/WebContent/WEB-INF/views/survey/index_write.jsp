@@ -50,7 +50,7 @@ $(function(){
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
-		/* if($stDate == "" || $stDate ==null){
+	 	if($stDate == "" || $stDate ==null){
 			alertMsg("시작일을 선택해주세요.");
 			return false;
 		}else if($endDate == "" || $endDate == null){
@@ -65,57 +65,86 @@ $(function(){
 		}else if(!$surveyMethod1 && !$surveyMethod2){
 			alertMsg("발송 방법을 선택해주세요.");
 			return false;
-		}else{
+		}else{ 
 			
-			alertMsg("문제가져와서 저장");
-			
-			// 임시저장
-			if($selElId=="temp"){
-				//console.log("임시저장")
-			
-			// 저장하기
-			}else if($selElId=="save"){
-				//console.log("저장하기")
+			// 설문대상  A:전체 B:지자체 C:해설사
+			var surveyTarget = "";
+			if(!!$surveyTarget1 && !!$surveyTarget2){
+				surveyTarget ="A";
+			}else if(!!$surveyTarget1){
+				surveyTarget="B";
+			}else{
+				surveyTarget="C";
 			}
-		}  */
-		
-		// 문제 데이터 
-		var qArray = [];
-		$(".a_number").each(function(i,e){
-			var aArray = []; // 답변 리스트
-			var qType = "1"; // 문제 타입 , 1: 주관식 , 2:객관식
-			var qNum =  $(this).text(); // 문제번호			
-			var qText =  $(this).next().text(); // 문제
-			var liEl = $(this).parent().next().find("ul").find("li"); // 객관식 하위 답변 element
-			var saOrMcFlag = $(this).hasClass("mc"); // 주관식 또는 객관식 여부 , true : 객관식 , flase :주관식
-			console.log("saOrMcFlag : " + saOrMcFlag);
-			//console.log("qNum : " + qNum);
-			//console.log("qText : " + qText);
-			var qDt = {};
-			qDt.QNo = qNum; 			
-			qDt.qType = qType;
-			qDt.qText = qText;
-			// 객관식일때			
-			if(saOrMcFlag){
-				qDt.qType = "2";
-				//console.log("liEl.length : " + liEl.length);
- 				for(var i=1;i<liEl.length+1;i++){
-					var qSubDt = {};
-					var subText = $(this).parent().next().find("ul").find("li:nth-child("+i+")").find("span").text(); // 객관식 하위 답변 string
-					qSubDt.answerNo = i;
-					qSubDt.answerText = subText; 
-					aArray.push(qSubDt);
+			
+			// 발송방법 : 문자, 이메일 , 둘다
+			var sendMethod = "";
+			if(!!$surveyMethod1 && !!$surveyMethod2){
+				sendMethod ="both";
+			}else if(!!$surveyMethod1){
+				sendMethod="sms";
+			}else{
+				sendMethod="email";
+			}
+			
+			// 문제 데이터 
+			var qArray = [];
+			$(".a_number").each(function(i,e){
+				var aArray = []; // 답변 리스트
+				var qType = "1"; // 문제 타입 , 1: 주관식 , 2:객관식
+				var qNum =  $(this).text(); // 문제번호			
+				var qText =  $(this).next().text(); // 문제
+				var liEl = $(this).parent().next().find("ul").find("li"); // 객관식 하위 답변 element
+				var saOrMcFlag = $(this).hasClass("mc"); // 주관식 또는 객관식 여부 , true : 객관식 , flase :주관식
+				console.log("saOrMcFlag : " + saOrMcFlag);
+				//console.log("qNum : " + qNum);
+				//console.log("qText : " + qText);
+				var qDt = {};
+				qDt.QNo = qNum; 			
+				qDt.qType = qType;
+				qDt.qText = qText;
+				// 객관식일때			
+				if(saOrMcFlag){
+					qDt.qType = "2";
+					//console.log("liEl.length : " + liEl.length);
+	 				for(var i=1;i<liEl.length+1;i++){
+						var qSubDt = {};
+						var subText = $(this).parent().next().find("ul").find("li:nth-child("+i+")").find("span").text(); // 객관식 하위 답변 string
+						qSubDt.answerNo = i;
+						qSubDt.answerText = subText; 
+						aArray.push(qSubDt);
+					}
+	 				/* str = JSON.stringify(aArray);
+	 				console.log("str : " + str); */
+	 				qDt.answerList = aArray; 
 				}
- 				/* str = JSON.stringify(aArray);
- 				console.log("str : " + str); */
- 				qDt.answerList = aArray; 
+				qArray.push(qDt); 
+			}); // endForEach
+			
+			var str = JSON.stringify(qArray); // 문제데이터
+			var tempSaveYn = "" // 임시저장여부
+			//console.log("str : " + str);			
+			if($selElId=="temp"){
+				tempSaveYn = "Y";
+			}else if($selElId=="save"){
+				tempSaveYn = "N";
 			}
-			qArray.push(qDt); 
-		}); // endForEach
-		
-		str = JSON.stringify(qArray);
-		console.log("str : " + str);
-				 
+			$.ajax({
+				  method: "POST",
+				  url: "survey_save.ajax", 
+				  data: {
+						  "tempSaveYn":tempSaveYn,
+						  "qArray":str,
+						  "sDate":$stDate, // 시작일
+						  "eDate":$endDate, // 종료일
+						  "surveyTarget":surveyTarget,
+						  "sendMethod":sendMethod
+					  }
+			}).done(function(result){
+				console.log("result : " +  result);
+				alertify.success("저장되었습니다.");
+			});
+		}  
 	}); //..하단버튼선택End
 	
 	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
@@ -217,6 +246,7 @@ $(function(){
 				QmNum++;
 				// 항목 초기화
 				setDefault();
+				alertify.success("질문이 생성되었습니다.");
 			}
 		}else{ // 주관식일 때
 			//console.log("주관식 선택");
@@ -237,6 +267,7 @@ $(function(){
 			Qnum++;
 			// 항목 초기화
 			setDefault();
+			alertify.success("질문이 생성되었습니다.");
 		}
 		
 	});// .문제추가버튼선택
@@ -251,7 +282,7 @@ $(function(){
 		$("p.a_number").each(function(index,element){
 			$(this).text(index+1);
 		});
-		
+		alertify.log("질문이 삭제되었습니다.");
 	});
 	
 	// 문제 항목 초기화 func
