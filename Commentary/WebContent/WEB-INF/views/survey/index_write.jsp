@@ -50,7 +50,7 @@ $(function(){
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
-		if($stDate == "" || $stDate ==null){
+		/* if($stDate == "" || $stDate ==null){
 			alertMsg("시작일을 선택해주세요.");
 			return false;
 		}else if($endDate == "" || $endDate == null){
@@ -68,6 +68,7 @@ $(function(){
 		}else{
 			
 			alertMsg("문제가져와서 저장");
+			
 			// 임시저장
 			if($selElId=="temp"){
 				//console.log("임시저장")
@@ -76,9 +77,29 @@ $(function(){
 			}else if($selElId=="save"){
 				//console.log("저장하기")
 			}
-		} 
-		 
-	}); //..하단버튼선End
+		}  */
+		
+		
+		// 문제 데이터 
+		var qDt = {};
+		var qSubDt = {};
+		var qArray = [];
+		
+		$(".a_number").each(function(i,e){
+			var qNum =  $(this).text(); // 문제번호			
+			var qText =  $(this).next().text(); // 문제			
+			//console.log("index : " + i+1);
+			console.log("qNum : " + qNum);
+			console.log("qText : " + qText);
+			qDt.QNo = qNum; 			
+			qDt.qText = qText;
+			qArray.push(qDt); 
+		});
+		
+		str = JSON.stringify(qArray);
+		console.log("str : " + str);
+				 
+	}); //..하단버튼선택End
 	
 	var ObOrSubFlag=false; // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 	
@@ -162,7 +183,7 @@ $(function(){
 				var qStr="";
 				qStr+="<fieldset class='article'>"
 				qStr+=    "<div>";
-				qStr+=        "<p class='a_number'>"+Qnum+"</p>"
+				qStr+=        "<p class='a_number mc'>"+Qnum+"</p>"
 				qStr+=        "<p class='aq_text'>"+$rTopVal+"</p>";
 				qStr+=        "<button class='b_del'></button>";
 				qStr+=    "</div>";
@@ -187,7 +208,7 @@ $(function(){
 			var qStr="";
 			qStr+="<fieldset class='article'>";
 			qStr+=    "<div>";
-			qStr+=        "<p class='a_number'>"+Qnum+"</p>"
+			qStr+=        "<p class='a_number sa'>"+Qnum+"</p>"
 			qStr+=        "<p class='aq_text'>"+$rTopVal+"</p>";
 			qStr+=        "<button class='b_del'></button>";
 			qStr+=    "</div>";
@@ -279,7 +300,7 @@ $(function(){
         <!-- 1번 예시 -->
         <!-- <fieldset class="article">
             <div>
-                <p class="a_number">1</p>
+                <p class="a_number sa">1</p>
                 <p class="aq_text">관리 담당 지역은 어디입니까?</p>
                 <button class="b_del"></button>
             </div>
@@ -293,7 +314,7 @@ $(function(){
         <!-- 2번 예시 -->
        <!-- <fieldset class="article">
             <div>
-                <p class="a_number">2</p>
+                <p class="a_number mc">2</p>
                 <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
                 <button class="b_del"></button>
             </div>
