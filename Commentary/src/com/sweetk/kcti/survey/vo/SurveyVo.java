@@ -2,6 +2,7 @@ package com.sweetk.kcti.survey.vo;
 
 public class SurveyVo {
 	
+	int survey_key; // 설문번호
 	String survey_target =""; //설문대상
 	String survey_title =""; // 설문제목
 	String temp_yn = "" ; // 임시저장여부
@@ -13,9 +14,15 @@ public class SurveyVo {
 	String qArray ="";
 	
 	
-	// getter setter
+	// getter setter\
 	public String getSurvey_target() {
 		return survey_target;
+	}
+	public int getSurvey_key() {
+		return survey_key;
+	}
+	public void setSurvey_key(int survey_key) {
+		this.survey_key = survey_key;
 	}
 	public String getqArray() {
 		return qArray;

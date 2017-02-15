@@ -1,6 +1,7 @@
 package com.sweetk.kcti.survey.controller;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +53,7 @@ public class SurveyController {
 			,@RequestParam(value="eDate") String eDate // 종료일
 			,@RequestParam(value="surveyTarget") String surveyTarget // 설문대상
 			,@RequestParam(value="sendMethod") String sendMethod // 발송방법
-			,@RequestParam(value="qArray") String qArray // 설문내용 
+			,@RequestParam(value="qArray") List<String> qArray // 설문내용 
 			) throws Exception  {
     	System.out.println("/survey_save.ajax called..");
     	PrintWriter out = resp.getWriter();
@@ -76,6 +77,9 @@ public class SurveyController {
     	vo.setReg_id(""); 
     	
     	mapper.survey_save(vo);
+    	System.out.println("surveyKey : " + vo.getSurvey_key());
+    	
+    	
     	
     	out.close();
     }
