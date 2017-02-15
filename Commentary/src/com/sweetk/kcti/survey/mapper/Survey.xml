@@ -4,6 +4,11 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.sweetk.kcti.survey.mapper.SurveyMapper">
+
+	<insert id="survey_save" parameterType="SurveyVo">
+		INSERT INTO survey (survey_target, survey_title, temp_yn, reg_dt, reg_id ,start_dt,end_dt)
+		VALUES (#{survey_target}, #{survey_title}, #{temp_yn}, now(), #{reg_id} , #{start_dt}, #{end_dt})
+	</insert>
 	
 	
 </mapper>

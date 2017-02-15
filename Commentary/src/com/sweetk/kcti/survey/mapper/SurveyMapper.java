@@ -1,6 +1,9 @@
 package com.sweetk.kcti.survey.mapper;
 
+import com.sweetk.kcti.survey.vo.SurveyVo;
+
 public interface SurveyMapper {
-//	public int board_list_count(BoardVo bvo);
+
+	public void survey_save(SurveyVo vo);
 	
 }

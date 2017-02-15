@@ -149,4 +149,9 @@ ALTER TABLE survey_target
 ;
 
 
+-- 추가
+
+ALTER TABLE `toursurvey`.`survey` 
+ADD COLUMN `start_dt` VARCHAR(20) NULL AFTER `reg_id`,
+ADD COLUMN `end_dt` VARCHAR(20) NULL AFTER `start_dt`;
 

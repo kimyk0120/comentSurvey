@@ -47,6 +47,7 @@ $(function(){
 		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
 		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
+		var $aLength = $(".a_number").length; // 질문 등록 개수 - 질문등록여부
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
@@ -75,7 +76,11 @@ $(function(){
 			alertMsg("발송 방법을 선택해주세요.");
 			//$("input[name=surveyMethod_1]").focus();
 			return false;
-		}else{ 
+		}else if($aLength<=0){
+			alertMsg("질문을 1개 이상 등록해주세요.");
+			//$("input[name=surveyMethod_1]").focus();
+			return false;
+		}else{
 			
 			// 설문대상  A:전체 B:지자체 C:해설사
 			var surveyTarget = "";
@@ -132,55 +137,39 @@ $(function(){
 			}); // endForEach
 			
 			var str = JSON.stringify(qArray); // 문제데이터
-			var tempSaveYn = "" // 임시저장여부
 			//console.log("str : " + str);			
+			var tempSaveYn = "" // 임시저장여부
 			if($selElId=="temp"){ // 임시저장일때
 				tempSaveYn = "Y";
-				$.ajax({
-					  method: "POST",
-					  url: "survey_save.ajax", 
-					  data: {
-							  "tempSaveYn":tempSaveYn,
-							  "qArray":str,
-							  "sDate":$stDate, // 시작일
-							  "eDate":$endDate, // 종료일
-							  "surveyTarget":surveyTarget,
-							  "sendMethod":sendMethod
-						  }
-				}).done(function(result){
-						//console.log("result : " +  result);
-						alertify.success("임시 저장되었습니다.");
-						var afDate = getActualFullDate();
-						//console.log("afDate : " +  afDate);
-						$("#sw_data").text(afDate + " 임시저장함");
-				});				
-			}else if($selElId=="save"){ // 저장하기 선택시
+			}else if($selElId=="save"){ // 저장하기 선택시 - 발송까지 완료 후 리스트에서 수정 및 삭제 안되게
 				tempSaveYn = "N";
-				alertify
-				  .okBtn("저장")
-				  .cancelBtn("취소")
-				  .confirm("저장하시겠습니까?", function (ev) {
-				        ev.preventDefault();
-						$.ajax({
-							  method: "POST",
-							  url: "survey_save.ajax", 
-							  data: {
-									  "tempSaveYn":tempSaveYn,
-									  "qArray":str,
-									  "sDate":$stDate, // 시작일
-									  "eDate":$endDate, // 종료일
-									  "surveyTarget":surveyTarget,
-									  "sendMethod":sendMethod
-								  }
-						}).done(function(result){
-							//console.log("result : " +  result);
-							alertify.alert("리스트페이지?");
-						});	
-				  }, function(ev) {
-				      ev.preventDefault();
-					  return false;
-				  });
 			}
+				
+			alertify
+			  .okBtn("저장")
+			  .cancelBtn("취소")
+			  .confirm("저장하시겠습니까?", function (ev) {
+			        ev.preventDefault();
+					$.ajax({
+						  method: "POST",
+						  url: "survey_save.ajax", 
+						  data: {
+								  "tempSaveYn":tempSaveYn,
+								  "surveyTitle":$rTitle,
+								  "qArray":str,
+								  "sDate":$stDate, // 시작일
+								  "eDate":$endDate, // 종료일
+								  "surveyTarget":surveyTarget,
+								  "sendMethod":sendMethod
+							  }
+					}).done(function(result){
+						// 리스트 페이지로 이동
+						//$(location).attr("href","survey_list.do");
+					});	
+			  }, function(ev) {
+			      ev.preventDefault();
+				  return false;
+			  });
 		}  
 	}); //..하단버튼선택End
 	
@@ -241,6 +230,7 @@ $(function(){
 		//console.log("ObOrSubFlag :  " + ObOrSubFlag); // 객관식, 주관식 여부 판단 flag , true :객관식, false:주관식
 		if($rTopVal == "" || $rTopVal == null){ // 질문이 입력 안되었을때
 				alertMsg("질문을 입력해주세요"); 
+				$(this).focus();
 				return false;
 		}
 		
