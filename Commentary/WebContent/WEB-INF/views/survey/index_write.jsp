@@ -40,7 +40,7 @@ $(function(){
 		
 		var $selElId = $(this).attr("id");
 		/* console.log("$selElId: "+ $selElId); */
-		/* 상단 val */
+		var $rTitle = $("#rTitle").val(); // 설문제목
 		var $stDate = $("input[id=start_s]").val(); // 시작일  format yyyy-mm-dd
 		var $endDate = $("input[id=end_s]").val();  // 종료일  format yyyy-mm-dd
 		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지자체 
@@ -50,20 +50,30 @@ $(function(){
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
-	 	if($stDate == "" || $stDate ==null){
-			alertMsg("시작일을 선택해주세요.");
+		
+		if(!$rTitle){
+			alertMsg("설문 제목을 입력해주세요."); 
+			$("#rTitle").focus();
+			return false;
+		}else if($stDate == "" || $stDate ==null){
+			alertMsg("시작일을 선택해주세요."); 
+			$("input[id=start_s]").focus();
 			return false;
 		}else if($endDate == "" || $endDate == null){
-			alertMsg("종료일을 선택해주세요");
+			alertMsg("종료일을 선택해주세요"); 
+			$("input[id=end_s]").focus();
 			return false;
 		}else if(parseStartDt>parseEndtDt){
 			alertMsg("설정 기간이 올바르지 않습니다.");
+			$("input[id=start_s]").focus();
 			return false;
 		}else if(!$surveyTarget1 && !$surveyTarget2){
 			alertMsg("설문 대상을 선택해주세요.");
+			//$("input[name=surveyTarget_1]").focus();
 			return false;
 		}else if(!$surveyMethod1 && !$surveyMethod2){
 			alertMsg("발송 방법을 선택해주세요.");
+			//$("input[name=surveyMethod_1]").focus();
 			return false;
 		}else{ 
 			
@@ -124,26 +134,53 @@ $(function(){
 			var str = JSON.stringify(qArray); // 문제데이터
 			var tempSaveYn = "" // 임시저장여부
 			//console.log("str : " + str);			
-			if($selElId=="temp"){
+			if($selElId=="temp"){ // 임시저장일때
 				tempSaveYn = "Y";
-			}else if($selElId=="save"){
+				$.ajax({
+					  method: "POST",
+					  url: "survey_save.ajax", 
+					  data: {
+							  "tempSaveYn":tempSaveYn,
+							  "qArray":str,
+							  "sDate":$stDate, // 시작일
+							  "eDate":$endDate, // 종료일
+							  "surveyTarget":surveyTarget,
+							  "sendMethod":sendMethod
+						  }
+				}).done(function(result){
+						//console.log("result : " +  result);
+						alertify.success("임시 저장되었습니다.");
+						var afDate = getActualFullDate();
+						//console.log("afDate : " +  afDate);
+						$("#sw_data").text(afDate + " 임시저장함");
+				});				
+			}else if($selElId=="save"){ // 저장하기 선택시
 				tempSaveYn = "N";
+				alertify
+				  .okBtn("저장")
+				  .cancelBtn("취소")
+				  .confirm("저장하시겠습니까?", function (ev) {
+				        ev.preventDefault();
+						$.ajax({
+							  method: "POST",
+							  url: "survey_save.ajax", 
+							  data: {
+									  "tempSaveYn":tempSaveYn,
+									  "qArray":str,
+									  "sDate":$stDate, // 시작일
+									  "eDate":$endDate, // 종료일
+									  "surveyTarget":surveyTarget,
+									  "sendMethod":sendMethod
+								  }
+						}).done(function(result){
+							//console.log("result : " +  result);
+							alertify.alert("리스트페이지?");
+						});	
+				  }, function(ev) {
+				      ev.preventDefault();
+					  return false;
+				  });
 			}
-			$.ajax({
-				  method: "POST",
-				  url: "survey_save.ajax", 
-				  data: {
-						  "tempSaveYn":tempSaveYn,
-						  "qArray":str,
-						  "sDate":$stDate, // 시작일
-						  "eDate":$endDate, // 종료일
-						  "surveyTarget":surveyTarget,
-						  "sendMethod":sendMethod
-					  }
-			}).done(function(result){
-				console.log("result : " +  result);
-				alertify.success("저장되었습니다.");
-			});
 		}  
 	}); //..하단버튼선택End
 	
@@ -299,6 +336,24 @@ $(function(){
 		alertify.error(str); 
 	}
 	
+	function getActualFullDate() {
+	    var d = new Date();
+	    var day = addZero(d.getDate());
+	    var month = addZero(d.getMonth()+1);
+	    var year = addZero(d.getFullYear());
+	    var h = addZero(d.getHours());
+	    var m = addZero(d.getMinutes());
+	    var s = addZero(d.getSeconds());
+	    return year + ". " + month + ". " + day + " (" + h + ":" + m + ")";
+	}
+	
+	function addZero(i) {
+	    if (i < 10) {
+	        i = "0" + i;
+	    }
+	    return i;
+	}
+	
 	// alertify 예시
 	//alertify.alert("Message");
 	/* alertify.log("Standard log message");
@@ -312,11 +367,11 @@ $(function(){
     <div id="s_head">
         설문조사
     </div>
-    <div id="sw_data">
-        2017.1.24 오후 1:32분 임시저장 함
-    </div>
+    <div id="sw_data">&nbsp;</div>  <!-- 임시저장 표시 공간 -->
+    
     <div id="sw_title">
-        해설 인력 관리 실태 설문 조사
+        <!-- 해설 인력 관리 실태 설문 조사 -->
+        <input type="text" class="qw" placeholder="제목을 입력해주세요." id="rTitle">
     </div>
     <form action="#" id="survey_write">
         <fieldset class="basic_s">
