@@ -92,8 +92,8 @@ $(function(){
 			//console.log("qNum : " + qNum);
 			//console.log("qText : " + qText);
 			var qDt = {};
-			qDt.qType = qType;
 			qDt.QNo = qNum; 			
+			qDt.qType = qType;
 			qDt.qText = qText;
 			// 객관식일때			
 			if(saOrMcFlag){
