@@ -79,22 +79,39 @@ $(function(){
 			}
 		}  */
 		
-		
 		// 문제 데이터 
-		var qDt = {};
-		var qSubDt = {};
 		var qArray = [];
-		
 		$(".a_number").each(function(i,e){
+			var aArray = []; // 답변 리스트
+			var qType = "1"; // 문제 타입 , 1: 주관식 , 2:객관식
 			var qNum =  $(this).text(); // 문제번호			
-			var qText =  $(this).next().text(); // 문제			
-			//console.log("index : " + i+1);
-			console.log("qNum : " + qNum);
-			console.log("qText : " + qText);
+			var qText =  $(this).next().text(); // 문제
+			var liEl = $(this).parent().next().find("ul").find("li"); // 객관식 하위 답변 element
+			var saOrMcFlag = $(this).hasClass("mc"); // 주관식 또는 객관식 여부 , true : 객관식 , flase :주관식
+			console.log("saOrMcFlag : " + saOrMcFlag);
+			//console.log("qNum : " + qNum);
+			//console.log("qText : " + qText);
+			var qDt = {};
+			qDt.qType = qType;
 			qDt.QNo = qNum; 			
 			qDt.qText = qText;
+			// 객관식일때			
+			if(saOrMcFlag){
+				qDt.qType = "2";
+				//console.log("liEl.length : " + liEl.length);
+ 				for(var i=1;i<liEl.length+1;i++){
+					var qSubDt = {};
+					var subText = $(this).parent().next().find("ul").find("li:nth-child("+i+")").find("span").text(); // 객관식 하위 답변 string
+					qSubDt.answerNo = i;
+					qSubDt.answerText = subText; 
+					aArray.push(qSubDt);
+				}
+ 				/* str = JSON.stringify(aArray);
+ 				console.log("str : " + str); */
+ 				qDt.answerList = aArray; 
+			}
 			qArray.push(qDt); 
-		});
+		}); // endForEach
 		
 		str = JSON.stringify(qArray);
 		console.log("str : " + str);
