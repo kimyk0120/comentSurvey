@@ -15,6 +15,7 @@ public class SurveyVo {
 	String send_method =""; // 발송방법
 	String qArray ="";
 	
+//	
 	String qNo="";//qna no
 	String qType =""; // qna type :  1 주관식, 2 객관식
 	String qText =""; // 질문 

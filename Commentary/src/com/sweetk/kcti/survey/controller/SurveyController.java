@@ -1,6 +1,7 @@
 package com.sweetk.kcti.survey.controller;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import com.sweetk.kcti.board.vo.BoardVo;
 import com.sweetk.kcti.survey.mapper.SurveyMapper;
 import com.sweetk.kcti.survey.vo.SurveyVo;
+import com.sweetk.kcti.survey.vo.VoList;
 
 @Controller
 public class SurveyController {
@@ -77,12 +77,16 @@ public class SurveyController {
     	vo.setReg_id(""); 
     	
     	mapper.survey_save(vo);
-    	JsonParser jParser = new JsonParser();
-	    JsonObject jObject = (JsonObject) jParser.parse(qArray);
-	    JsonElement elem =  jObject.get("qNo");
+    	System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
     	
-	    System.out.println("elem : " + elem);
-	    
+    	VoList voList = new Gson().fromJson(qArray, VoList.class);
+    	
+    	for(int i=0;i<voList.getqList().size();i++){
+    		
+    	}
+    	
+    	
+    	//out.print("test");
     	out.close();
     }
     

@@ -138,6 +138,8 @@ $(function(){
 			
 			var str = JSON.stringify(qArray); // 문제데이터
 			//console.log("str : " + str);			
+			str = "{'qList':"+str+"}";	
+			
 			var tempSaveYn = "" // 임시저장여부
 			if($selElId=="temp"){ // 임시저장일때
 				tempSaveYn = "Y";
@@ -151,16 +153,16 @@ $(function(){
 			  .confirm("저장하시겠습니까?", function (ev) {
 			        ev.preventDefault();
 					$.ajax({
-						  method: "POST",
+						  method: 'POST',
 						  url: "survey_save.ajax", 
 						  data: {
-								  "tempSaveYn":tempSaveYn,
-								  "surveyTitle":$rTitle,
-								  "qArray":str,
-								  "sDate":$stDate, // 시작일
-								  "eDate":$endDate, // 종료일
-								  "surveyTarget":surveyTarget,
-								  "sendMethod":sendMethod
+								  'tempSaveYn':tempSaveYn,
+								  'surveyTitle':$rTitle,
+								  'qArray':str,
+								  'sDate':$stDate, // 시작일
+								  'eDate':$endDate, // 종료일
+								  'surveyTarget':surveyTarget,
+								  'sendMethod':sendMethod
 							  },
 						  cache: false	  
 					}).done(function(result){
