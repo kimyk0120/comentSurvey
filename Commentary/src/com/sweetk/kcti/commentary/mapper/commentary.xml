@@ -714,4 +714,4 @@
 		AND cmntor_no =  #{cmntor_no}
 	</update>
 	
-</mapper> -->
+</mapper>  -->
