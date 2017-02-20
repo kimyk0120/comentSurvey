@@ -19,7 +19,9 @@ public class SurveyVo {
 	String question ="";
 	String multi_seq =""; // 객관식 질문 번호
 	String multi_question = ""; // 객관식 질문
-
+	String reg_dt_sv=""; // reg_dt  yyyy-mm--dd 형식으로 
+	String del_yn=""; // 삭제여부
+	
 	/////////////////////////////
 	
 	String qNo="";//qna no
@@ -29,10 +31,57 @@ public class SurveyVo {
 	String answerText ="" ; // 답변 내용
 	List<SurveyVo> answerList=null; // 답변리스트
 	
+	/////////////////////////////
 	
-	// getter setter\
+	String proc_stat =""; // 진행상태
+	int answer_cnt; // 응답수
+	String mod_dt=""; // 수정일
+	
+	
+	// getter setter
 	public SurveyVo() {
 	}	
+
+	public String getDel_yn() {
+		return del_yn;
+	}
+
+	public void setDel_yn(String del_yn) {
+		this.del_yn = del_yn;
+	}
+
+	public String getReg_dt_sv() {
+		return reg_dt_sv;
+	}
+
+	public void setReg_dt_sv(String reg_dt_sv) {
+		this.reg_dt_sv = reg_dt_sv;
+	}
+
+	public String getProc_stat() {
+		return proc_stat;
+	}
+
+	public void setProc_stat(String proc_stat) {
+		this.proc_stat = proc_stat;
+	}
+
+	public int getAnswer_cnt() {
+		return answer_cnt;
+	}
+
+	public void setAnswer_cnt(int answer_cnt) {
+		this.answer_cnt = answer_cnt;
+	}
+
+
+	public String getMod_dt() {
+		return mod_dt;
+	}
+
+	public void setMod_dt(String mod_dt) {
+		this.mod_dt = mod_dt;
+	}
 
 	public String getMulti_seq() {
 		return multi_seq;

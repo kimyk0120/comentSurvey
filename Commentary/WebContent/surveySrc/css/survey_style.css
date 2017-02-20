@@ -37,6 +37,7 @@ tr,td,th,div,form,fieldset,button,input {
 #s_contents {padding: 0 31px;}
 #s_button {
     width: 100px; height: 28px; background-color:#ffffff; border:1px solid #66ccff; border-radius: 2px; color:#66ccff; line-height:28px; font-size:15px; float: right; margin-bottom: 13px; font-weight:bold; box-shadow:0px 2px 2px;
+    cursor: pointer;
 }
 
 #survey_table {
@@ -359,3 +360,7 @@ input.r_li {}
     border: 1px solid #4b5b9d;
     font-weight: bold;	
 }
+button[name=mod_ing],button[name=deleteBtn],button[name=saveBtn]{
+	cursor: pointer;
+}
+

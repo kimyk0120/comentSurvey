@@ -1,6 +1,7 @@
 package com.sweetk.kcti.survey.controller;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.sweetk.kcti.board.vo.BoardVo;
 import com.sweetk.kcti.survey.mapper.SurveyMapper;
 import com.sweetk.kcti.survey.vo.SurveyVo;
 import com.sweetk.kcti.survey.vo.VoList;
@@ -34,19 +34,19 @@ public class SurveyController {
     @SuppressWarnings("unused")
 	@Autowired 
     private PlatformTransactionManager transactionManager;
- 
     
-    //  설문 작성 
-    @RequestMapping("/survey_write.do")
+    
+    //  설문 작성 페이지
+    @RequestMapping(value="/survey_write.do",method={RequestMethod.GET})
 	protected ModelAndView survey_write(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		ModelAndView mav = new ModelAndView("survey/index_write");
-		System.out.println("/survey_write.do called..");
+		ModelAndView mav = new ModelAndView("survey/s_write");
+		//System.out.println("/survey_write.do called..");
 		return mav;
 	}
     
-    //  설문 저장 
+    //  설문 저장 ajax
     @Transactional
-    @RequestMapping(value="/survey_save.ajax", method ={RequestMethod.POST,RequestMethod.GET} )
+    @RequestMapping(value="/survey_save.ajax", method ={RequestMethod.POST} )
 	protected void survey_save_ajax(HttpServletRequest req, HttpSession session, HttpServletResponse resp,
 			@RequestParam(value="tempSaveYn") String tempSaveYn // 임시저장여부
 			,@RequestParam(value="surveyTitle") String surveyTitle // 설문제목
@@ -67,8 +67,7 @@ public class SurveyController {
 //    	System.out.println("eDate : " + eDate);
 //    	System.out.println("surveyTarget : " + surveyTarget);
 //    	System.out.println("sendMethod : " + sendMethod);
-    	System.out.println("qArray : " + qArray);
-    	
+//    	System.out.println("qArray : " + qArray);
     	vo.setSurvey_title(surveyTitle);
     	vo.setTemp_yn(tempSaveYn);
     	vo.setStart_dt(sDate);
@@ -78,12 +77,12 @@ public class SurveyController {
     	vo.setReg_id(""); 
 
     	try {
-    		
+    		// 설문정보저장
     		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
         	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
         	VoList voList = new Gson().fromJson(qArray, VoList.class);
-        	
-        	for(int i=0;i<voList.getqList().size();i++){
+
+        	for(int i=0;i<voList.getqList().size();i++){ // 설문 내용 
         		if(voList.getqList().get(i).getqType().equals("1")){  // 주관식일 때
         			vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
         			vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
@@ -96,7 +95,7 @@ public class SurveyController {
         			vo.setMulti_yn("Y"); // 객관식여부
         			vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
         			mapper.survey_q_save(vo);
-        			for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){
+        			for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){  // 객관식 질문 
         				vo.setSurvey_key(vo.getSurvey_key());
         				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
         				vo.setMulti_seq(voList.getqList().get(i).getAnswerList().get(j).getAnswerNo());
@@ -105,7 +104,6 @@ public class SurveyController {
         			}
         		}
         	}
-        	out.print("test");
 		} catch (Exception e) {
 			System.out.println("survey_save error");
 			out.print("error");
@@ -115,16 +113,58 @@ public class SurveyController {
     }//end survey_save
     
     
-	@RequestMapping("/survey_list.do")
-	protected ModelAndView board_list(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-    	ModelAndView mav = new ModelAndView("survey/index_list");
-    	
-    	
+    // 설문 리스트 
+	@RequestMapping(value="/survey_list.do",method={RequestMethod.GET})
+	protected ModelAndView survey_list(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+    	ModelAndView mav = new ModelAndView("survey/s_list");
+    	SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+    	List<SurveyVo> sList = mapper.surveyList();
+    	mav.addObject("sList",sList);
     	return mav;
     }
+	
+	// 설문 수정
+	@RequestMapping(value="/survey_mod.do",method={RequestMethod.GET})
+	protected ModelAndView survey_mod(HttpServletRequest req, HttpSession session, HttpServletResponse resp
+			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
+		//System.out.println("/survey_mod called..");
+		System.out.println("surveyKey : " + surveyKey);
+    	ModelAndView mav = new ModelAndView("survey/s_write");
+    	SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+    	return mav;
+    }
+	
+	// 설문 삭제
+	@RequestMapping(value="/survey_delete.ajax",method={RequestMethod.GET})
+	protected void survey_delete_ajax(HttpServletRequest req, HttpSession session, HttpServletResponse resp
+			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
+		
+		PrintWriter out = resp.getWriter();
+		SurveyVo vo = new SurveyVo();
+		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		//System.out.println("surveyKey : " + surveyKey);
+		vo.setSurvey_key(Integer.parseInt(surveyKey));
+		vo.setDel_yn("Y");
+
+		try {
+			// del yn -> Y로 변경
+			mapper.deleteDelYn(vo);
+			
+			// 행 삭제
+			//mapper.surveyDel(vo);
+			
+		} catch (Exception e) {
+			System.out.println("survey_delete.ajax error");
+		}finally {
+			out.close();
+		}
+	}
+	
+	
 	@RequestMapping("/survey_result.do")
-	protected ModelAndView survey_result(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		ModelAndView mav = new ModelAndView("survey/index_result");
+	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		ModelAndView mav = new ModelAndView("survey/s_result");
 		
 		
 		return mav;

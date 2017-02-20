@@ -167,7 +167,7 @@ $(function(){
 						  cache: false	  
 					}).done(function(result){
 						// 리스트 페이지로 이동
-						//$(location).attr("href","survey_list.do");
+						$(location).attr("href","survey_list.do");
 					});	
 			  }, function(ev) {
 			      ev.preventDefault();
