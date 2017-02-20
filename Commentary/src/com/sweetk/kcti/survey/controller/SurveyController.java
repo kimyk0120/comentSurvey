@@ -1,8 +1,6 @@
 package com.sweetk.kcti.survey.controller;
 
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sweetk.kcti.board.vo.BoardVo;
 import com.sweetk.kcti.survey.mapper.SurveyMapper;
 import com.sweetk.kcti.survey.vo.SurveyVo;
@@ -27,7 +28,6 @@ public class SurveyController {
 
 	Logger log = Logger.getLogger(SurveyController.class);
 	
-	@SuppressWarnings("unused")
 	@Autowired
     private SqlSession sqlSession;
     
@@ -38,22 +38,22 @@ public class SurveyController {
     
     //  설문 작성 
     @RequestMapping("/survey_write.do")
-	protected ModelAndView survey_write(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+	protected ModelAndView survey_write(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		ModelAndView mav = new ModelAndView("survey/index_write");
-		
+		System.out.println("/survey_write.do called..");
 		return mav;
 	}
     
     //  설문 저장 
-    @RequestMapping( value="/survey_save.ajax", method ={RequestMethod.POST} )
-	protected void survey_save_ajax(BoardVo bvo, HttpServletRequest req, HttpSession session, HttpServletResponse resp,
+    @RequestMapping(value="/survey_save.ajax", method ={RequestMethod.POST,RequestMethod.GET} )
+	protected void survey_save_ajax(HttpServletRequest req, HttpSession session, HttpServletResponse resp,
 			@RequestParam(value="tempSaveYn") String tempSaveYn // 임시저장여부
 			,@RequestParam(value="surveyTitle") String surveyTitle // 설문제목
 			,@RequestParam(value="sDate") String sDate // 시작일
 			,@RequestParam(value="eDate") String eDate // 종료일
 			,@RequestParam(value="surveyTarget") String surveyTarget // 설문대상
 			,@RequestParam(value="sendMethod") String sendMethod // 발송방법
-			,@RequestParam(value="qArray") List<Map<String,Object>> qArray // 설문내용 
+			,@RequestParam(value="qArray") String qArray // 설문내용 
 			) throws Exception  {
     	System.out.println("/survey_save.ajax called..");
     	PrintWriter out = resp.getWriter();
@@ -66,7 +66,7 @@ public class SurveyController {
 //    	System.out.println("eDate : " + eDate);
 //    	System.out.println("surveyTarget : " + surveyTarget);
 //    	System.out.println("sendMethod : " + sendMethod);
-//    	System.out.println("qArray : " + qArray);
+    	System.out.println("qArray : " + qArray);
     	
     	vo.setSurvey_title(surveyTitle);
     	vo.setTemp_yn(tempSaveYn);
@@ -77,14 +77,12 @@ public class SurveyController {
     	vo.setReg_id(""); 
     	
     	mapper.survey_save(vo);
-    	//System.out.println("surveyKey : " + vo.getSurvey_key());
+    	JsonParser jParser = new JsonParser();
+	    JsonObject jObject = (JsonObject) jParser.parse(qArray);
+	    JsonElement elem =  jObject.get("qNo");
     	
-    	// 문제 인서트
-    	for(int i=0;i<qArray.size();i++){
-    		System.out.println("qArray.get("+i+"): " + qArray.get(i));
-    	}
-    	
-    	
+	    System.out.println("elem : " + elem);
+	    
     	out.close();
     }
     

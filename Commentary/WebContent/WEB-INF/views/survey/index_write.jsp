@@ -115,7 +115,7 @@ $(function(){
 				//console.log("qNum : " + qNum);
 				//console.log("qText : " + qText);
 				var qDt = {};
-				qDt.QNo = qNum; 			
+				qDt.qNo = qNum; 			
 				qDt.qType = qType;
 				qDt.qText = qText;
 				// 객관식일때			
@@ -161,7 +161,8 @@ $(function(){
 								  "eDate":$endDate, // 종료일
 								  "surveyTarget":surveyTarget,
 								  "sendMethod":sendMethod
-							  }
+							  },
+						  cache: false	  
 					}).done(function(result){
 						// 리스트 페이지로 이동
 						//$(location).attr("href","survey_list.do");
