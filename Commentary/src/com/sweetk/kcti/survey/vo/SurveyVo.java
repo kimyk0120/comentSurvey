@@ -14,8 +14,14 @@ public class SurveyVo {
 	String end_dt = ""; // 종료일
 	String send_method =""; // 발송방법
 	String qArray ="";
+	String question_seq ="";
+	String multi_yn = "";
+	String question ="";
+	String multi_seq =""; // 객관식 질문 번호
+	String multi_question = ""; // 객관식 질문
+
+	/////////////////////////////
 	
-//	
 	String qNo="";//qna no
 	String qType =""; // qna type :  1 주관식, 2 객관식
 	String qText =""; // 질문 
@@ -24,8 +30,33 @@ public class SurveyVo {
 	List<SurveyVo> answerList=null; // 답변리스트
 	
 	
+	// getter setter\
 	public SurveyVo() {
 	}	
+
+	public String getMulti_seq() {
+		return multi_seq;
+	}
+
+	public void setMulti_seq(String multi_seq) {
+		this.multi_seq = multi_seq;
+	}
+
+	public String getMulti_question() {
+		return multi_question;
+	}
+
+	public void setMulti_question(String multi_question) {
+		this.multi_question = multi_question;
+	}
+
+	public String getMulti_yn() {
+		return multi_yn;
+	}
+
+	public void setMulti_yn(String multi_yn) {
+		this.multi_yn = multi_yn;
+	}
 
 	public SurveyVo(SurveyVo vo) {
 		survey_key = vo.getSurvey_key();
@@ -43,13 +74,26 @@ public class SurveyVo {
 		answerNo = vo.getAnswerNo();
 		answerText = vo.getAnswerText();
 	}	
-	
-	
-	// getter setter\
 	public String getSurvey_target() {
 		return survey_target;
 	}
 
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public String getQuestion_seq() {
+		return question_seq;
+	}
+
+	public void setQuestion_seq(String question_seq) {
+		this.question_seq = question_seq;
+	}
 
 	public List<SurveyVo> getAnswerList() {
 		return answerList;

@@ -12,6 +12,16 @@
 			select max(survey_key) FROM survey
 		</selectKey>
 	</insert>
+
+	<insert id="survey_q_save" parameterType="SurveyVo">
+		INSERT INTO survey_question (`survey_key`, `question_seq`, `multi_yn`, `question`)
+		VALUES (#{survey_key}, #{question_seq} , #{multi_yn} , #{question});
+	</insert>
+
+	<insert id="survey_mq_save" parameterType="SurveyVo">
+		INSERT INTO multi_question (`survey_key`, `question_seq`, `multi_seq`, `multi_question`)
+		VALUES (#{survey_key}, #{question_seq}, #{multi_seq}, #{multi_question});
+	</insert>
 	
 	
 </mapper>
