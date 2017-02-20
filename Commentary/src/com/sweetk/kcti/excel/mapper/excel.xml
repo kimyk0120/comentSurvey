@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper 
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
@@ -7,7 +7,7 @@
 	<mapper namespace="com.sweetk.kcti.excel.mapper.ExcelMapper">
 	
 		<select id="cmmt_excel_down" parameterType="ExcelVo" resultType="ExcelVo">
-			<!-- select
+			select
 				bs.cmntor_no,
 				bs.sido_cd_nm as sido_nm,
 				bs.gugun_cd_nm as gugun_nm,
@@ -125,7 +125,7 @@
 					left join act_hist ah on tmp.cmntor_no = ah.cmntor_no and ah.WORK_YM = tt
 					left join act_fee_pay_hist af on tmp.cmntor_no = af.cmntor_no and af.act_ym = tt
 				 where ah.seq &gt; 0 or af.seq &gt; 0 or ech1.EDU_SEQ &gt; 0 or ech2.EDU_SEQ &gt; 0
-			     ) bs2 on bs.cmntor_no = bs2.cmntor_no -->
+			     ) bs2 on bs.cmntor_no = bs2.cmntor_no
 			     
 			     
 		select 
@@ -187,4 +187,4 @@
 		left join edu_cmpl_hist e on a.cmntor_no = e.cmntor_no and e.edu_prt = 2
 		order by cmntor_no		     
 	</select>
-	</mapper>
+	</mapper> -->

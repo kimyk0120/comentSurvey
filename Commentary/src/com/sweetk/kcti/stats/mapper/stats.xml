@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper 
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 	<mapper namespace="com.sweetk.kcti.stats.mapper.StatsMapper">
 	
-	<!-- <select id="stats_cmmt_age" parameterType="StatsVo" resultType="StatsVo">
+	<select id="stats_cmmt_age" parameterType="StatsVo" resultType="StatsVo">
 	
 		SELECT
 			bs.ages,
@@ -48,7 +48,7 @@
 				) b
 			group by ag with rollup
 			) bs2 on bs.ag = bs2.ag
-	</select> -->
+	</select>
 	
 	<select id="stats_cmmt_age" parameterType="StatsVo" resultType="StatsVo">
 		select 
@@ -79,7 +79,7 @@
 		    </if>
 					
 	</select>
-<!-- 	<select id="stats_cmmt_age2" parameterType="StatsVo" resultType="StatsVo">
+	<select id="stats_cmmt_age2" parameterType="StatsVo" resultType="StatsVo">
 	
 		SELECT
 			bs.ages,
@@ -125,7 +125,7 @@
 				) b
 			group by ag with rollup
 			) bs2 on bs.ag = bs2.ag
-	</select> -->
+	</select>
 	
 	<select id="stats_cmmt_work" parameterType="StatsVo" resultType="StatsVo">
 		SELECT
@@ -180,7 +180,7 @@
 				a.gugun_cd
 			) c
 	
-		<!-- SELECT
+		SELECT
 			gugun_cd,
 		    (select gugun_cd from gugun g where c.gugun_cd = g.gugun_cd) as gugun_cd_nm, 
 		    round(cnt, 2) as cmntor_mon_cnt, 
@@ -242,7 +242,7 @@
 				) b
 			GROUP BY
 				gugun_cd
-			) c -->
+			) c
 	</select>
 	
 	<select id="stats_cmmt_work2" parameterType="StatsVo" resultType="StatsVo">
@@ -340,7 +340,7 @@
 		GROUP BY
 			gugun_cd, work_place
 		
-		<!-- SELECT
+		SELECT
 			gugun_cd,
 			(select gugun_cd_nm from gugun s where b.gugun_cd = s.gugun_cd) as gugun_cd_nm,
 			work_place,
@@ -399,7 +399,7 @@
 				gugun_cd, arrg_place
 			) b
 		GROUP BY
-			gugun_cd, work_place -->
+			gugun_cd, work_place
 	</select>
 	
 	<select id="stats_cmmt_edu" parameterType="StatsVo" resultType="StatsVo">
@@ -467,4 +467,4 @@
         LIMIT 0,5	
 	</select>
 	
-</mapper>
+</mapper> -->

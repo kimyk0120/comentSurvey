@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper 
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
@@ -43,7 +43,7 @@
 		INSERT INTO user_act_hist (id, act_prt_cd, reg_tm, ip_info)
 		VALUES (#{id}, #{act_prt_cd}, now(), #{ip_info})
 	</insert>
-	<!-- 
+	
 	<select id="topMenu_list" parameterType="CommonVo" resultType="CommonVo">
 		SELECT 
 			a.menu_id,
@@ -59,7 +59,7 @@
 			AND a.write_auth = 'Y'
 		
 	</select>
-	 -->
+	
 	 
 	<select id="main_cnt_info" parameterType="CommonVo" resultType="CommonVo">
 		SELECT 
@@ -238,9 +238,9 @@
 			AND act_ym = #{1}
 	</select>
 	
-	<!-- <insert id="sign_input" parameterType="map">
+	<insert id="sign_input" parameterType="map">
 		Insert Into sign_test (sign_name, sign_addr, latitude, longitude) 
 		values (#{name}, #{addr}, #{lat}, #{lon})
-	</insert> -->
+	</insert>
 	
-</mapper>
+</mapper> -->

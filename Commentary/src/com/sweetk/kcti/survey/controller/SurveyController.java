@@ -2,6 +2,7 @@ package com.sweetk.kcti.survey.controller;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sweetk.kcti.board.mapper.BoardMapper;
 import com.sweetk.kcti.board.vo.BoardVo;
 import com.sweetk.kcti.survey.mapper.SurveyMapper;
 import com.sweetk.kcti.survey.vo.SurveyVo;
@@ -53,20 +53,20 @@ public class SurveyController {
 			,@RequestParam(value="eDate") String eDate // 종료일
 			,@RequestParam(value="surveyTarget") String surveyTarget // 설문대상
 			,@RequestParam(value="sendMethod") String sendMethod // 발송방법
-			,@RequestParam(value="qArray") List<String> qArray // 설문내용 
+			,@RequestParam(value="qArray") List<Map<String,Object>> qArray // 설문내용 
 			) throws Exception  {
     	System.out.println("/survey_save.ajax called..");
     	PrintWriter out = resp.getWriter();
     	SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
     	SurveyVo vo = new SurveyVo(); 
     	
-    	System.out.println("surveyTitle : " + surveyTitle);
-    	System.out.println("tempSaveYn : " + tempSaveYn);
-    	System.out.println("sDate : " + sDate);
-    	System.out.println("eDate : " + eDate);
-    	System.out.println("surveyTarget : " + surveyTarget);
-    	System.out.println("sendMethod : " + sendMethod);
-    	System.out.println("qArray : " + qArray);
+//    	System.out.println("surveyTitle : " + surveyTitle);
+//    	System.out.println("tempSaveYn : " + tempSaveYn);
+//    	System.out.println("sDate : " + sDate);
+//    	System.out.println("eDate : " + eDate);
+//    	System.out.println("surveyTarget : " + surveyTarget);
+//    	System.out.println("sendMethod : " + sendMethod);
+//    	System.out.println("qArray : " + qArray);
     	
     	vo.setSurvey_title(surveyTitle);
     	vo.setTemp_yn(tempSaveYn);
@@ -77,8 +77,12 @@ public class SurveyController {
     	vo.setReg_id(""); 
     	
     	mapper.survey_save(vo);
-    	System.out.println("surveyKey : " + vo.getSurvey_key());
+    	//System.out.println("surveyKey : " + vo.getSurvey_key());
     	
+    	// 문제 인서트
+    	for(int i=0;i<qArray.size();i++){
+    		System.out.println("qArray.get("+i+"): " + qArray.get(i));
+    	}
     	
     	
     	out.close();

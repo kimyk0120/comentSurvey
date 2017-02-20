@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%-- <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 
 <%@ page import="java.util.Iterator" %>
@@ -9,7 +9,7 @@ Log logPaging = LogFactory.getLog(getClass());
 System.out.println("getRowPerPage:" + pagingList.getRowPerPage());
 try{
 if(pagingList != null && pagingList.getTotalRow() > 0){ %>
-<%-- paging : str --%>
+paging : str
 <div class="paging" >
 	<a href="javascript:goPage('<%=pagingList.getPrePage()%>')" class="no-bg">&lt;&lt;</a>
 	<%
@@ -36,4 +36,4 @@ if(pagingList != null && pagingList.getTotalRow() > 0){ %>
 }catch(Exception e){
 	logPaging.error(e);
 }
-%>
+%> --%>

@@ -1,12 +1,14 @@
 package com.sweetk.kcti.common.domain;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sweetk.dumin.common.utils.CommProperty;
-import com.sweetk.dumin.common.utils.StringUtil;
+import com.sweetk.kcti.common.utils.StringUtil;
+
 
 /**
  * 페이징 관련.
