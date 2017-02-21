@@ -108,7 +108,7 @@ public class SurveyController {
         				}
         			}
         		}//endForSave
-    		}else{ // 수정이 아닌 임시저장 또는 저장일때
+    		}else{ // 수정이 아닌 임시저장 일때
         		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
             	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
         		VoList voList = new Gson().fromJson(qArray, VoList.class);

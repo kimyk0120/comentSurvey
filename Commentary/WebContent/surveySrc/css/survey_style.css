@@ -367,4 +367,7 @@ button[name=mod_ing],button[name=deleteBtn],button[name=saveBtn]{
 	text-align: center;
     margin-top: 10em;	
 }
+.dsNo{
+	display: none;
+}
 

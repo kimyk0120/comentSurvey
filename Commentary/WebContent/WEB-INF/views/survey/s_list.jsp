@@ -25,6 +25,10 @@
 alertify.success("Success log message");
 alertify.error("Error log message"); */
 $(function(){
+	// init
+	var sListLength = $("#sListLength").val(); // 리스트 개수
+	//console.log("init sListLength : " + sListLength);
+	
 	// 질문생성 선택시 - 질문 작성 페이지로 이동
 	$("#s_button").on("click",function(e){
 		$(location).prop("href","survey_write.do");		
@@ -61,6 +65,13 @@ $(function(){
 				cache: false }).done(function(result){
 					console.log(result);
 					alertify.success("삭제되었습니다.");
+					// null 화면 처리 css
+					sListLength--; 
+					//console.log("sListLength : " + sListLength);
+					if(sListLength == 0){
+						var str = "<p class='noDataMsg'>데이터가 없습니다.</p>";
+						$("body").append(str);
+					}
 				}); 
 		}, function() {});
 	});
@@ -81,6 +92,7 @@ $(function(){
 </script>
 </head>
 <body>
+	<input type="hidden" value="${sList.size()}" id="sListLength">
     <div id="s_head">
         설문조사
     </div>
