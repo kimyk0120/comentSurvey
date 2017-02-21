@@ -35,12 +35,7 @@ $(function(){
 	    changeMonth: true,
 	    changeYear: true
 	});
-	var qlLength = $("#qlLength").val(); // 수정시 설문 리스트 개수 
-	var Qnum = 1; // 생성되는 문제 시작 번호
-	if(!!qlLength){
-		Qnum = parseInt(qlLength) + 1;
-		console.log("Qnum : " + Qnum);
-	}
+	var Qnum = 1; // 생성되는 문제번호
 	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
 	
 	// 하단 버튼 선택시 (임시저장 , 저장하기)  , *설문대상과 발송방법은 하나라도 체크되어야함
@@ -159,7 +154,6 @@ $(function(){
 				tempSaveYn = "N";
 			}else if($selElId=="update"){
 				updateYn = "Y";
-				tempSaveYn = "Y";
 			}
 			alertify
 			  .okBtn("저장")
@@ -293,6 +287,7 @@ $(function(){
 				// 항목 초기화
 				setDefault();
 				alertify.success("질문이 생성되었습니다.");
+				console.log("Qnum : " + Qnum);
 			}
 		}else{ // 주관식일 때
 			//console.log("주관식 선택");
@@ -369,11 +364,11 @@ $(function(){
 </script>
 </head>
 <body>
-	<input type="hidden" value="${qlLength}" id="qlLength">
     <div id="s_head">
         설문조사
     </div>
     <div id="sw_data">&nbsp;</div>  <!-- 임시저장 표시 공간 -->
+    
     <div id="sw_title">
         <!-- 해설 인력 관리 실태 설문 조사 -->
 		<c:if test="${sVo ne null}">

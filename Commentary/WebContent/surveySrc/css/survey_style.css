@@ -363,4 +363,8 @@ input.r_li {}
 button[name=mod_ing],button[name=deleteBtn],button[name=saveBtn]{
 	cursor: pointer;
 }
+.noDataMsg{
+	text-align: center;
+    margin-top: 10em;	
+}
 

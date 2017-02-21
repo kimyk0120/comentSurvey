@@ -23,6 +23,33 @@
 		VALUES (#{survey_key}, #{question_seq}, #{multi_seq}, #{multi_question});
 	</insert>
 	
+	<update id="survey_update" parameterType="SurveyVo">
+		UPDATE 
+			survey 
+		SET 
+			survey_target = #{survey_target}, 
+			survey_title = #{survey_title}, 
+			temp_yn = #{temp_yn}, 
+			reg_id = #{reg_id},
+			start_dt = #{start_dt},
+			end_dt = #{end_dt},
+			mod_dt = now(),
+			send_method = #{send_method}
+		WHERE 
+			survey_key = #{survey_key}
+	</update>
+	
+	<update id="survey_q_update" parameterType="SurveyVo">
+		UPDATE 
+			survey_question 
+		SET 
+			question_seq = #{question_seq},
+			multi_yn = #{multi_yn},
+			question = #{question}
+		WHERE 
+			survey_key = #{survey_key}
+	</update>
+	
 	<select id="surveyList" resultType="SurveyVo">
 		SELECT 
 			survey_key,

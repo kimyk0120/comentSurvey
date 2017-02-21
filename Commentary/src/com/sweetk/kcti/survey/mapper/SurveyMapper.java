@@ -28,4 +28,8 @@ public interface SurveyMapper {
 
 	public List<SurveyVo> multi_questionList(SurveyVo vo);
 
+	public void survey_update(SurveyVo vo);
+
+	public void survey_q_update(SurveyVo vo);
+
 }

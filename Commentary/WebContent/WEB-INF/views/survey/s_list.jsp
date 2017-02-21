@@ -144,7 +144,9 @@ $(function(){
         <!-- end tr 단위 -->
     </table>
    </div>
-   
+   <c:if test="${empty sList}">
+        	<p class="noDataMsg">데이터가 없습니다.</p>
+   </c:if>
 <!-- aelrt.js library -->
 <script src="/surveySrc/js/alertify.js"></script>
 </body>

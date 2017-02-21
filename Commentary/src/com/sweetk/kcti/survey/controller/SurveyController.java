@@ -78,64 +78,62 @@ public class SurveyController {
     	vo.setSend_method(sendMethod);
     	vo.setReg_id("");  // TODO 등록자 설정해야함
     	try {
-    		// 설문 수정시
+    		// 설문 수정시 
     		if(updateYn.equals("Y")){
-    			vo.setSurvey_key(Integer.parseInt(surveyUpdateKey));
+    			vo.setSurvey_key(Integer.parseInt(surveyUpdateKey)); // 설문번호
     			mapper.surveyDel_sur_mq(vo); // multi_question 테이블 삭제
-    			mapper.surveyDel_sur_q(vo); // survey_question 테이블 삭제
-    			mapper.surveyDel_sur(vo); // survey 테이블 삭제
+    			mapper.surveyDel_sur_q(vo); // survey_question 테이블 삭
+        		mapper.survey_update(vo); 
+            	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
+        		VoList voList = new Gson().fromJson(qArray, VoList.class);
+        		for(int i=0;i<voList.getqList().size();i++){ // 설문 내용 
+        			if(voList.getqList().get(i).getqType().equals("1")){  // 주관식일 때
+        				vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
+        				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        				vo.setMulti_yn("N"); // 객관식여부
+        				vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
+        				mapper.survey_q_save(vo);
+        			}else if(voList.getqList().get(i).getqType().equals("2")){ // 객관식일 때
+        				vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
+        				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        				vo.setMulti_yn("Y"); // 객관식여부
+        				vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
+        				mapper.survey_q_save(vo);
+        				for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){  // 객관식 질문 
+        					vo.setSurvey_key(vo.getSurvey_key());
+        					vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        					vo.setMulti_seq(voList.getqList().get(i).getAnswerList().get(j).getAnswerNo());
+        					vo.setMulti_question(voList.getqList().get(i).getAnswerList().get(j).getAnswerText());
+        					mapper.survey_mq_save(vo);
+        				}
+        			}
+        		}//endForSave
+    		}else{ // 수정이 아니고 임시저장 또는 저장일때
         		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
             	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
-            	VoList voList = new Gson().fromJson(qArray, VoList.class);
-            	for(int i=0;i<voList.getqList().size();i++){ // 설문 내용 
-            		if(voList.getqList().get(i).getqType().equals("1")){  // 주관식일 때
-            			vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
-            			vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            			vo.setMulti_yn("N"); // 객관식여부
-            			vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
-            			mapper.survey_q_save(vo);
-            		}else if(voList.getqList().get(i).getqType().equals("2")){ // 객관식일 때
-            			vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
-            			vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            			vo.setMulti_yn("Y"); // 객관식여부
-            			vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
-            			mapper.survey_q_save(vo);
-            			for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){  // 객관식 질문 
-            				vo.setSurvey_key(vo.getSurvey_key());
-            				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            				vo.setMulti_seq(voList.getqList().get(i).getAnswerList().get(j).getAnswerNo());
-            				vo.setMulti_question(voList.getqList().get(i).getAnswerList().get(j).getAnswerText());
-            				mapper.survey_mq_save(vo);
-            			}
-            		}
-            	}//endSave
-    		}else{
-    			// 설문정보저장
-        		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
-            	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
-            	VoList voList = new Gson().fromJson(qArray, VoList.class);
-            	for(int i=0;i<voList.getqList().size();i++){ // 설문 내용 
-            		if(voList.getqList().get(i).getqType().equals("1")){  // 주관식일 때
-            			vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
-            			vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            			vo.setMulti_yn("N"); // 객관식여부
-            			vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
-            			mapper.survey_q_save(vo);
-            		}else if(voList.getqList().get(i).getqType().equals("2")){ // 객관식일 때
-            			vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
-            			vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            			vo.setMulti_yn("Y"); // 객관식여부
-            			vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
-            			mapper.survey_q_save(vo);
-            			for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){  // 객관식 질문 
-            				vo.setSurvey_key(vo.getSurvey_key());
-            				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
-            				vo.setMulti_seq(voList.getqList().get(i).getAnswerList().get(j).getAnswerNo());
-            				vo.setMulti_question(voList.getqList().get(i).getAnswerList().get(j).getAnswerText());
-            				mapper.survey_mq_save(vo);
-            			}
-            		}
-            	}//endSave
+        		VoList voList = new Gson().fromJson(qArray, VoList.class);
+        		for(int i=0;i<voList.getqList().size();i++){ // 설문 내용 
+        			if(voList.getqList().get(i).getqType().equals("1")){  // 주관식일 때
+        				vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
+        				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        				vo.setMulti_yn("N"); // 객관식여부
+        				vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
+        				mapper.survey_q_save(vo);
+        			}else if(voList.getqList().get(i).getqType().equals("2")){ // 객관식일 때
+        				vo.setSurvey_key(vo.getSurvey_key());  // 설문번호
+        				vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        				vo.setMulti_yn("Y"); // 객관식여부
+        				vo.setQuestion(voList.getqList().get(i).getqText()); //  질문
+        				mapper.survey_q_save(vo);
+        				for(int j=0;j<voList.getqList().get(i).getAnswerList().size();j++){  // 객관식 질문 
+        					vo.setSurvey_key(vo.getSurvey_key());
+        					vo.setQuestion_seq(voList.getqList().get(i).getqNo()); // 질문번호
+        					vo.setMulti_seq(voList.getqList().get(i).getAnswerList().get(j).getAnswerNo());
+        					vo.setMulti_question(voList.getqList().get(i).getAnswerList().get(j).getAnswerText());
+        					mapper.survey_mq_save(vo);
+        				}
+        			}
+        		}//endForSave
     		}//endElse
 		} catch (Exception e) {
 			System.out.println("survey_save error");
@@ -161,7 +159,7 @@ public class SurveyController {
 	protected ModelAndView survey_mod(HttpServletRequest req, HttpSession session, HttpServletResponse resp
 			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
 		//System.out.println("/survey_mod called..");
-		System.out.println("surveyKey : " + surveyKey);
+		//System.out.println("surveyKey : " + surveyKey);
     	ModelAndView mav = new ModelAndView("survey/s_write");
     	SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
     	SurveyVo vo = new SurveyVo();
@@ -174,6 +172,8 @@ public class SurveyController {
         	mav.addObject("sVo",vo);
         	mav.addObject("qList",qList);
         	mav.addObject("mqList",mqList);
+        	mav.addObject("qlLength",qList.size());
+        	System.out.println("qList.size() : " + qList.size());
 		} catch (Exception e) {
 			System.out.println("error");
 		}
