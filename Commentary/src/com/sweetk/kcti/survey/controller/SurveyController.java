@@ -153,7 +153,7 @@ public class SurveyController {
     	return mav;
     }
 	
-	// 설문 수정 페이지
+	// 설문 수정 선택시 - 설문 작성 페이지에서 설문 수정 
 	@Transactional
 	@RequestMapping(value="/survey_mod.do",method={RequestMethod.GET})
 	protected ModelAndView survey_mod(HttpServletRequest req, HttpSession session, HttpServletResponse resp
@@ -180,7 +180,8 @@ public class SurveyController {
     	return mav;
     }
 	
-	// 설문 삭제
+	// 설문 삭제  
+	@Transactional
 	@RequestMapping(value="/survey_delete.ajax",method={RequestMethod.GET})
 	protected void survey_delete_ajax(HttpServletRequest req, HttpSession session, HttpServletResponse resp
 			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
@@ -191,11 +192,10 @@ public class SurveyController {
 		//System.out.println("surveyKey : " + surveyKey);
 		vo.setSurvey_key(Integer.parseInt(surveyKey));
 		vo.setDel_yn("Y");
-
 		try {
 			// del yn -> Y로 변경
 			mapper.deleteDelYn(vo);
-			// 행 삭제 
+			// 행 삭제일때
 //			mapper.surveyDel_sur_mq(vo); // multi_question 테이블 삭제
 //			mapper.surveyDel_sur_q(vo); // survey_question 테이블 삭제
 //			mapper.surveyDel_sur(vo); // survey 테이블 삭제
@@ -208,13 +208,10 @@ public class SurveyController {
 		}
 	}
 	
-	
-	@RequestMapping("/survey_result.do")
+	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		//SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
 		ModelAndView mav = new ModelAndView("survey/s_result");
 		return mav;
 	}
-	
-	
 }//endClass

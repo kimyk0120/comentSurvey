@@ -182,8 +182,15 @@ $(function(){
 							  },
 						  cache: false	  
 					}).done(function(result){
-						// 리스트 페이지로 이동
-						$(location).attr("href","survey_list.do");
+						if(tempSaveYn!="Y"){ // 저장하기 선택시
+							// TODO 발송처리  
+							console.log("저장하기 선택됨");
+							// 리스트로 이동
+							//$(location).attr("href","survey_list.do");
+						}else if(tempSaveYn=="Y"){ // 임시저장하기 선택시 
+							// 리스트로 이동
+							$(location).attr("href","survey_list.do");
+						}
 					});	
 			  }, function(ev) {
 			      ev.preventDefault();

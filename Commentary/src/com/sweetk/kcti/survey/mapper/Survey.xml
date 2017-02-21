@@ -62,7 +62,13 @@
 		    end_dt,
 		    mod_dt,
 		    del_yn,
-		    if(now() <![CDATA[ < ]]> end_dt and now() <![CDATA[ > ]]> start_dt ,'진행중','종료') as proc_stat,
+		    CASE
+		    	WHEN now() <![CDATA[ < ]]> end_dt and now() <![CDATA[ > ]]> start_dt 
+		    	THEN '진행중'
+		    	WHEN now() <![CDATA[ < ]]> start_dt
+		    	THEN '진행전'
+		    	ELSE '종료'
+		    END as proc_stat,
 		    (select count(*) from answer b where a.survey_key = b.survey_key) as answer_cnt 
 		FROM survey a
 		WHERE del_yn ='N'

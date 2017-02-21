@@ -120,6 +120,10 @@ $(function(){
         			<c:set var="procStat" value="ing"></c:set>
         			<c:set var="modStat" value="2"></c:set>
         		</c:when>
+        		<c:when test="${sl.proc_stat eq '진행전'}">
+        			<c:set var="procStat" value="before"></c:set>
+        			<c:set var="modStat" value="1"></c:set>
+        		</c:when>
         		<c:otherwise>
         			<c:set var="procStat" value="end"></c:set>
         			<c:set var="modStat" value="1"></c:set>
