@@ -108,7 +108,7 @@ public class SurveyController {
         				}
         			}
         		}//endForSave
-    		}else{ // 수정이 아니고 임시저장 또는 저장일때
+    		}else{ // 수정이 아닌 임시저장 또는 저장일때
         		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
             	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
         		VoList voList = new Gson().fromJson(qArray, VoList.class);
@@ -173,7 +173,7 @@ public class SurveyController {
         	mav.addObject("qList",qList);
         	mav.addObject("mqList",mqList);
         	mav.addObject("qlLength",qList.size());  // 문제 개수
-        	System.out.println("qList.size() : " + qList.size());
+        	//System.out.println("qList.size() : " + qList.size());
 		} catch (Exception e) {
 			System.out.println("error");
 		}

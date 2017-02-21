@@ -39,7 +39,7 @@ $(function(){
 	var Qnum = 1; // 생성되는 문제 시작 번호
 	if(!!qlLength){
 		Qnum = parseInt(qlLength) + 1;
-		console.log("Qnum : " + Qnum);
+		//console.log("Qnum : " + Qnum);
 	}
 	var QmNum = 1; // 생성되는 객관식 라디오 name 증가값
 	
@@ -415,7 +415,7 @@ $(function(){
         
         <!-- 수정 시 문제정보 -->
         <c:if test="${qList ne null}">
-        	<c:forEach items="${qList}" var="ql">
+        	<c:forEach items="${qList}" var="ql" varStatus="qlStat">
 				<fieldset class="article">
 		            <div>
 		            	<c:choose>
@@ -438,8 +438,8 @@ $(function(){
 			            				<c:if test="${ql.question_seq eq mql.question_seq }">
 							                    <li>
 								                    <label>
-								                    	<input type="radio" class="r_li" value="" name="QmNum${mql.multi_seq}">
-								                    	<span>${mql.multi_question}</span>
+								                    	<input type="radio" class="r_li" value="" name="QmUpNo${qlStat.index}">
+								                    	<span class="rText">${mql.multi_question}</span>
 								                    </label>
 							                    </li>
 			            				</c:if>
