@@ -438,7 +438,7 @@ $(function(){
 			            				<c:if test="${ql.question_seq eq mql.question_seq }">
 							                    <li>
 								                    <label>
-								                    	<input type="radio" class="r_li" value="" name="QmNum"+${mql.multi_seq}>
+								                    	<input type="radio" class="r_li" value="" name="QmNum${mql.multi_seq}">
 								                    	<span>${mql.multi_question}</span>
 								                    </label>
 							                    </li>

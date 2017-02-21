@@ -172,7 +172,7 @@ public class SurveyController {
         	mav.addObject("sVo",vo);
         	mav.addObject("qList",qList);
         	mav.addObject("mqList",mqList);
-        	mav.addObject("qlLength",qList.size());
+        	mav.addObject("qlLength",qList.size());  // 문제 개수
         	System.out.println("qList.size() : " + qList.size());
 		} catch (Exception e) {
 			System.out.println("error");
