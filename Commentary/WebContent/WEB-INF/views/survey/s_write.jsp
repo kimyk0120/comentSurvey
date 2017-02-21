@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions"  prefix="fn"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,6 +51,7 @@ $(function(){
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
 		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
 		var $aLength = $(".a_number").length; // 질문 등록 개수 - 질문등록여부
+		var $surveyUpdateKey = $("#surveyUpdateKey").val(); // 수정시 설문번호 
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
 		
@@ -138,15 +142,17 @@ $(function(){
 			
 			var str = JSON.stringify(qArray); // 문제데이터
 			//console.log("str : " + str);			
-			str = "{'qList':"+str+"}";	
+			str = "{'qList':"+str+"}";	// json 형식 
 			
-			var tempSaveYn = "" // 임시저장여부
+			var tempSaveYn = ""; // 임시저장여부
+			var updateYn = "N"; // 수정 인지 여부
 			if($selElId=="temp"){ // 임시저장일때
 				tempSaveYn = "Y";
 			}else if($selElId=="save"){ // 저장하기 선택시 - 발송까지 완료 후 리스트에서 수정 및 삭제 안되게
 				tempSaveYn = "N";
+			}else if($selElId=="update"){
+				updateYn = "Y";
 			}
-				
 			alertify
 			  .okBtn("저장")
 			  .cancelBtn("취소")
@@ -157,17 +163,19 @@ $(function(){
 						  url: "survey_save.ajax", 
 						  data: {
 								  'tempSaveYn':tempSaveYn,
+								  'updateYn':updateYn,
 								  'surveyTitle':$rTitle,
 								  'qArray':str,
 								  'sDate':$stDate, // 시작일
 								  'eDate':$endDate, // 종료일
 								  'surveyTarget':surveyTarget,
-								  'sendMethod':sendMethod
+								  'sendMethod':sendMethod,
+								  'surveyUpdateKey':$surveyUpdateKey //수정시 설문번호
 							  },
 						  cache: false	  
 					}).done(function(result){
 						// 리스트 페이지로 이동
-						$(location).attr("href","survey_list.do");
+						//$(location).attr("href","survey_list.do");
 					});	
 			  }, function(ev) {
 			      ev.preventDefault();
@@ -328,7 +336,6 @@ $(function(){
 		alertify.alert(str);
 		alertify.error(str); 
 	}
-	
 	function getActualFullDate() {
 	    var d = new Date();
 	    var day = addZero(d.getDate());
@@ -339,20 +346,17 @@ $(function(){
 	    var s = addZero(d.getSeconds());
 	    return year + ". " + month + ". " + day + " (" + h + ":" + m + ")";
 	}
-	
 	function addZero(i) {
 	    if (i < 10) {
 	        i = "0" + i;
 	    }
 	    return i;
 	}
-	
 	// alertify 예시
 	//alertify.alert("Message");
 	/* alertify.log("Standard log message");
 	alertify.success("Success log message");
 	alertify.error("Error log message"); */
-	
 })// endDomReady
 </script>
 </head>
@@ -364,33 +368,84 @@ $(function(){
     
     <div id="sw_title">
         <!-- 해설 인력 관리 실태 설문 조사 -->
-        <input type="text" class="qw" placeholder="제목을 입력해주세요." id="rTitle">
+		<c:if test="${sVo ne null}">
+			<c:set value="${sVo.survey_title}" var="sTitle"></c:set>
+			<c:set value="${sVo.start_dt}" var="sDt" ></c:set>
+			<c:set value="${sVo.end_dt}" var="eDt" ></c:set>
+			<input type="hidden" value="${sVo.survey_key}" id="surveyUpdateKey">
+		</c:if>
+        <input type="text" class="qw" placeholder="제목을 입력해주세요." id="rTitle" value="${sTitle}">
     </div>
     <form action="#" id="survey_write">
         <fieldset class="basic_s">
             <ul>
                 <li id="se_date">
-                    <label for="start_s" class="mr15">시작일<input type="text" id="start_s" placeholder="연도 - 월 - 일">
+                    <label for="start_s" class="mr15">시작일<input type="text" id="start_s" placeholder="연도 - 월 - 일" value="${sDt}">
                     <i class="fa fa-calendar" aria-hidden="true"></i>
                     </label>
                     ~
-                    <label for="end_s">종료일<input type="text" id="end_s"placeholder="연도 - 월 - 일">
+                    <label for="end_s">종료일<input type="text" id="end_s"placeholder="연도 - 월 - 일" value="${eDt}">
                     <i class="fa fa-calendar" aria-hidden="true"></i>
                     </label>
-                    
                 </li>
                 <li id="sort_s">
                     <span>설문대상</span>
-                    <label><input type="checkbox" value="group" name="surveyTarget_1">지자체</label>
-                    <label><input type="checkbox" value="commentator" name="surveyTarget_2">해설사</label>
+               	    <label><input type="checkbox" value="group" name="surveyTarget_1" 
+               	  	 	${(sVo ne null and sVo.survey_target eq 'B') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>지자체</label>
+                    <label><input type="checkbox" value="commentator" name="surveyTarget_2" 
+                   		${(sVo ne null and sVo.survey_target eq 'C') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>해설사</label>
                 </li>
                 <li id="sort_s">
                     <span>발송방법</span>
-                    <label><input type="checkbox" value="textMassage" name="surveyMethod_1">문자</label>
-                    <label><input type="checkbox" value="email" name="surveyMethod_2">이메일</label>
+                   	<label><input type="checkbox" value="textMassage" name="surveyMethod_1" 
+                   		${(sVo ne null and sVo.send_method eq 'textMassage') or (sVo ne null and sVo.send_method eq 'both' )?'checked':''}>문자</label>
+                   	<label><input type="checkbox" value="email" name="surveyMethod_2" 
+                   		${(sVo ne null and sVo.send_method eq 'email') or (sVo ne null and sVo.send_method eq 'both' )?'checked':''}>이메일</label>
                 </li>
             </ul>           
         </fieldset>
+        
+        <!-- 수정 시 문제정보 -->
+        <c:if test="${qList ne null}">
+        	<c:forEach items="${qList}" var="ql">
+				<fieldset class="article">
+		            <div>
+		            	<c:choose>
+		            		<c:when test="${ql.multi_yn eq 'Y'}">
+		            			<c:set var="mqClassStat" value="mc"></c:set>	
+		            		</c:when>
+		            		<c:otherwise>
+		            			<c:set var="mqClassStat" value="sa"></c:set>
+		            		</c:otherwise>
+		            	</c:choose>
+		                <p class="a_number ${mqClassStat}">${ql.question_seq}</p>
+		                <p class="aq_text">${ql.question}</p>
+		                <button class="b_del"></button>
+		            </div>
+		            <div class="clear">                
+		                <c:choose>
+		            		<c:when test="${ql.multi_yn eq 'Y'}">
+		            			<ul class="s_radio">
+		            				<c:forEach items="${mqList}" var="mql" varStatus="mqlStat" >
+			            				<c:if test="${ql.question_seq eq mql.question_seq }">
+							                    <li>
+								                    <label>
+								                    	<input type="radio" class="r_li" value="" name="QmNum"+${mql.multi_seq}>
+								                    	<span>${mql.multi_question}</span>
+								                    </label>
+							                    </li>
+			            				</c:if>
+		            				</c:forEach>
+				                </ul>
+		            		</c:when>
+		            		<c:otherwise>
+		            			<input type="text" class="t_input" id="chargeLocText">
+		            		</c:otherwise>
+		            	</c:choose>
+		            </div>            
+		        </fieldset>        		
+        	</c:forEach>
+        </c:if>
         
         
         <!-- 1번 예시 -->
@@ -405,7 +460,6 @@ $(function(){
             </div>            
         </fieldset>  -->
         <!-- .1번 -->
-        
         
         <!-- 2번 예시 -->
        <!-- <fieldset class="article">
@@ -435,7 +489,6 @@ $(function(){
             </div>            
         </fieldset>  -->
         <!-- .2번 -->
-        
         
         <!-- 질문 작성 영역 -->
         <fieldset class="m_article mb2">
@@ -493,7 +546,15 @@ $(function(){
         
         <!-- 버튼 영역 -->
         <fieldset id="sending">
-            <button type="button" name="saveBtn" id="temp">임시저장</button>
+			<c:choose>
+				<c:when test="${sVo ne null}">
+					<c:set value="update" var="btnStat"></c:set>
+				</c:when>
+				<c:otherwise>
+					<c:set value="temp" var="btnStat"></c:set>
+				</c:otherwise>			
+			</c:choose>
+            <button type="button" name="saveBtn" id="${btnStat}">임시저장</button>
             <button type="button" name="saveBtn" id="save" class="save">저장하기</button>
         </fieldset>
         <!-- .버튼 영역 -->

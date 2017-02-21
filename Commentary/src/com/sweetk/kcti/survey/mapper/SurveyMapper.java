@@ -16,4 +16,16 @@ public interface SurveyMapper {
 
 	public void deleteDelYn(SurveyVo vo);
 
+	public void surveyDel_sur(SurveyVo vo);
+
+	public void surveyDel_sur_q(SurveyVo vo);
+
+	public void surveyDel_sur_mq(SurveyVo vo);
+
+	public SurveyVo survey_detail(SurveyVo vo);
+
+	public List<SurveyVo> questionList(SurveyVo vo);
+
+	public List<SurveyVo> multi_questionList(SurveyVo vo);
+
 }

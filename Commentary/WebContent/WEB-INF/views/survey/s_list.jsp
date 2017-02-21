@@ -44,7 +44,6 @@ $(function(){
 	$("button[name=deleteBtn]").on("click",function(e){
 		e.preventDefault();
 		var delEl = $(this).parent().parent();
-		
 		//alertify.alert("삭제실행");
 		var $surveyKey = $(this).parent().parent().prev("input[name=surveyKey]").val();  // 설문번호
 		//console.log("$surveyKey : " + $surveyKey);
@@ -60,12 +59,13 @@ $(function(){
 				data:{"surveyKey":$surveyKey},
 				url:"/survey_delete.ajax",
 				cache: false }).done(function(result){
+					console.log(result);
 					alertify.success("삭제되었습니다.");
 				}); 
 		}, function() {});
 	});
 	
-	// 수정버튼 선택시 
+	// 결과저장버튼 선택시 
 	$("button[name=saveBtn]").on("click",function(e){
 		//alertify.alert("결과저장");
 		var $surveyKey = $(this).parent().parent().prev("input[name=surveyKey]").val();  // 설문번호

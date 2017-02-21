@@ -6,8 +6,8 @@
 <mapper namespace="com.sweetk.kcti.survey.mapper.SurveyMapper">
 
 	<insert id="survey_save" parameterType="SurveyVo">
-		INSERT INTO survey (survey_target, survey_title, temp_yn, reg_dt, reg_id ,start_dt,end_dt)
-		VALUES (#{survey_target}, #{survey_title}, #{temp_yn}, now(), #{reg_id} , #{start_dt}, #{end_dt})
+		INSERT INTO survey (survey_target, survey_title, temp_yn, reg_dt, reg_id ,start_dt,end_dt, send_method)
+		VALUES (#{survey_target}, #{survey_title}, #{temp_yn}, now(), #{reg_id} , #{start_dt}, #{end_dt}, #{send_method})
 		<selectKey resultType="int" keyProperty="survey_key" order="AFTER">
 			select max(survey_key) FROM survey
 		</selectKey>
@@ -46,7 +46,57 @@
 		UPDATE survey SET del_yn = #{del_yn} WHERE survey_key = #{survey_key}
 	</update>
 	
-	<!-- <delete id="surveyDel" parameterType="SurveyVo">
-		DELETE FROM survey WHERE survey_key = #{survey_key};
-	</delete> -->
+	<delete id="surveyDel" parameterType="SurveyVo">
+		DELETE FROM survey WHERE survey_key = #{survey_key}
+	</delete> 
+
+	<delete id="surveyDel_sur_q" parameterType="SurveyVo">
+		DELETE FROM survey_question WHERE survey_key = #{survey_key}
+	</delete> 
+
+	<delete id="surveyDel_sur_mq" parameterType="SurveyVo">
+		DELETE FROM multi_question WHERE survey_key = #{survey_key}
+	</delete> 
+	
+	<select id="survey_detail" parameterType="SurveyVo" resultType="SurveyVo">
+		SELECT 
+			survey_key,
+			survey_target,
+			survey_title,
+			temp_yn,
+			reg_dt,
+			reg_id,
+			start_dt,
+			end_dt,
+			mod_dt,
+			del_yn,
+			send_method 
+		FROM survey 
+		WHERE survey_key = #{survey_key}
+	</select>
+	
+	<select id="questionList" parameterType="SurveyVo" resultType="SurveyVo">
+		SELECT 
+			survey_key,
+		    question_seq,
+		    multi_yn,
+		    question
+		FROM survey_question
+		WHERE survey_key = #{survey_key}
+		ORDER BY question_seq
+	</select>
+
+	<select id="multi_questionList" parameterType="SurveyVo" resultType="SurveyVo">
+		SELECT 
+			survey_key,
+		    question_seq,
+		    multi_seq,
+		    multi_question
+		FROM multi_question
+		WHERE survey_key = #{survey_key}
+		ORDER BY question_seq, multi_seq
+	</select>
+	
+	
+	
 </mapper>
