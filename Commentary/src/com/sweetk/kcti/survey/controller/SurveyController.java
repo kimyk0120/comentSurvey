@@ -150,7 +150,7 @@ public class SurveyController {
 			// del yn -> Y로 변경
 			mapper.deleteDelYn(vo);
 			
-			// 행 삭제
+			// 행 삭제 
 			//mapper.surveyDel(vo);
 			
 		} catch (Exception e) {
