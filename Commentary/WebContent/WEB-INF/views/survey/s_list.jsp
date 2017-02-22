@@ -35,7 +35,7 @@ $(function(){
 	});
 	
 	// 수정버튼 선택시 - 수정 페이지로 이동
-	$("button[name=mod_ing]").on("click",function(e){
+	$("button[name=mod_before]").on("click",function(e){
 		var $surveyKey = $(this).parent().parent().prev("input[name=surveyKey]").val();  // 설문번호
 		//console.log("$surveyKey : " + $surveyKey);
 		alertify.okBtn("수정").cancelBtn("취소").confirm("수정하시겠습니까?", function () {
@@ -118,20 +118,23 @@ $(function(){
         	<c:choose>
         		<c:when test="${sl.proc_stat eq '진행중'}">
         			<c:set var="procStat" value="ing"></c:set>
-        			<c:set var="modStat" value="2"></c:set>
+        			<c:set var="modStat" value="1"></c:set>
+        			<c:set var="delStat" value="noDeleteBtn"></c:set>
         		</c:when>
         		<c:when test="${sl.proc_stat eq '진행전'}">
         			<c:set var="procStat" value="before"></c:set>
-        			<c:set var="modStat" value="1"></c:set>
+        			<c:set var="modStat" value="2"></c:set>
+        			<c:set var="delStat" value="deleteBtn"></c:set>
         		</c:when>
         		<c:otherwise>
         			<c:set var="procStat" value="end"></c:set>
         			<c:set var="modStat" value="1"></c:set>
+        			<c:set var="delStat" value="noDeleteBtn"></c:set>
         		</c:otherwise>
         	</c:choose>
         	<input type="hidden" value="${sl.survey_key}" name="surveyKey">
 	        <tr class="${procStat}">
-	            <td class="situation">${sl.proc_stat}</td>
+	            <td class="situation ${procStat}">${sl.proc_stat}</td>
 	            <td class="t_title"><p class="s_contents">${sl.survey_title}</p><p class="t_data">${sl.reg_dt_sv} 등록</p></td>
 	            <td class="p_number">${sl.answer_cnt}</td>
 	            <c:choose>
@@ -150,7 +153,7 @@ $(function(){
 	                <button type="button" name="mod_${procStat}"><img src="/surveySrc/img/modification_${modStat}.png" alt="modification"></button>
 	            </td>
 	            <td class="delete">
-	                <button type="button" name="deleteBtn"><img src="/surveySrc/img/delete.png" alt="delete"></button>
+	                <button type="button" name="${delStat}"><img src="/surveySrc/img/delete.png" alt="delete"></button>
 	            </td>
 	            <td class="save">
 	                <button type="button" name="saveBtn"><img src="/surveySrc/img/download.png" alt="save"></button>

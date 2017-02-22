@@ -360,7 +360,7 @@ input.r_li {}
     border: 1px solid #4b5b9d;
     font-weight: bold;	
 }
-button[name=mod_ing],button[name=deleteBtn],button[name=saveBtn]{
+button[name=mod_before],button[name=deleteBtn],button[name=saveBtn]{
 	cursor: pointer;
 }
 .noDataMsg{
@@ -369,5 +369,11 @@ button[name=mod_ing],button[name=deleteBtn],button[name=saveBtn]{
 }
 .dsNo{
 	display: none;
+}
+button[name=noDeleteBtn]{
+	opacity: 0.4;
+}
+.situation.before{
+	color: #d53260;
 }
 
