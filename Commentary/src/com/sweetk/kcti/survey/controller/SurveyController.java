@@ -109,6 +109,7 @@ public class SurveyController {
         			}
         		}//endForSave
     		}else{ // 수정이 아닌 임시저장 일때
+    			
         		mapper.survey_save(vo); // 설문기본정보  - survey 테이블 인서트
             	//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
         		VoList voList = new Gson().fromJson(qArray, VoList.class);
@@ -135,6 +136,7 @@ public class SurveyController {
         			}
         		}//endForSave
     		}//endElse
+    		out.print(vo.getSurvey_key()); // 저장된 설문번호
 		} catch (Exception e) {
 			System.out.println("survey_save error");
 			out.print("error");
@@ -208,6 +210,23 @@ public class SurveyController {
 		}
 	}
 	
+	// 이메일, sms 발송처리 - 유저에게 url 전송
+	@RequestMapping(value="/send_survey.ajax",method={RequestMethod.GET})
+	protected void send_survey(HttpServletRequest req, HttpSession session, HttpServletResponse resp
+			,@RequestParam(value="surveyKey",required=true) int surveyKey) throws Exception  {
+		//System.out.println("surveyKey : " + surveyKey);
+		System.out.println("send_survey.ajax called");
+		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		SurveyVo vo = new SurveyVo();
+		vo.setSurvey_key(surveyKey);
+		
+		// 설문대상 , 발송방법 select
+		
+		
+		
+	}
+	
+	// 설문지 
 	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		//SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);

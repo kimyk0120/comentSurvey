@@ -59,10 +59,8 @@ $(function(){
 		var $surveyUpdateKey = $("#surveyUpdateKey").val(); // 수정시 설문번호 
 		var parseStartDt = parseInt($stDate.replace(/\-/g,''));
 		var parseEndtDt = parseInt($endDate.replace(/\-/g,''));
-		
-		console.log("$surveyMethod1 : " + $surveyMethod1);
-		console.log("$surveyMethod2 : " + $surveyMethod2);
-		
+		/* console.log("$surveyMethod1 : " + $surveyMethod1);
+		console.log("$surveyMethod2 : " + $surveyMethod2); */
 		if(!$rTitle){
 			alertMsg("설문 제목을 입력해주세요."); 
 			$("#rTitle").focus();
@@ -181,12 +179,19 @@ $(function(){
 								  'surveyUpdateKey':$surveyUpdateKey //수정시 설문번호
 							  },
 						  cache: false	  
-					}).done(function(result){
+					}).done(function(surveyKey){
+						//console.log("surveyKey : " + surveyKey);
 						if(tempSaveYn!="Y"){ // 저장하기 선택시
-							// TODO 발송처리  
-							console.log("저장하기 선택됨");
-							// 리스트로 이동
-							//$(location).attr("href","survey_list.do");
+							//console.log("저장하기 선택됨");
+							//발송처리
+							$.ajax({
+								method:"GET",
+								url:"send_survey.ajax",
+								data:{"surveyKey":surveyKey}
+							}).done(function(result){
+								// 리스트로 이동
+								//$(location).attr("href","survey_list.do");								
+							});
 						}else if(tempSaveYn=="Y"){ // 임시저장하기 선택시 
 							// 리스트로 이동
 							$(location).attr("href","survey_list.do");
