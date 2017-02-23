@@ -70,8 +70,6 @@ public class SendEmail{
 	         transport.sendMessage(msg, msg.getAllRecipients());
 	         transport.close();
 */
-	 
-			
 		} catch (Exception e) {
 			System.out.println("e : " + e);
 		}

@@ -20,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.sweetk.kcti.survey.mapper.SurveyMapper;
+import com.sweetk.kcti.survey.util.AES256Util;
+import com.sweetk.kcti.survey.util.SendEmail;
 import com.sweetk.kcti.survey.vo.SurveyVo;
 import com.sweetk.kcti.survey.vo.VoList;
 
@@ -215,35 +217,27 @@ public class SurveyController {
 	protected void send_survey(HttpServletRequest req, HttpSession session, HttpServletResponse resp
 			,@RequestParam(value="surveyKey",required=true) int surveyKey) throws Exception  {
 		//System.out.println("surveyKey : " + surveyKey);
-		System.out.println("send_survey.ajax called");
+		//System.out.println("send_survey.ajax called");
 		PrintWriter out = resp.getWriter();
 		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
 		SurveyVo vo = new SurveyVo();
 		vo.setSurvey_key(surveyKey);
-		
 		try {
 			// 설문대상 , 발송방법 select    
 			vo = mapper.select_send_targetAndMethod(vo);
-			//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
-			System.out.println("vo.getSurvey_target() : " + vo.getSurvey_target());
-			//System.out.println("vo.getSend_method(): " + vo.getSend_method());
-			String sendMethod = vo.getSend_method();
+//			System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
+//			System.out.println("vo.getSurvey_target() : " + vo.getSurvey_target());
+//			System.out.println("vo.getSend_method(): " + vo.getSend_method());
 			
-			// auth_no 2,3 - 지자체 4 - 해설사
-			// user select
 			List<SurveyVo> userList = mapper.user_list(vo);
-				
-			if(sendMethod.equals("email")){  // 이메일 발송
-				
-				
-				
-			}else if(sendMethod.equals("textMassage")){ // 메세지 발송 
-				
-				
-			}else if(sendMethod.equals("both")){  // 이메일, 메세지 발송
-				
-			}
 			
+			if(vo.getSend_method().equals("email")){  // 이메일 발송 
+				send_survey_mail(req,session,resp,vo,userList);
+			}else if(vo.getSend_method().equals("textMassage")){ // 메세지 발송 TODO
+				
+			}else if(vo.getSend_method().equals("both")){  // 이메일, 메세지 발송 TODO
+				send_survey_mail(req,session,resp,vo,userList);
+			}
 		} catch (Exception e) {
 			//e.printStackTrace();
 			System.out.println("send_survey error");
@@ -252,11 +246,47 @@ public class SurveyController {
 		}
 	}//end send
 	
-	
-	
-	
-	
-	
+	// 메일 송신
+    protected void send_survey_mail(HttpServletRequest req, HttpSession session, HttpServletResponse resp,
+    		SurveyVo vo, List<SurveyVo> userList) throws Exception {
+    	
+    	System.out.println("send_survey_mail methid called");
+    	resp.setContentType("text/xml; charset=utf-8");
+    	
+    	SendEmail SendEmail = new SendEmail();
+//    	String content = "<div class=\"_wcpushTag\" id=\"pushTag_82a073a72331565\" style=\"padding: 0px;\"><img src=\"http://ctgs.kr/image/login_m.png\">";
+//    	content += "안녕하십니까</div><div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\"><strong>문화관광해설사 관리 페이지</strong>입니다.</div><div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\">요청하신 비밀번호는 <em>abcdef </em>입니다.</div>";
+//    	content += "<div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\"><a href=\"http://www.ctgs.kr\">www.ctgs.kr</a> 로 접속하셔서 <strong>비밀번호 변경 후</strong> 이용하여 주시길 바랍니다.</div>";
+//    	content += "<div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\">감사합니다.</div><div align=\"center\" class=\"_wcSign\" style=\"background: rgb(222, 222, 222); padding: 15px 0px 0px;\"><img src=\"http://ctgs.kr/image/login_logo_mcst.png\"></div>";
+    	
+    	// 설문번호, 아이디 encode TODO
+    	System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
+    	System.out.println("userList.get(0).getUser_id() : " + userList.get(0).getUser_id());
+    	System.out.println("userList.get(0).getEmail() : " + userList.get(0).getEmail());
+    	
+    	String encodeStr = AES256Util.aesEncode("test");
+    	System.out.println("encodeStr : " + encodeStr);
+    	
+//    	String decodeStr  = AES256Cipher.AES_Decode(encodeStr, "commentary");
+//    	
+//    	System.out.println("decodeStr : " + decodeStr);
+    	
+    	// 이메일 내용
+    	String content = ""; 
+    	content += "<div style='text-align: center;'>                                                                                  ";
+    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><a href=''>survey_result.do</a></div>                          ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>위 링크로 접속하셔서 설문에 응해주시면 감사하겠습니다.</div>   ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px; margin-bottom: 1em;'>감사합니다.</div>                          ";
+    	content += "<div align='center' class='_wcSign' style='background: rgb(222, 222, 222); padding: 15px 0px 0px;'>          	   ";
+    	content += "<img src='http://ctgs.kr/image/login_logo_mcst.png'></div>                                                   	   ";
+    	content += "</div>                                                                                                       	   ";
+    	
+    	SendEmail.Email("ctgs@hanmail.net", "kimyk0120@naver.com", "한국문화관광해설사 테스트 이메일 입니다", content);
+    	
+    }
 	
 	
 	// 설문지 
@@ -264,6 +294,13 @@ public class SurveyController {
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		//SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
 		ModelAndView mav = new ModelAndView("survey/s_result");
+		return mav;
+	}
+
+	// 이메일 UI 테스트
+	@RequestMapping(value="/emailui_test.do",method={RequestMethod.POST,RequestMethod.GET})
+	protected ModelAndView emailui_test(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+		ModelAndView mav = new ModelAndView("survey/emailui_test");
 		return mav;
 	}
 }//endClass
