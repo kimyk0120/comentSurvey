@@ -215,13 +215,13 @@ public class SurveyController {
 	// 이메일, sms 발송처리 - 유저에게 url 전송
 	@RequestMapping(value="/send_survey.ajax",method={RequestMethod.GET})
 	protected void send_survey(HttpServletRequest req, HttpSession session, HttpServletResponse resp
-			,@RequestParam(value="surveyKey",required=true) int surveyKey) throws Exception  {
+			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
 		//System.out.println("surveyKey : " + surveyKey);
 		//System.out.println("send_survey.ajax called");
 		PrintWriter out = resp.getWriter();
 		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
 		SurveyVo vo = new SurveyVo();
-		vo.setSurvey_key(surveyKey);
+		vo.setSurvey_key(Integer.parseInt(surveyKey));
 		try {
 			// 설문대상 , 발송방법 select    
 			vo = mapper.select_send_targetAndMethod(vo);
@@ -263,41 +263,79 @@ public class SurveyController {
 //    	System.out.println("userList.get(0).getUser_id() : " + userList.get(0).getUser_id());
 //    	System.out.println("userList.get(0).getEmail() : " + userList.get(0).getEmail());
     	AES256Util aes = new AES256Util("commentary123456");
-    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(0).getUser_id()); 
 //    	System.out.println("encodeStr : " + encodeStr);
 //    	String decodeStr  = aes.aesDecode(encodeStr); 
 //    	System.out.println("decodeStr : " + decodeStr);
-    	
+
     	// 이메일 내용 + send
-    	String content = ""; 
-    	String url ="192.168.0.189:8080/survey_result.do?"+encodeStr;
-    	content += "<div style='text-align: center;'>                                                                                  ";
-    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>                       	 									   ";
-    	content += "<a href='" + url + "'> 설문조사 페이지로 이동 </a></div>                       											   ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>위 링크로 접속하셔서 설문에 응해주시면 감사하겠습니다.</div>   ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px; margin-bottom: 1em;'>감사합니다.</div>                          ";
-    	content += "<div align='center' class='_wcSign' style='background: rgb(222, 222, 222); padding: 15px 0px 0px;'>          	   ";
-    	content += "<img src='http://ctgs.kr/image/login_logo_mcst.png'></div>                                                   	   ";
-    	content += "</div>                                                                                                       	   ";
-    	SendEmail.Email("ctgs@hanmail.net", "kimyk0120@naver.com", "한국문화관광해설사 테스트 이메일 입니다", content);
+    	for(int i=0;i<userList.size();i++){
+    		// 이메일 유효성 체크
+    		if(SendEmail.isEmail(userList.get(i).getEmail())){
+    			String content = "";
+    	    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(i).getUser_id());
+    	    	String url ="http://192.168.0.10:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
+    	    	content += "<div style='text-align: center;'>                                                                                  ";
+    	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>                       	 									   ";
+    	    	content += "<a href='" + url + "'> 설문조사 페이지로 이동 </a></div>                       									   ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>위 링크로 접속하셔서 설문에 응해주시면 감사하겠습니다.</div>   ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px; margin-bottom: 1em;'>감사합니다.</div>                          ";
+    	    	content += "<div align='center' class='_wcSign' style='background: rgb(222, 222, 222); padding: 15px 0px 0px;'>          	   ";
+    	    	content += "<img src='http://ctgs.kr/image/login_logo_mcst.png'></div>                                                   	   ";
+    	    	content += "</div>                                                                                                       	   ";
+    	    	SendEmail.Email("ctgs@hanmail.net", userList.get(i).getEmail(), "한국문화관광해설사 설문 조사 이메일 입니다", content);
+    		}
+    	}//endFOr
     }
+
+    
+    // 이메일 UI 테스트
+ 	@RequestMapping(value="/emailui_test.do",method={RequestMethod.POST,RequestMethod.GET})
+ 	protected ModelAndView emailui_test(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+ 		ModelAndView mav = new ModelAndView("survey/emailui_test");
+ 		return mav;
+ 	}
 	
-	
-	// 설문지 
+	// 설문지 - 각 유저 이메일에서 url 선택시
 	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		//SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		
+		System.out.println("설문 작성자 접속");
 		ModelAndView mav = new ModelAndView("survey/s_result");
+		AES256Util aes = new AES256Util("commentary123456"); 
+		String decodeStr = aes.aesDecode(req.getParameter("userKey"));
+		//System.out.println("decodeStr : " + decodeStr);
+		String[] splitArr;
+		splitArr = decodeStr.split("#");
+		String surveyKey = splitArr[0]; // 설문번호
+		String userId = splitArr[1]; // 유저 아이디
+		//System.out.println("surveyKey : " + surveyKey);
+		//System.out.println("userId : " + userId);
+		SurveyVo vo = new SurveyVo();
+		vo.setSurvey_key(Integer.parseInt(surveyKey));
+		try {
+			
+			// 답변 완료 여부체크 - 완료페이지로 이동 
+			
+			// 시작일 종료일 체크 - 완료(종료)페이지로 이동 
+			
+			
+//    		vo = mapper.survey_detail(vo);
+//        	List<SurveyVo> qList = mapper.questionList(vo);
+//        	List<SurveyVo> mqList = mapper.multi_questionList(vo);
+//        	mav.addObject("sVo",vo);
+//        	mav.addObject("qList",qList);
+//        	mav.addObject("mqList",mqList);
+//        	mav.addObject("qlLength",qList.size());  // 문제 개수
+        	//System.out.println("qList.size() : " + qList.size());
+		} catch (Exception e) {
+			System.out.println("error");
+		}
 		return mav;
 	}
 
-	// 이메일 UI 테스트
-	@RequestMapping(value="/emailui_test.do",method={RequestMethod.POST,RequestMethod.GET})
-	protected ModelAndView emailui_test(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
-		ModelAndView mav = new ModelAndView("survey/emailui_test");
-		return mav;
-	}
+	
 }//endClass

@@ -2,6 +2,7 @@ package com.sweetk.kcti.survey.util;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -14,7 +15,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 public class SendEmail{
-
+	
+	public boolean isEmail(String email) {
+        if (email==null) return false;
+        boolean b = Pattern.matches("[\\w\\~\\-\\.]+@[\\w\\~\\-]+(\\.[\\w\\~\\-]+)+",email.trim());
+        return b;
+    }
+	
 	public void Email (String From, String To, String Subject, String Content){
 		
 		try{

@@ -1,14 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions"  prefix="fn"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>survey_result</title>
-    <link rel="shortcut icon" type="image/png" href=""/>
-    <link rel="stylesheet" href="/surveySrc/css/style.css">
-    <link rel="stylesheet" href="/surveySrc/css/survey_style.css">
-    <link rel="stylesheet" href="/surveySrc/css/re_style.css">
-    <script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
+<meta charset="UTF-8">
+<title>survey_result</title>
+<link rel="shortcut icon" type="image/png" href=""/>
+<link rel="stylesheet" href="/surveySrc/css/style.css">
+<link rel="stylesheet" href="/surveySrc/css/survey_style.css">
+<link rel="stylesheet" href="/surveySrc/css/re_style.css">
+<script type="text/javascript" src="/surveySrc/js/jquery-1.11.3.min.js"></script>
+    <!-- alertify -->
+<link rel="stylesheet" href="/surveySrc/css/alertify.css">
+<!-- jquery UI -->
+<script src="/surveySrc/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="/surveySrc/css/jquery-ui.css">
+<!-- font-awesome -->
+<link rel="stylesheet" href="/surveySrc/css/font-awesome.min.css">
 </head>
 <body>
     <div class="bg"></div>

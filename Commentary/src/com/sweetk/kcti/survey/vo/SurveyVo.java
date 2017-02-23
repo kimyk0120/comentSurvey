@@ -248,12 +248,15 @@ public class SurveyVo {
 		this.answerText = answerText;
 	}
 	
+
 	public int getSurvey_key() {
 		return survey_key;
 	}
+
 	public void setSurvey_key(int survey_key) {
 		this.survey_key = survey_key;
 	}
+
 	public String getqArray() {
 		return qArray;
 	}
