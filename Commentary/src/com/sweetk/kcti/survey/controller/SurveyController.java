@@ -273,7 +273,7 @@ public class SurveyController {
     		if(SendEmail.isEmail(userList.get(i).getEmail())){
     			String content = "";
     	    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(i).getUser_id());
-    	    	String url ="http://192.168.0.10:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
+    	    	String url ="http://192.168.0.189:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
     	    	content += "<div style='text-align: center;'>                                                                                  ";
     	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
