@@ -32,4 +32,9 @@ public interface SurveyMapper {
 
 	public void survey_q_update(SurveyVo vo);
 
+	public SurveyVo select_send_targetAndMethod(SurveyVo vo);
+
+	public List<SurveyVo> user_list(SurveyVo vo);
+
+
 }

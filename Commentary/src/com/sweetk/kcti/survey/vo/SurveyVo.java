@@ -37,10 +37,75 @@ public class SurveyVo {
 	int answer_cnt; // 응답수
 	String mod_dt=""; // 수정일
 	
+	/////////////////////////////
+	
+	String user_id =""; // 유저 아이디
+	String sido_cd = ""; // 시,도 코드
+	String gugun_cd = ""; // 구,군 코드
+	String auth_no =""; // 권한
+	String email = ""; // 이메일
+	String phone = ""; // 연락처
+	String cmntor_no = ""; // 해설사번호
 	
 	// getter setter
 	public SurveyVo() {
 	}	
+	
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getSido_cd() {
+		return sido_cd;
+	}
+
+	public void setSido_cd(String sido_cd) {
+		this.sido_cd = sido_cd;
+	}
+
+	public String getGugun_cd() {
+		return gugun_cd;
+	}
+
+	public void setGugun_cd(String gugun_cd) {
+		this.gugun_cd = gugun_cd;
+	}
+
+	public String getAuth_no() {
+		return auth_no;
+	}
+
+	public void setAuth_no(String auth_no) {
+		this.auth_no = auth_no;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getCmntor_no() {
+		return cmntor_no;
+	}
+
+	public void setCmntor_no(String cmntor_no) {
+		this.cmntor_no = cmntor_no;
+	}
 
 	public String getDel_yn() {
 		return del_yn;

@@ -130,6 +130,40 @@
 		ORDER BY question_seq, multi_seq
 	</select>
 	
-	
+	<select id="select_send_targetAndMethod" parameterType="SurveyVo" resultType="SurveyVo">
+		SELECT 
+			survey_key,
+			survey_target,
+		    send_method
+		FROM 
+			survey
+		WHERE 
+			survey_key = #{survey_key};
+	</select>
+
+	<select id="user_list" parameterType="SurveyVo" resultType="SurveyVo">
+		SELECT 
+			user_id,
+		    sido_cd,
+		    gugun_cd,
+		    auth_no,
+		    email,
+		    phone,
+		    cmntor_no
+		FROM user
+		<where>
+			<choose>
+				<when test='survey_target != null and survey_target.equals("B")'>
+					AND (auth_no = '2' or auth_no = '3')
+				</when>
+				<when test='survey_target != null and survey_target.equals("C")'>
+					AND auth_no = '4'
+				</when>
+			</choose>
+		</where> 
+		<!-- <if test="survey_target != null and survey_target.equals('C')">
+			AND auth_no = '4'
+		</if> -->
+	</select>
 	
 </mapper>

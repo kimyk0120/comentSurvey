@@ -216,15 +216,48 @@ public class SurveyController {
 			,@RequestParam(value="surveyKey",required=true) int surveyKey) throws Exception  {
 		//System.out.println("surveyKey : " + surveyKey);
 		System.out.println("send_survey.ajax called");
+		PrintWriter out = resp.getWriter();
 		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
 		SurveyVo vo = new SurveyVo();
 		vo.setSurvey_key(surveyKey);
 		
-		// 설문대상 , 발송방법 select
-		
-		
-		
-	}
+		try {
+			// 설문대상 , 발송방법 select    
+			vo = mapper.select_send_targetAndMethod(vo);
+			//System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
+			System.out.println("vo.getSurvey_target() : " + vo.getSurvey_target());
+			//System.out.println("vo.getSend_method(): " + vo.getSend_method());
+			String sendMethod = vo.getSend_method();
+			
+			// auth_no 2,3 - 지자체 4 - 해설사
+			// user select
+			List<SurveyVo> userList = mapper.user_list(vo);
+				
+			if(sendMethod.equals("email")){  // 이메일 발송
+				
+				
+				
+			}else if(sendMethod.equals("textMassage")){ // 메세지 발송 
+				
+				
+			}else if(sendMethod.equals("both")){  // 이메일, 메세지 발송
+				
+			}
+			
+		} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("send_survey error");
+		} finally {
+			out.close();
+		}
+	}//end send
+	
+	
+	
+	
+	
+	
+	
 	
 	// 설문지 
 	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
