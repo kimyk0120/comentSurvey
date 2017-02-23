@@ -228,7 +228,6 @@ public class SurveyController {
 //			System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
 //			System.out.println("vo.getSurvey_target() : " + vo.getSurvey_target());
 //			System.out.println("vo.getSend_method(): " + vo.getSend_method());
-			
 			List<SurveyVo> userList = mapper.user_list(vo);
 			
 			if(vo.getSend_method().equals("email")){  // 이메일 발송 
@@ -239,7 +238,7 @@ public class SurveyController {
 				send_survey_mail(req,session,resp,vo,userList);
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("send_survey error");
 		} finally {
 			out.close();
@@ -260,32 +259,30 @@ public class SurveyController {
 //    	content += "<div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\">감사합니다.</div><div align=\"center\" class=\"_wcSign\" style=\"background: rgb(222, 222, 222); padding: 15px 0px 0px;\"><img src=\"http://ctgs.kr/image/login_logo_mcst.png\"></div>";
     	
     	// 설문번호, 아이디 encode TODO
-    	System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
-    	System.out.println("userList.get(0).getUser_id() : " + userList.get(0).getUser_id());
-    	System.out.println("userList.get(0).getEmail() : " + userList.get(0).getEmail());
-    	
-    	String encodeStr = AES256Util.aesEncode("test");
-    	System.out.println("encodeStr : " + encodeStr);
-    	
-//    	String decodeStr  = AES256Cipher.AES_Decode(encodeStr, "commentary");
-//    	
+//    	System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
+//    	System.out.println("userList.get(0).getUser_id() : " + userList.get(0).getUser_id());
+//    	System.out.println("userList.get(0).getEmail() : " + userList.get(0).getEmail());
+    	AES256Util aes = new AES256Util("commentary123456");
+    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(0).getUser_id()); 
+//    	System.out.println("encodeStr : " + encodeStr);
+//    	String decodeStr  = aes.aesDecode(encodeStr); 
 //    	System.out.println("decodeStr : " + decodeStr);
     	
-    	// 이메일 내용
+    	// 이메일 내용 + send
     	String content = ""; 
+    	String url ="192.168.0.189:8080/survey_result.do?"+encodeStr;
     	content += "<div style='text-align: center;'>                                                                                  ";
     	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
     	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
     	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
-    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><a href=''>survey_result.do</a></div>                          ";
+    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>                       	 									   ";
+    	content += "<a href='" + url + "'> 설문조사 페이지로 이동 </a></div>                       											   ";
     	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>위 링크로 접속하셔서 설문에 응해주시면 감사하겠습니다.</div>   ";
     	content += "<div class='_wcSign' style='padding: 15px 0px 0px; margin-bottom: 1em;'>감사합니다.</div>                          ";
     	content += "<div align='center' class='_wcSign' style='background: rgb(222, 222, 222); padding: 15px 0px 0px;'>          	   ";
     	content += "<img src='http://ctgs.kr/image/login_logo_mcst.png'></div>                                                   	   ";
     	content += "</div>                                                                                                       	   ";
-    	
     	SendEmail.Email("ctgs@hanmail.net", "kimyk0120@naver.com", "한국문화관광해설사 테스트 이메일 입니다", content);
-    	
     }
 	
 	

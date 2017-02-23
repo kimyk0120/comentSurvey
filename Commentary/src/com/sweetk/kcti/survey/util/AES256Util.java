@@ -1,5 +1,6 @@
 package com.sweetk.kcti.survey.util;
 
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -32,8 +33,8 @@ import org.apache.commons.codec.binary.Base64;
  
  */
 public class AES256Util {
-    private static String iv;
-    private static Key keySpec;
+    private String iv;
+    private Key keySpec;
  
     public AES256Util(String key) throws UnsupportedEncodingException {
         this.iv = key.substring(0, 16);
@@ -50,7 +51,7 @@ public class AES256Util {
     }
  
     // 암호화
-    public static String aesEncode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, 
+    public String aesEncode(String str) throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, 
                                                      NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, 
                                                      IllegalBlockSizeException, BadPaddingException{
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
