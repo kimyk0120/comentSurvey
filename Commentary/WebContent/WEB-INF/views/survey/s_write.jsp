@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="/surveySrc/css/font-awesome.min.css"> 
 <script type="text/javascript">
 $(function(){
-	
 	//init
+	$(".wrap-loading").hide();
 	$("#start_s,#end_s").datepicker({
 	    dateFormat: 'yy-mm-dd',
 	    prevText: '이전 달',
@@ -181,8 +181,9 @@ $(function(){
 						  cache: false	  
 					}).done(function(surveyKey){
 						//console.log("surveyKey : " + surveyKey);
-						if(tempSaveYn!="Y"){ // 저장하기 선택시
+						if(tempSaveYn=="N"){ // 저장하기 선택시
 							//console.log("저장하기 선택됨");
+							$(".wrap-loading").show();						
 							//발송처리
 							$.ajax({
 								method:"GET",
@@ -190,8 +191,9 @@ $(function(){
 								data:{"surveyKey":surveyKey}
 							}).done(function(result){
 								// 리스트로 이동
+								$(".wrap-loading").hide();
 								$(location).attr("href","survey_list.do");								
-							});
+							}); 
 						}else if(tempSaveYn=="Y"){ // 임시저장하기 선택시 
 							// 리스트로 이동
 							$(location).attr("href","survey_list.do");
@@ -381,6 +383,11 @@ $(function(){
 </script>
 </head>
 <body>
+	<!-- 로딩이미지 -->
+	<div class="wrap-loading display-none">
+		<div><img src="/surveySrc/img/kOnzy.gif" id="loadImg"></div>
+	</div>
+	
 	<input type="hidden" value="${qlLength}" id="qlLength">
     <div id="s_head">
         설문조사
