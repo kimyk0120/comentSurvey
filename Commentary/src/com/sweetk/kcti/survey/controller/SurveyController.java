@@ -258,7 +258,7 @@ public class SurveyController {
 //    	content += "<div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\"><a href=\"http://www.ctgs.kr\">www.ctgs.kr</a> 로 접속하셔서 <strong>비밀번호 변경 후</strong> 이용하여 주시길 바랍니다.</div>";
 //    	content += "<div class=\"_wcSign\" style=\"padding: 15px 0px 0px;\">감사합니다.</div><div align=\"center\" class=\"_wcSign\" style=\"background: rgb(222, 222, 222); padding: 15px 0px 0px;\"><img src=\"http://ctgs.kr/image/login_logo_mcst.png\"></div>";
     	
-    	// 설문번호, 아이디 encode TODO
+    	// 설문번호, 아이디 encode 
 //    	System.out.println("vo.getSurvey_key() : " + vo.getSurvey_key());
 //    	System.out.println("userList.get(0).getUser_id() : " + userList.get(0).getUser_id());
 //    	System.out.println("userList.get(0).getEmail() : " + userList.get(0).getEmail());
@@ -273,7 +273,7 @@ public class SurveyController {
     		if(SendEmail.isEmail(userList.get(i).getEmail())){
     			String content = "";
     	    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(i).getUser_id());
-    	    	String url ="http://192.168.0.189:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
+    	    	String url ="http://localhost:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
     	    	content += "<div style='text-align: center;'>                                                                                  ";
     	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
@@ -298,7 +298,7 @@ public class SurveyController {
  		return mav;
  	}
 	
-	// 설문지 - 각 유저 이메일에서 url 선택시
+	// 설문지 - 각 유저 이메일에서 url 선택시 TODO 작성중
 	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
@@ -329,15 +329,14 @@ public class SurveyController {
 			System.out.println("confirmYn : " + confirmYn);
 			System.out.println("stdtChkYn : " + stdtChkYn);
 			
-			// 답변 미완료일때 , 설문기간일때
+			// 답변 미완료일때 and 설문기간일때
 			if((confirmYn==null||confirmYn.equals("N"))&&(stdtChkYn.equals("Y"))){
 				
 				System.out.println("설문페이지로 이동");
 				
 				
-			}else{ // 답변 완료일때, 설문기간이 아닐 때 - 완료 페이지로 
-				System.out.println("완료 페이지로 이동");
-				
+			}else{ // 답변 완료일때 or 설문기간이 아닐 때 - 완료 페이지로 
+				//System.out.println("완료 페이지로 이동");
 				if(stdtChkYn.equals("N")){
 					mav.addObject("stdtChkYn","N");
 				}
