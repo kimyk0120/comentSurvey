@@ -57,12 +57,23 @@ public class SurveyVo {
 	String confirm_dt =""; // 답변완료일
 	//String temp_yn =""; // 입시저장여부
 	
+	/////////////////////////////
+	
+	String answer = ""; // 답
 	
 	
 	// getter setter
 	public SurveyVo() {
 	}	
 	
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
 	public String getSend_dt() {
 		return send_dt;
 	}

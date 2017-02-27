@@ -40,5 +40,19 @@ public interface SurveyMapper {
 
 	public String select_stdt_yn(SurveyVo vo);
 
+	public void insert_answer(SurveyVo vo);
+
+	public void insert_user(SurveyVo vo);
+
+	public void update_emailYn(SurveyVo vo);
+
+	public void update_smsYn(SurveyVo vo);
+
+	public void update_emailYn_smsYn(SurveyVo vo);
+
+	public void update_tempYn(SurveyVo vo);
+
+	public void update_confirm(SurveyVo vo);
+
 
 }
