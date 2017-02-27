@@ -307,18 +307,23 @@ public class SurveyController {
 		ModelAndView mav = new ModelAndView("survey/s_result");
 		AES256Util aes = new AES256Util("commentary123456"); 
 		String decodeStr = aes.aesDecode(req.getParameter("userKey"));
-		//System.out.println("decodeStr : " + decodeStr);
 		String[] splitArr;
 		splitArr = decodeStr.split("#");
 		String surveyKey = splitArr[0]; // 설문번호
 		String userId = splitArr[1]; // 유저 아이디
-		//System.out.println("surveyKey : " + surveyKey);
-		//System.out.println("userId : " + userId);
+
+		//System.out.println("decodeStr : " + decodeStr);
+		System.out.println("surveyKey : " + surveyKey);
+		System.out.println("userId : " + userId);
+		
 		SurveyVo vo = new SurveyVo();
 		vo.setSurvey_key(Integer.parseInt(surveyKey));
+		vo.setUser_id(userId);
+		
 		try {
 			
 			// 답변 완료 여부체크 - 완료페이지로 이동 
+			
 			
 			// 시작일 종료일 체크 - 완료(종료)페이지로 이동 
 			

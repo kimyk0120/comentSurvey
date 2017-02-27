@@ -47,10 +47,70 @@ public class SurveyVo {
 	String phone = ""; // 연락처
 	String cmntor_no = ""; // 해설사번호
 	
+	/////////////////////////////
+	
+	String send_dt =""; // 발송일
+	String email_yn = "" ; // 이메일 발송여부
+	String sms_yn = ""; // 문자발송여부
+	String unique_no =""; // 발송 고유값
+	String confirm_yn =""; // 답변완료여부
+	String confirm_dt =""; // 답변완료일
+	//String temp_yn =""; // 입시저장여부
+	
+	
+	
 	// getter setter
 	public SurveyVo() {
 	}	
 	
+	public String getSend_dt() {
+		return send_dt;
+	}
+
+	public void setSend_dt(String send_dt) {
+		this.send_dt = send_dt;
+	}
+
+	public String getEmail_yn() {
+		return email_yn;
+	}
+
+	public void setEmail_yn(String email_yn) {
+		this.email_yn = email_yn;
+	}
+
+	public String getSms_yn() {
+		return sms_yn;
+	}
+
+	public void setSms_yn(String sms_yn) {
+		this.sms_yn = sms_yn;
+	}
+
+	public String getUnique_no() {
+		return unique_no;
+	}
+
+	public void setUnique_no(String unique_no) {
+		this.unique_no = unique_no;
+	}
+
+	public String getConfirm_yn() {
+		return confirm_yn;
+	}
+
+	public void setConfirm_yn(String confirm_yn) {
+		this.confirm_yn = confirm_yn;
+	}
+
+	public String getConfirm_dt() {
+		return confirm_dt;
+	}
+
+	public void setConfirm_dt(String confirm_dt) {
+		this.confirm_dt = confirm_dt;
+	}
+
 	public String getUser_id() {
 		return user_id;
 	}
