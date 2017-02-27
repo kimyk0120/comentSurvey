@@ -213,6 +213,7 @@ public class SurveyController {
 	}
 	
 	// 이메일, sms 발송처리 - 유저에게 url 전송
+	@Transactional
 	@RequestMapping(value="/send_survey.ajax",method={RequestMethod.GET})
 	protected void send_survey(HttpServletRequest req, HttpSession session, HttpServletResponse resp
 			,@RequestParam(value="surveyKey",required=true) String surveyKey) throws Exception  {
@@ -229,14 +230,23 @@ public class SurveyController {
 //			System.out.println("vo.getSurvey_target() : " + vo.getSurvey_target());
 //			System.out.println("vo.getSend_method(): " + vo.getSend_method());
 			List<SurveyVo> userList = mapper.user_list(vo);
-			
+			for(int i=0;i<userList.size();i++){ 
+				vo.setUser_id(userList.get(i).getUser_id());
+				mapper.insert_user(vo);	 // survey_target 에 유저등록
+			}
 			if(vo.getSend_method().equals("email")){  // 이메일 발송 
 				send_survey_mail(req,session,resp,vo,userList);
+				vo.setEmail_yn("Y");
+				vo.setSms_yn("N");
 			}else if(vo.getSend_method().equals("textMassage")){ // 메세지 발송 TODO
-				
+				vo.setEmail_yn("N");
+				vo.setSms_yn("Y");
 			}else if(vo.getSend_method().equals("both")){  // 이메일, 메세지 발송 TODO
 				send_survey_mail(req,session,resp,vo,userList);
+				vo.setEmail_yn("N");
+				vo.setSms_yn("Y");
 			}
+			mapper.update_emailYn_smsYn(vo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("send_survey error");
@@ -275,7 +285,7 @@ public class SurveyController {
     	    	String encodeStr = aes.aesEncode(vo.getSurvey_key()+"#"+userList.get(i).getUser_id());
     	    	String url ="http://localhost:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
     	    	content += "<div style='text-align: center;'>                                                                                  ";
-    	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까</div>     ";
+    	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까.</div>     ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>                       	 									   ";
@@ -289,7 +299,6 @@ public class SurveyController {
     		}
     	}//endFOr
     }
-
     
     // 이메일 UI 테스트
  	@RequestMapping(value="/emailui_test.do",method={RequestMethod.POST,RequestMethod.GET})
@@ -298,7 +307,7 @@ public class SurveyController {
  		return mav;
  	}
 	
-	// 설문지 - 각 유저 이메일에서 url 선택시 TODO 작성중
+	// 설문 답변 페이지  - 각 유저 이메일에서 url 선택시
 	@RequestMapping(value="/survey_result.do",method={RequestMethod.POST,RequestMethod.GET})
 	protected ModelAndView survey_result(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
 		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
@@ -315,13 +324,14 @@ public class SurveyController {
 		//System.out.println("decodeStr : " + decodeStr);
 		System.out.println("surveyKey : " + surveyKey);
 		System.out.println("userId : " + userId);
+		mav.addObject("surveyKey",surveyKey);
+		mav.addObject("userId",userId);
 		
 		SurveyVo vo = new SurveyVo();
 		vo.setSurvey_key(Integer.parseInt(surveyKey));
 		vo.setUser_id(userId);
 		
 		try {
-			
 			// 답변 완료 여부체크 , 시작일 종료일 체크- 완료페이지로 이동
 			String confirmYn = mapper.select_answer_yn(vo);
 			String stdtChkYn = mapper.select_stdt_yn(vo);
@@ -332,9 +342,14 @@ public class SurveyController {
 			// 답변 미완료일때 and 설문기간일때
 			if((confirmYn==null||confirmYn.equals("N"))&&(stdtChkYn.equals("Y"))){
 				
-				System.out.println("설문페이지로 이동");
-				
-				
+				vo = mapper.survey_detail(vo);
+	        	List<SurveyVo> qList = mapper.questionList(vo);
+	        	List<SurveyVo> mqList = mapper.multi_questionList(vo);
+	        	mav.addObject("sVo",vo);
+	        	mav.addObject("qList",qList);
+	        	mav.addObject("mqList",mqList);
+	        	mav.addObject("qlLength",qList.size());  // 문제 개수
+	        	
 			}else{ // 답변 완료일때 or 설문기간이 아닐 때 - 완료 페이지로 
 				//System.out.println("완료 페이지로 이동");
 				if(stdtChkYn.equals("N")){
@@ -342,25 +357,58 @@ public class SurveyController {
 				}
 				mav.setViewName("survey/s_done");
 			}
-			
-			
-			// 시작일 종료일 체크 - 완료(종료)페이지로 이동 
-			
-			
-//    		vo = mapper.survey_detail(vo);
-//        	List<SurveyVo> qList = mapper.questionList(vo);
-//        	List<SurveyVo> mqList = mapper.multi_questionList(vo);
-//        	mav.addObject("sVo",vo);
-//        	mav.addObject("qList",qList);
-//        	mav.addObject("mqList",mqList);
-//        	mav.addObject("qlLength",qList.size());  // 문제 개수
-        	//System.out.println("qList.size() : " + qList.size());
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("survey_result error");
 		}
 		return mav;
 	}
+	
+	// 설문 답변 저장 ajax
+	@RequestMapping(value="/survey_result_save.ajax",method={RequestMethod.POST})
+	protected void survey_result_save(HttpServletRequest req, HttpSession session, HttpServletResponse resp
+			,@RequestParam(value="surveyKey") String surveyKey 
+			,@RequestParam(value="tempYn") String tempYn
+			,@RequestParam(value="userId") String userId
+			,@RequestParam(value="aArray[]") String[] aArray) throws Exception  { 
+		SurveyMapper mapper = sqlSession.getMapper(SurveyMapper.class);
+		PrintWriter out = resp.getWriter();
+//		System.out.println("survey_result_save.ajax called");
+//		System.out.println("surveyKey : " + surveyKey);
+//		System.out.println("tempYn : " + tempYn);
+//		System.out.println("userId : " + userId);
+//		for (int i = 0; i < aArray.length; i++) {System.out.println("aArray["+i+"] : " + aArray[i]);}
+		SurveyVo vo = new SurveyVo();
+		vo.setSurvey_key(Integer.parseInt(surveyKey)); // 설문번호
+		vo.setTemp_yn(tempYn);  // 임시저장여부
+		vo.setUser_id(userId); // 유저 아이디
+		try {
+			mapper.update_tempYn(vo); //임시저장여부 업데이트
+			for (int i = 0; i < aArray.length; i++) {
+				String qSeq = String.valueOf(i+1);
+				vo.setQuestion_seq(qSeq);  // 문제 번호
+				//System.out.println(vo.getQuestion_seq());
+				vo.setAnswer(aArray[i]);  // 문제 답안
+				mapper.insert_answer(vo);  // 답변 저장 및 업데이트
+			}
+			if(tempYn.equals("N")){
+				vo.setConfirm_yn("Y");
+				mapper.update_confirm(vo); // 답변완료 여부 저장
+			}
+		} catch (Exception e) {
+			out.print("error");
+			System.out.println("survey_result_save error");
+		} finally {
+			out.close();
+		}
+	}
 
+	// 답변완료페이지 
+ 	@RequestMapping(value="/survey_done.do",method={RequestMethod.GET})
+ 	protected ModelAndView survey_done(HttpServletRequest req, HttpSession session, HttpServletResponse resp) throws Exception  {
+ 		ModelAndView mav = new ModelAndView("survey/s_done");
+ 		return mav;
+ 	}
+	
 	
 }//endClass

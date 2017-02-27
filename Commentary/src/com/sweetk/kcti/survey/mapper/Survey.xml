@@ -110,12 +110,13 @@
 	
 	<select id="questionList" parameterType="SurveyVo" resultType="SurveyVo">
 		SELECT 
-			survey_key,
-		    question_seq,
-		    multi_yn,
-		    question
-		FROM survey_question
-		WHERE survey_key = #{survey_key}
+			a.survey_key,
+		    a.question_seq,
+		    a.multi_yn,
+		    a.question,
+            b.answer
+		FROM survey_question as a LEFT JOIN answer as b ON a.survey_key = b.survey_key and a.question_seq = b.question_seq
+		WHERE a.survey_key = #{survey_key}
 		ORDER BY question_seq
 	</select>
 
@@ -182,14 +183,60 @@
 			CASE
 	    	WHEN now()  <  end_dt and now() > start_dt 
 	    	THEN 'Y'
-	    	WHEN now() <  start_dt or now()  >  end_dt
-	    	THEN 'N'						
+	    	WHEN now()  >  end_dt
+	    	THEN 'N'
+	    	ELSE 'N'
             END as stdtChkYn
-               
 		FROM
 			survey
 		WHERE survey_key = #{survey_key} 
 	]]>
 	</select>
+	
+	<insert id="insert_answer" parameterType="SurveyVo">
+		INSERT INTO answer (`survey_key`, `question_seq`, `user_id`, `answer`)
+		VALUES (#{survey_key}, #{question_seq} , #{user_id} , #{answer})
+		ON DUPLICATE KEY UPDATE survey_key=#{survey_key}, question_seq=#{question_seq}, answer= #{answer}  
+	</insert>
+
+	<insert id="insert_user" parameterType="SurveyVo">
+		INSERT INTO survey_target (`survey_key`, `send_dt`, `user_id`)
+		VALUES (#{survey_key}, now() , #{user_id})
+		ON DUPLICATE KEY UPDATE survey_key=#{survey_key}, user_id=#{user_id}, send_dt= #{send_dt}  
+	</insert>
+	
+	<update id="update_emailYn_smsYn" parameterType="SurveyVo">
+		UPDATE 
+			survey_target 
+		SET 
+			email_yn = #{email_yn},
+			sms_yn = #{sms_yn}
+		WHERE 
+			survey_key = #{survey_key}
+			and user_id=#{user_id}
+	</update>
+	
+	<update id="update_tempYn" parameterType="SurveyVo">
+		UPDATE 
+			survey_target 
+		SET 
+			temp_yn = #{temp_yn}
+		WHERE 
+			survey_key = #{survey_key}
+			and user_id=#{user_id}
+	</update>
+
+	<update id="update_confirm" parameterType="SurveyVo">
+		UPDATE 
+			survey_target 
+		SET 
+			temp_yn = #{temp_yn},
+			confirm_yn = #{confirm_yn},
+			confirm_dt = now()
+		WHERE 
+			survey_key = #{survey_key}
+			and user_id=#{user_id}
+	</update>
+
 	
 </mapper>

@@ -190,7 +190,7 @@ $(function(){
 								data:{"surveyKey":surveyKey}
 							}).done(function(result){
 								// 리스트로 이동
-								//$(location).attr("href","survey_list.do");								
+								$(location).attr("href","survey_list.do");								
 							});
 						}else if(tempSaveYn=="Y"){ // 임시저장하기 선택시 
 							// 리스트로 이동
@@ -467,49 +467,6 @@ $(function(){
         	</c:forEach>
         </c:if>
         
-        
-        <!-- 1번 예시 -->
-        <!-- <fieldset class="article">
-            <div>
-                <p class="a_number sa">1</p>
-                <p class="aq_text">관리 담당 지역은 어디입니까?</p>
-                <button class="b_del"></button>
-            </div>
-            <div class="clear">                
-                <input type="text" class="t_input" id="chargeLocText">
-            </div>            
-        </fieldset>  -->
-        <!-- .1번 -->
-        
-        <!-- 2번 예시 -->
-       <!-- <fieldset class="article">
-            <div>
-                <p class="a_number mc">2</p>
-                <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
-                <button class="b_del"></button>
-            </div>
-            <div class="clear">                
-                <ul class="s_radio">
-                    <li>
-                        <label><input type="radio" class="r_li" value="r_01" name=""> <span>1~10명</span></label>
-                    </li>
-                    <li>
-                        <label><input type="radio" class="r_li" value="r_02" name=""> 11~20명</label>
-                    </li>
-                    <li>
-                        <label><input type="radio" class="r_li" value="r_03" name=""> 21~30명</label>
-                    </li>
-                    <li>
-                        <label><input type="radio" class="r_li" value="r_04" name=""> 31~40명</label>
-                    </li>
-                    <li>
-                        <label><input type="radio" class="r_li" value="r_05" name=""> 41명 이상</label>
-                    </li>
-                </ul>
-            </div>            
-        </fieldset>  -->
-        <!-- .2번 -->
-        
         <!-- 질문 작성 영역 -->
         <fieldset class="m_article mb2">
             <div>
@@ -585,3 +542,48 @@ $(function(){
     
 </body>
 </html>
+
+
+        
+        <!-- 1번 예시 -->
+        <!-- <fieldset class="article">
+            <div>
+                <p class="a_number sa">1</p>
+                <p class="aq_text">관리 담당 지역은 어디입니까?</p>
+                <button class="b_del"></button>
+            </div>
+            <div class="clear">                
+                <input type="text" class="t_input" id="chargeLocText">
+            </div>            
+        </fieldset>  -->
+        <!-- .1번 -->
+        
+        <!-- 2번 예시 -->
+       <!-- <fieldset class="article">
+            <div>
+                <p class="a_number mc">2</p>
+                <p class="aq_text">관리하고 계신 해설 인력은 몇 명 입니까?</p>
+                <button class="b_del"></button>
+            </div>
+            <div class="clear">                
+                <ul class="s_radio">
+                    <li>
+                        <label><input type="radio" class="r_li" value="r_01" name=""> <span>1~10명</span></label>
+                    </li>
+                    <li>
+                        <label><input type="radio" class="r_li" value="r_02" name=""> 11~20명</label>
+                    </li>
+                    <li>
+                        <label><input type="radio" class="r_li" value="r_03" name=""> 21~30명</label>
+                    </li>
+                    <li>
+                        <label><input type="radio" class="r_li" value="r_04" name=""> 31~40명</label>
+                    </li>
+                    <li>
+                        <label><input type="radio" class="r_li" value="r_05" name=""> 41명 이상</label>
+                    </li>
+                </ul>
+            </div>            
+        </fieldset>  -->
+        <!-- .2번 -->
+        
