@@ -15,12 +15,12 @@
 
 	<insert id="survey_q_save" parameterType="SurveyVo">
 		INSERT INTO survey_question (`survey_key`, `question_seq`, `multi_yn`, `question`)
-		VALUES (#{survey_key}, #{question_seq} , #{multi_yn} , #{question});
+		VALUES (#{survey_key}, #{question_seq} , #{multi_yn} , #{question})
 	</insert>
 
 	<insert id="survey_mq_save" parameterType="SurveyVo">
 		INSERT INTO multi_question (`survey_key`, `question_seq`, `multi_seq`, `multi_question`)
-		VALUES (#{survey_key}, #{question_seq}, #{multi_seq}, #{multi_question});
+		VALUES (#{survey_key}, #{question_seq}, #{multi_seq}, #{multi_question})
 	</insert>
 	
 	<update id="survey_update" parameterType="SurveyVo">
@@ -138,7 +138,7 @@
 		FROM 
 			survey
 		WHERE 
-			survey_key = #{survey_key};
+			survey_key = #{survey_key}
 	</select>
 
 	<select id="user_list" parameterType="SurveyVo" resultType="SurveyVo">
@@ -164,6 +164,32 @@
 		<!-- <if test="survey_target != null and survey_target.equals('C')">
 			AND auth_no = '4'
 		</if> -->
+	</select>
+	
+	<select id="select_answer_yn" parameterType="SurveyVo" resultType="String">
+		SELECT
+			IFNULL(confirm_yn,'N') as confirmYn
+		FROM 
+			survey_target
+		WHERE
+			survey_key = #{survey_key}
+			AND user_id = #{user_id}
+	</select>
+
+	<select id="select_stdt_yn" parameterType="SurveyVo" resultType="String">
+	<![CDATA[ 
+		SELECT 
+			CASE
+	    	WHEN now()  <  end_dt and now() > start_dt 
+	    	THEN 'Y'
+	    	WHEN now() <  start_dt or now()  >  end_dt
+	    	THEN 'N'						
+            END as stdtChkYn
+               
+		FROM
+			survey
+		WHERE survey_key = #{survey_key} 
+	]]>
 	</select>
 	
 </mapper>

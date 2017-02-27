@@ -322,7 +322,27 @@ public class SurveyController {
 		
 		try {
 			
-			// 답변 완료 여부체크 - 완료페이지로 이동 
+			// 답변 완료 여부체크 , 시작일 종료일 체크- 완료페이지로 이동
+			String confirmYn = mapper.select_answer_yn(vo);
+			String stdtChkYn = mapper.select_stdt_yn(vo);
+			
+			System.out.println("confirmYn : " + confirmYn);
+			System.out.println("stdtChkYn : " + stdtChkYn);
+			
+			// 답변 미완료일때 , 설문기간일때
+			if((confirmYn==null||confirmYn.equals("N"))&&(stdtChkYn.equals("Y"))){
+				
+				System.out.println("설문페이지로 이동");
+				
+				
+			}else{ // 답변 완료일때, 설문기간이 아닐 때 - 완료 페이지로 
+				System.out.println("완료 페이지로 이동");
+				
+				if(stdtChkYn.equals("N")){
+					mav.addObject("stdtChkYn","N");
+				}
+				mav.setViewName("survey/s_done");
+			}
 			
 			
 			// 시작일 종료일 체크 - 완료(종료)페이지로 이동 
@@ -337,7 +357,8 @@ public class SurveyController {
 //        	mav.addObject("qlLength",qList.size());  // 문제 개수
         	//System.out.println("qList.size() : " + qList.size());
 		} catch (Exception e) {
-			System.out.println("error");
+			e.printStackTrace();
+			System.out.println("survey_result error");
 		}
 		return mav;
 	}

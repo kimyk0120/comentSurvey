@@ -36,5 +36,9 @@ public interface SurveyMapper {
 
 	public List<SurveyVo> user_list(SurveyVo vo);
 
+	public String select_answer_yn(SurveyVo vo);
+
+	public String select_stdt_yn(SurveyVo vo);
+
 
 }
