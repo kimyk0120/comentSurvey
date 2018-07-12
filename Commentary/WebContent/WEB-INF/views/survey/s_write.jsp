@@ -51,8 +51,8 @@ $(function(){
 		var $rTitle = $("#rTitle").val(); // 설문제목
 		var $stDate = $("input[id=start_s]").val(); // 시작일  format yyyy-mm-dd
 		var $endDate = $("input[id=end_s]").val();  // 종료일  format yyyy-mm-dd
-		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지자체 
-		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해설사
+		var $surveyTarget1 = $("input[name=surveyTarget_1]:checked").val(); // 설문대상 - 지 
+		var $surveyTarget2 = $("input[name=surveyTarget_2]:checked").val(); // 설문대상 - 해
 		var $surveyMethod1 = $("input[name=surveyMethod_1]:checked").val(); // 설문방법 - 문자 
 		var $surveyMethod2 = $("input[name=surveyMethod_2]:checked").val(); // 설문방법 - 이메일
 		var $aLength = $(".a_number").length; // 질문 등록 개수 - 질문등록여부
@@ -91,7 +91,7 @@ $(function(){
 			return false;
 		}else{
 			
-			// 설문대상  A:전체 B:지자체 C:해설사
+			// 설문대상  
 			var surveyTarget = "";
 			if(!!$surveyTarget1 && !!$surveyTarget2){
 				surveyTarget ="A";
@@ -418,9 +418,9 @@ $(function(){
                 <li id="sort_s">
                     <span>설문대상</span>
                	    <label><input type="checkbox" value="group" name="surveyTarget_1" 
-               	  	 	${(sVo ne null and sVo.survey_target eq 'B') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>지자체</label>
+               	  	 	${(sVo ne null and sVo.survey_target eq 'B') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>개인</label>
                     <label><input type="checkbox" value="commentator" name="surveyTarget_2" 
-                   		${(sVo ne null and sVo.survey_target eq 'C') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>해설사</label>
+                   		${(sVo ne null and sVo.survey_target eq 'C') or (sVo ne null and sVo.survey_target eq 'A' )?'checked':''}>단체</label>
                 </li>
                 <li id="sort_s">
                     <span>발송방법</span>
