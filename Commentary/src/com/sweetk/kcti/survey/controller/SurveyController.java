@@ -286,7 +286,7 @@ public class SurveyController {
     	    	String url ="http://localhost:8080/survey_result.do?userKey="+encodeStr;  // TODO 도메인 변경해야함
     	    	content += "<div style='text-align: center;'>                                                                                  ";
     	    	content += "<div class='_wcpushTag' id='pushTag_82a073a72331565' style='padding: 0px; margin-top: 2em;'>안녕하십니까.</div>     ";
-    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>문화관광해설사 관리 페이지</strong>입니다.</div>       ";
+    	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'><strong>설문지작성 관리 페이지</strong>입니다.</div>       ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>새로운 설문이 등록되었습니다.</div>                            ";
     	    	content += "<div class='_wcSign' style='padding: 15px 0px 0px;'>                       	 									   ";
     	    	content += "<a href='" + url + "'> 설문조사 페이지로 이동 </a></div>                       									   ";
