@@ -37,9 +37,6 @@ CREATE TABLE multi_question
 CREATE TABLE survey
 (
 	survey_key int NOT NULL AUTO_INCREMENT,
-	-- A:전체
-	-- B:지자체
-	-- C:해설사
 	survey_target varchar(1) COMMENT 'A:전체
 B:지자체
 C:해설사',
